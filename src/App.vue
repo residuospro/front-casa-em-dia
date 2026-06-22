@@ -35,6 +35,12 @@ if (estaAutenticado()) {
 }
 
 onMounted(() => {
+  const estaDeslogado =
+    globalThis.location.pathname === "/login" ||
+    globalThis.location.pathname === "/cadastro";
+
+  if (estaDeslogado) return;
+
   listar();
 
   socket.value = conectar();

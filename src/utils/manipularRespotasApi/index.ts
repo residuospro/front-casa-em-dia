@@ -11,8 +11,6 @@ export const useRespostaApi = (
   res?: AxiosError,
   msg?: string,
 ) => {
-  console.log("res", res);
-
   const { notificar } = useNotificacoes();
   const { limparSessao } = useSessao();
 
@@ -31,6 +29,12 @@ export const useRespostaApi = (
     },
 
     401: () => {
+      const estaDeslogado =
+        globalThis.location.pathname === "/login" ||
+        globalThis.location.pathname === "/cadastro";
+
+      if (estaDeslogado) return;
+
       const error = res?.response?.data as IError;
 
       notificar("ERROR", 5000, error.message);
