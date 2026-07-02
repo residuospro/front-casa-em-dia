@@ -1,66 +1,67 @@
 <template>
-  <div
-    class="grid grid-cols-[auto_1fr] h-screen"
-    :class="
-      sidebarAberto
-        ? 'sm:!grid-cols-[auto_1fr] md:!grid-cols-[auto_1fr]'
-        : 'sm:!grid-cols-[1fr] sm:!grid-rows-1 md:!grid-cols-[1fr] md:!grid-rows-1'
-    "
-  >
-    <Sidebar />
+  <div class="h-screen bg-[#fff] dark:bg-ce_black flex flex-col">
+    <div
+      class="flex bg-[#FCFAF8] border-b border-[#ECE4D8] px-6 items-center justify-between h-16 shrink-0 z-30"
+    >
+      <button @click="toggleSidebar" class="text-cinza_363637 transition">
+        <svg-icon type="mdi" :path="mdiMenu" class="w-6 h-6" />
+      </button>
 
-    <div class="grid grid-rows-[8%_1fr_8%] h-screen">
-      <div
-        class="flex bg-[#FCFAF8] border-b border-[#ECE4D8] px-6 items-center justify-between"
-      >
-        <button @click="toggleSidebar" class="text-cinza_363637 transition">
-          <svg-icon type="mdi" :path="mdiMenu" class="w-6 h-6" />
-        </button>
+      <div class="flex items-center gap-2">
+        <NotificacaoNaoLidas />
 
-        <div class="flex items-center gap-2">
-          <NotificacaoNaoLidas />
+        <img
+          v-if="perfil.fotoPerfil"
+          :src="parseFotoPerfil(perfil.fotoPerfil)"
+          class="object-cover w-8 h-8 rounded-full"
+        />
 
-          <img
-            v-if="perfil.fotoPerfil"
-            :src="parseFotoPerfil(perfil.fotoPerfil)"
-            class="object-cover w-8 h-8 rounded-full"
-          />
-
-          <div class="flex flex-col gap-1">
-            <span class="text-sm font-medium">{{ perfil.nome }}</span>
-            <ce-badge
-              color="primary"
-              rounded="lg"
-              size="sm"
-              status
-              variant="solid"
-            >
-              <span>{{ parsePermissao(perfil.permissao) }}</span>
-            </ce-badge>
-          </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-sm font-medium">{{ perfil.nome }}</span>
+          <ce-badge
+            color="primary"
+            rounded="lg"
+            size="sm"
+            status
+            variant="solid"
+          >
+            <span>{{ parsePermissao(perfil.permissao) }}</span>
+          </ce-badge>
         </div>
       </div>
+    </div>
 
-      <div class="relative w-full flex justify-start p-4">
-        <!-- Fundo da aplicação -->
+    <div class="flex flex-1 min-h-0 relative">
+      <Transition name="overlay">
+        <div
+          v-if="!isDesktop && sidebarAberto"
+          class="fixed inset-0 bg-black/50 z-40"
+          @click="fecharSidebar"
+        />
+      </Transition>
+
+      <Sidebar />
+
+      <main
+        class="flex-1 min-w-0 relative overflow-auto"
+        :class="{ 'bg-[#F9F9F6]': !isDesktop }"
+      >
         <img
+          v-if="isDesktop"
           src="/fundoConteudo.png"
           alt=""
           class="absolute inset-0 w-full h-full object-cover"
         />
 
-        <!-- Overlay -->
         <div class="absolute inset-0" />
 
-        <!-- Conteúdo (fica por cima) -->
-        <div class="relative z-10 pb-20 w-full">
-          <!-- pb-20 dá espaço no final -->
+        <div class="relative z-10 pb-20 w-full p-4">
           <router-view />
         </div>
-      </div>
-
-      <div class="bg-[#FAF7F3] border-t border-[#ECE4D8]">footer</div>
+      </main>
     </div>
+
+    <div class="bg-[#FAF7F3] border-t border-[#ECE4D8] shrink-0">footer</div>
   </div>
 </template>
 
@@ -76,7 +77,7 @@ import { CeBadge } from "@comercti/vue-components";
 import { useUtils } from "@/utils/useUtils";
 import NotificacaoNaoLidas from "@/components/notificacao/naoLidas/index.vue";
 
-const { toggleSidebar, sidebarAberto } = useSidebar();
+const { toggleSidebar, sidebarAberto, fecharSidebar } = useSidebar();
 const { perfil } = usePerfil();
 const { parseFotoPerfil, parsePermissao } = useUtils();
 
@@ -99,7 +100,12 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.fundo {
-  background-image: "/fundoLogin.png";
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.3s ease;
+}
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
 }
 </style>

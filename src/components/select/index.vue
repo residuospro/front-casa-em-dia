@@ -44,11 +44,11 @@ import { mdiChevronDown } from "@mdi/js";
 
 interface SelectItem {
   text: string;
-  value: string;
+  value: string | number;
 }
 
 const props = defineProps<{
-  modelValue?: string;
+  modelValue?: string | number | null;
   label?: string;
   placeholder?: string;
   items: SelectItem[];

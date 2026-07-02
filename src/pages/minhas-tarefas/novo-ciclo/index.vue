@@ -1,11 +1,12 @@
 <template>
-  <Notificacao />
+  <NovoCiclo />
 </template>
 
 <route lang="json">
 {
+  "name": "novo-ciclo",
   "meta": {
-    "title": "Notificação",
+    "title": "Novo Ciclo",
     "layout": "Default",
     "auth": true
   }
@@ -13,5 +14,5 @@
 </route>
 
 <script setup lang="ts">
-import Notificacao from "@/components/notificacao/index.vue";
+import NovoCiclo from "@/components/minhasTarefas/novoCiclo/index.vue";
 </script>

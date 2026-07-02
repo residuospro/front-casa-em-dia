@@ -102,7 +102,7 @@
             @click="irParaCadastro"
             class="w-full h-12 rounded-xl border border-[#53864C] text-[#53864C] transition"
           >
-            Criar minha família
+            Criar conta
           </button>
         </form>
       </div>

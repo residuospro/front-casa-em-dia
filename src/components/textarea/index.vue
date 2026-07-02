@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label :for="id" class="block text-sm mb-1 text-slate-300" v-if="label">
+    <label :for="id" class="block text-sm mb-1 !text-black" v-if="label">
       {{ label }}
     </label>
 
@@ -8,7 +8,7 @@
       :id="id"
       :rows="2"
       :placeholder="placeholder"
-      class="w-full rounded-xl p-4 bg-[#0F172A] border border-cyan-500/20 text-white"
+      class="w-full rounded-xl p-4 bg-white text-black border border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#53864C]"
       :value="modelValue"
       @change="onChange"
     />

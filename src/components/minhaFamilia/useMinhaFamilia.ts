@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import type { IFamilia } from "./tipagem";
+import type { IOpcoes } from "@/utils/interfaces";
 
 const opcoesMembroFamiliar = [
   {
@@ -57,7 +58,7 @@ const tabs = [
 ];
 const dataFamilia = ref<IFamilia[]>([]);
 const editando = ref(false);
-
+const opcoesFamiliares = ref<IOpcoes[]>([]);
 const abrirModalDeletar = ref(false);
 
 const permitirEdicao = () => {
@@ -74,6 +75,7 @@ export const useMinhaFamilia = () => {
     abaAtiva,
     tabs,
     abrirModalDeletar,
+    opcoesFamiliares,
     permitirEdicao,
   };
 };

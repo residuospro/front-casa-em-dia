@@ -71,7 +71,8 @@ const ajustarMenuItens = (membroFamiliar: IFamiliaPessoa) => {
     });
   } else if (
     membroFamiliar.conviteEnviado &&
-    membroFamiliar.status === "PENDENTE"
+    membroFamiliar.status === "PENDENTE" &&
+    perfil.value?.id === membroFamiliar?.usuario?.id
   ) {
     menuItems.value.push(
       {

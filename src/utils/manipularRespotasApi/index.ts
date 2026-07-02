@@ -1,18 +1,23 @@
-import type { AxiosError } from "axios";
 import { useNotificacoes } from "@/utils/notificacoes";
 import { useSessao } from "../sessao";
-
-interface IError {
-  message: string;
-}
+import type { IResponseError } from "../interfaces";
 
 export const useRespostaApi = (
   statusCode: number,
-  res?: AxiosError,
+  res?: IResponseError,
   msg?: string,
 ) => {
   const { notificar } = useNotificacoes();
   const { limparSessao } = useSessao();
+
+  const setarMsg = (message?: string | string[]) => {
+    const mensagemErro =
+      Array.isArray(message) && message.length > 0
+        ? message.join("")
+        : String(message) || "Algo deu errado, tente novamente mais tarde";
+
+    notificar("ERROR", 5000, mensagemErro);
+  };
 
   const respostasApi = {
     201: () => {
@@ -24,8 +29,8 @@ export const useRespostaApi = (
     },
 
     400: () => {
-      const error = res?.response?.data as IError;
-      notificar("ERROR", 5000, error.message);
+      const error = res?.response?.data;
+      setarMsg(error?.message);
     },
 
     401: () => {
@@ -35,12 +40,11 @@ export const useRespostaApi = (
 
       if (estaDeslogado) return;
 
-      const error = res?.response?.data as IError;
-
-      notificar("ERROR", 5000, error.message);
+      const error = res?.response?.data;
+      setarMsg(error?.message);
 
       setTimeout(() => {
-        limparSessao();
+        limparSessao("/login");
       }, 2000);
     },
 
@@ -53,13 +57,9 @@ export const useRespostaApi = (
     },
 
     404: () => {
-      const error = res?.response?.data as IError;
+      const error = res?.response?.data;
 
-      notificar(
-        "ERROR",
-        5000,
-        error.message || "Algo deu errado, tente novamente mais tarde",
-      );
+      setarMsg(error?.message);
     },
 
     500: () => {

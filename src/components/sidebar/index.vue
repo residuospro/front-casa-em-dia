@@ -1,14 +1,14 @@
 <template>
   <aside
-    class="h-full bg-white border-r border-[#ECE4D8] flex flex-col transition-all duration-300 overflow-hidden"
+    class="flex flex-col bg-white border-r border-[#ECE4D8] overflow-hidden transition-all duration-300 z-50"
     :class="
       isDesktop
         ? sidebarAberto
-          ? 'w-64 translate-x-0'
-          : 'w-16 translate-x-0'
+          ? 'relative h-full w-64'
+          : 'relative h-full w-auto'
         : sidebarAberto
-          ? 'w-64 translate-x-0'
-          : 'w-64 -translate-x-full'
+          ? 'fixed left-0 top-0 h-full w-64 translate-x-0'
+          : 'fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 -translate-x-full'
     "
   >
     <div
@@ -29,29 +29,78 @@
     </div>
 
     <nav class="flex-1 p-4 space-y-1 overflow-hidden">
-      <router-link
-        v-for="item in navItens"
-        :key="item.path"
-        :to="item.path"
-        @click="!isDesktop && fecharSidebar()"
-        class="flex items-center rounded-lg text-sm font-medium transition"
-        :class="[
-          isDesktop && !sidebarAberto ? 'justify-center px-0' : 'px-3',
-          linkClasses(item.path),
-        ]"
-      >
-        <svg-icon
-          type="mdi"
-          :path="item.icone"
-          class="w-5 h-5 shrink-0 my-2.5"
-        />
-        <span
-          v-show="!isDesktop || sidebarAberto"
-          class="ml-3 whitespace-nowrap"
+      <template v-for="item in navItens" :key="item.label">
+        <div v-if="item.children" class="space-y-1">
+          <button
+            @click="toggleSubmenu(item.label)"
+            class="flex items-center w-full rounded-lg text-sm font-medium transition"
+            :class="[
+              isDesktop && !sidebarAberto ? 'justify-center px-0' : 'px-3',
+              parentLinkClasses(item),
+            ]"
+          >
+            <svg-icon
+              type="mdi"
+              :path="item.icone"
+              class="w-5 h-5 shrink-0 my-2.5"
+            />
+            <span
+              v-show="!isDesktop || sidebarAberto"
+              class="ml-3 whitespace-nowrap flex-1 text-left"
+            >
+              {{ item.label }}
+            </span>
+            <svg-icon
+              v-show="!isDesktop || sidebarAberto"
+              type="mdi"
+              :path="mdiChevronDown"
+              class="w-4 h-4 transition-transform"
+              :class="{ 'rotate-180': submenuAbertos[item.label] }"
+            />
+          </button>
+          <div v-show="submenuAbertos[item.label]" class="space-y-1">
+            <template v-for="child in item.children" :key="child.label">
+              <router-link
+                v-if="child.path"
+                :to="child.path!"
+                @click="!isDesktop && fecharSidebar()"
+                class="flex items-center rounded-lg text-sm font-medium transition pl-11"
+                :class="childLinkClasses(child.path)"
+              >
+                <span
+                  v-show="!isDesktop || sidebarAberto"
+                  class="whitespace-nowrap"
+                >
+                  {{ child.label }}
+                </span>
+              </router-link>
+            </template>
+          </div>
+        </div>
+
+        <router-link
+          v-else-if="item.path"
+          :to="item.path!"
+          @click="!isDesktop && fecharSidebar()"
+          class="flex items-center rounded-lg text-sm font-medium transition"
+          :class="[
+            isDesktop && !sidebarAberto ? 'justify-center px-0' : 'px-3',
+            linkClasses(item.path),
+          ]"
         >
-          {{ item.label }}
-        </span>
-      </router-link>
+          <svg-icon
+            type="mdi"
+            :path="item.icone"
+            class="w-5 h-5 shrink-0 my-2.5"
+          />
+          <span
+            v-show="!isDesktop || sidebarAberto"
+            class="ml-3 whitespace-nowrap"
+          >
+            {{ item.label }}
+          </span>
+        </router-link>
+      </template>
     </nav>
 
     <div class="w-full p-4 mb-5" v-if="sidebarAberto">
@@ -83,15 +132,22 @@
 <script setup lang="ts">
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
+import { mdiChevronDown } from "@mdi/js";
 import { useRoute } from "vue-router";
-import { useSidebar } from "./useSidebar";
-import { ref, onMounted, onUnmounted } from "vue";
+import { useSidebar, type NavItem } from "./useSidebar";
+import { ref, reactive, onMounted, onUnmounted } from "vue";
 import { usePerfil } from "@/composables/usePerfil";
 
 const { perfil } = usePerfil();
 
 const route = useRoute();
 const { sidebarAberto, navItens, fecharSidebar } = useSidebar();
+
+const submenuAbertos = reactive<Record<string, boolean>>({});
+
+const toggleSubmenu = (label: string) => {
+  submenuAbertos[label] = !submenuAbertos[label];
+};
 
 const isDesktop = ref(false);
 let mql: MediaQueryList | null = null;
@@ -110,9 +166,31 @@ onUnmounted(() => {
   mql?.removeEventListener("change", handleChange);
 });
 
-function linkClasses(path: string) {
+function isPathActive(path?: string) {
+  if (!path) return false;
+  return route.path === path || (route.path.startsWith(path) && path !== "/");
+}
+
+function linkClasses(path?: string) {
+  const ativo = isPathActive(path);
+  return {
+    "text-verde_53864c bg-verde_F2F4E9": ativo,
+    "text-cinza_363637 hover:text-verde_53864c hover:bg-verde_F2F4E9": !ativo,
+  };
+}
+
+function childLinkClasses(path?: string) {
+  const ativo = route.path === path;
+  return {
+    "text-verde_53864c bg-verde_F2F4E9": ativo,
+    "text-cinza_363637 hover:text-verde_53864c hover:bg-verde_F2F4E9": !ativo,
+  };
+}
+
+function parentLinkClasses(item: NavItem) {
   const ativo =
-    route.path === path || (route.path.startsWith(path) && path !== "/");
+    isPathActive(item.path) ||
+    item.children?.some((child) => child.path && route.path === child.path);
   return {
     "text-verde_53864c bg-verde_F2F4E9": ativo,
     "text-cinza_363637 hover:text-verde_53864c hover:bg-verde_F2F4E9": !ativo,

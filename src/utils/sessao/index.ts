@@ -10,15 +10,21 @@ const setBearerAuthorization = () => {
     `Bearer ${estaAutenticado()}`;
 };
 
-const setToken = (token: string) => {
+const setToken = (token: string, redirectPath = "/home") => {
   localStorage.setItem("token", JSON.stringify(token));
-  window.location.href = "/home";
+  useClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  window.location.href = redirectPath;
 };
 
-const limparSessao = () => {
+const limparSessao = (redirectPath?: string) => {
   localStorage.removeItem("token");
   useClient.defaults.headers.common["Authorization"] = "";
-  window.location.href = "/login";
+  if (redirectPath) {
+    if (redirectPath === "/login" && globalThis.location.pathname !== "/login") {
+      sessionStorage.setItem("redirectAfterLogin", globalThis.location.pathname);
+    }
+    window.location.href = redirectPath;
+  }
 };
 
 const getTokenInfo = () => {

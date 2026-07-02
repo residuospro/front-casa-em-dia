@@ -1,12 +1,14 @@
 import { useClient } from "@/client";
 import { useMinhaFamilia } from "./useMinhaFamilia";
 import type { AxiosResponse } from "axios";
-import type { IFamilia, IFamiliaPessoa } from "./tipagem";
+import type { IFamilia } from "./tipagem";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import { usePerfil } from "@/composables/usePerfil";
+import type { IOpcoes } from "@/utils/interfaces";
 
 export const useApiMinhaFamilia = () => {
-  const { dataFamilia, abrirModalDeletar } = useMinhaFamilia();
+  const { dataFamilia, abrirModalDeletar, opcoesFamiliares } =
+    useMinhaFamilia();
   const { perfil } = usePerfil();
 
   const obterFamilia = async () => {
@@ -27,5 +29,13 @@ export const useApiMinhaFamilia = () => {
     abrirModalDeletar.value = false;
   };
 
-  return { obterFamilia, deletarFamilia };
+  const obterOpcoesFamiliares = async () => {
+    const resposta: AxiosResponse<IOpcoes[]> = await useClient.get(
+      `/families/${perfil.value.familiaId}/membros/opcoes`,
+    );
+
+    opcoesFamiliares.value = resposta.data;
+  };
+
+  return { obterFamilia, deletarFamilia, obterOpcoesFamiliares };
 };

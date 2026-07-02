@@ -1,8 +1,10 @@
+import { useRoute } from "vue-router";
 import { useLogin } from "./useLogin";
 import { useClient } from "@/client/index";
 import { useSessao } from "@/utils/sessao";
 
 export const useApiLogin = () => {
+  const route = useRoute();
   const { usuario } = useLogin();
   const { setToken } = useSessao();
 
@@ -15,7 +17,10 @@ export const useApiLogin = () => {
     console.log("res", resposta);
 
     if (resposta.status === 200) {
-      setToken(resposta.data.accessToken);
+      const redirectStorage = sessionStorage.getItem("redirectAfterLogin");
+      sessionStorage.removeItem("redirectAfterLogin");
+      const redirect = (route.query.redirect as string) || redirectStorage || "/home";
+      setToken(resposta.data.accessToken, redirect);
     }
   };
 

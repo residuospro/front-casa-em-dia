@@ -21,8 +21,8 @@ const isRotaIgnorada = (url?: string): boolean => {
 
   const rotasIgnoradas = [
     /^\/notifications$/,
+    /^\/users\/me\/perfil$/,
     /^\/notifications\/[^/]+\/read$/,
-
   ];
   return rotasIgnoradas.some((regex) => regex.test(pathname));
 };

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex xl:!flex-row xl:!items-center justify-between w-full flex-col gap-3"
+    class="flex xl:!flex-row xl:!items-center justify-between flex-col gap-3"
   >
     <div class="flex gap-3">
       <button
@@ -37,7 +37,13 @@
     </div>
 
     <button
-      class="px-4 py-2 rounded-full border text-sm border-[#53864C] text-[#53864C] sm:w-full"
+      :disabled="notificacoes.length === 0"
+      class="px-4 py-2 rounded-full border text-sm sm:w-full"
+      :class="
+        notificacoes.length > 0
+          ? 'border-[#53864C] text-[#53864C]'
+          : 'border-slate-300 text-slate-400'
+      "
       @click="marcarTodasComoLido"
     >
       Marcar todas como lidas

@@ -35,9 +35,7 @@ if (estaAutenticado()) {
 }
 
 onMounted(() => {
-  const estaDeslogado =
-    globalThis.location.pathname === "/login" ||
-    globalThis.location.pathname === "/cadastro";
+  const estaDeslogado = !localStorage.getItem("token");
 
   if (estaDeslogado) return;
 

@@ -13,25 +13,26 @@ const router = createRouter({
   routes,
 });
 
-//@ts-ignore
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from) => {
   const requiresAuth = to.meta.auth !== false;
 
   if (requiresAuth && tokenExpirado() && to.path !== "/login") {
     limparSessao();
-    return next("/login");
+    return { path: "/login", query: { redirect: to.fullPath } };
   }
 
   if (!tokenExpirado() && to.path === "/login") {
     setBearerAuthorization();
-    return next("/home");
+    return "/home";
   }
 
   if (!tokenExpirado() && !["/login", "/cadastro"].includes(to.path)) {
-    await obterPerfil();
+    try {
+      await obterPerfil();
+    } catch {
+      console.error("Erro ao obter perfil durante navegação");
+    }
   }
-
-  return next();
 });
 
 export default router;

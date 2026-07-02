@@ -33,13 +33,12 @@
     <div v-else class="relative">
       <input
         :type="type"
-        :step="type === 'time' ? 2 : 0"
+        :step="type === 'time' ? 60 : 0"
         :placeholder="placeholder"
         :value="modelValue"
         @change="onChange"
         @input="onChange"
         class="w-full px-4 py-2 rounded-lg border bg-white text-black border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#53864C] appearance-none cursor-pointer pr-10"
-        :class="{ 'dark-icon': type === 'date' || type === 'time' }"
       />
 
       <div
@@ -91,9 +90,3 @@ const onChange = (event: Event) => {
   }
 };
 </script>
-
-<style scoped>
-.dark-icon::-webkit-calendar-picker-indicator {
-  filter: invert(1) brightness(2);
-}
-</style>

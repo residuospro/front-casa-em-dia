@@ -1,11 +1,11 @@
 <template>
-  <Notificacao />
+  <Tarefas />
 </template>
 
 <route lang="json">
 {
   "meta": {
-    "title": "Notificação",
+    "title": "Minhas tarefas",
     "layout": "Default",
     "auth": true
   }
@@ -13,5 +13,5 @@
 </route>
 
 <script setup lang="ts">
-import Notificacao from "@/components/notificacao/index.vue";
+import Tarefas from "@/components/minhasTarefas/tarefas/index.vue";
 </script>

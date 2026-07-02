@@ -1,5 +1,6 @@
 <template>
-  <div class="w-1/2 flex flex-col justify-start gap-3 px-2 sm:w-full">
+  <div class="flex flex-col justify-center gap-3 px-2 items-center">
+    
     <Header />
 
     <Filtro />

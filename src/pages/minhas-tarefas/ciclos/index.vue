@@ -1,11 +1,11 @@
 <template>
-  <Notificacao />
+  <Ciclos />
 </template>
 
 <route lang="json">
 {
   "meta": {
-    "title": "Notificação",
+    "title": "Ciclos",
     "layout": "Default",
     "auth": true
   }
@@ -13,5 +13,5 @@
 </route>
 
 <script setup lang="ts">
-import Notificacao from "@/components/notificacao/index.vue";
+import Ciclos from "@/components/minhasTarefas/ciclos/index.vue";
 </script>
