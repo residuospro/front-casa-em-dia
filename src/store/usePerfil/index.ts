@@ -1,6 +1,7 @@
 import { useClient } from "@/client";
 import type { AxiosResponse } from "axios";
 import { ref } from "vue";
+import { defineStore } from "pinia";
 
 interface Perfil {
   nome: string;
@@ -12,17 +13,17 @@ interface Perfil {
   id: string;
 }
 
-const perfil = ref<Perfil>({
-  nome: "",
-  fotoPerfil: null,
-  familia: "",
-  totalMembros: 0,
-  permissao: "ADMIN",
-  familiaId: "",
-  id: "",
-});
+export const usePerfil = defineStore("perfil", () => {
+  const perfil = ref<Perfil>({
+    nome: "",
+    fotoPerfil: null,
+    familia: "",
+    totalMembros: 0,
+    permissao: "ADMIN",
+    familiaId: "",
+    id: "",
+  });
 
-export const usePerfil = () => {
   const obterPerfil = async () => {
     const resposta: AxiosResponse<Perfil> =
       await useClient.get("/users/me/perfil");
@@ -31,9 +32,8 @@ export const usePerfil = () => {
 
     console.log("perfil", perfil.value);
   };
-
   return {
     perfil,
     obterPerfil,
   };
-};
+});

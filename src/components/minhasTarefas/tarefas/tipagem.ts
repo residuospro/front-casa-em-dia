@@ -1,4 +1,9 @@
-import type { Categorias, TipoTarefa, ModoDistribuicao } from "@/utils/tipagem";
+import type {
+  Categorias,
+  TipoTarefa,
+  ModoDistribuicao,
+  StatusExecucao,
+} from "@/utils/tipagem";
 
 type Tarefa = {
   id: string;
@@ -10,11 +15,18 @@ type Tarefa = {
   categoria: Categorias;
   modoDistribuicao: ModoDistribuicao | null;
   responsavelAtualId: string | null;
+  responsavelAtual: {
+    id: string;
+    nome: string;
+    fotoPerfil: string;
+    genero: "MASCULINO" | "FEMININO";
+  };
   pontos: number;
   ativo: boolean;
   criadoPorId: string;
   criadoEm: Date;
   atualizadoEm: Date;
+  execucoes: Execucao[];
 };
 
 type Paginacao = {
@@ -30,7 +42,11 @@ type Filtro = {
   categoria: Categorias | null;
   modoDistribuicao: ModoDistribuicao | null;
   responsavelAtualId: string;
+  dataInicial: string | null;
+  dataFinal: string | null;
   ativo: boolean | null;
+  status: StatusExecucao[] | null;
+  busca: string | null;
 };
 
 type Direcao = "desc" | "asc";
@@ -53,21 +69,16 @@ interface ParametrosTarefas {
   paginacao: Paginacao;
 }
 
-interface Agendamento {
+interface Execucao {
   id: string;
   tarefaId: string;
-  diaSemana: number;
-  horario: string;
+  data: string | Date;
+  status: StatusExecucao;
+  pontosObtidos: number | null;
+  concluidoPorId: string | null;
+  concluidoEm: string | null;
+  notificacaoCriada: boolean;
+  criadoEm: string | null;
 }
 
-interface AgendamentoComData extends Agendamento {
-  dataAgendamento: Date;
-}
-
-export type {
-  IResponseTarefa,
-  Filtro,
-  ParametrosTarefas,
-  Agendamento,
-  AgendamentoComData,
-};
+export type { IResponseTarefa, Filtro, ParametrosTarefas, Execucao, Tarefa };

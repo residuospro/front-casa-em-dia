@@ -1,10 +1,10 @@
 <template>
-  <NovaTarefa acao="criar" />
+  <NovaTarefa :acao="'editar'" />
 </template>
 
 <route lang="json">
 {
-  "name": "minhas-tarefas.nova-tarefa",
+  "name": "minhas-tarefas.editar-tarefa",
   "meta": {
     "title": "Ciclos",
     "layout": "Default",

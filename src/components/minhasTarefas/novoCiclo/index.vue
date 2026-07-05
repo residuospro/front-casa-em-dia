@@ -12,7 +12,7 @@
       </div>
       <Button
         @click="router.push('/minhas-tarefas/ciclos')"
-        class="!w-1/5 sm:!w-full"
+        class="!w-1/6 sm:!w-full"
         >Visualizar Ciclos</Button
       >
     </div>

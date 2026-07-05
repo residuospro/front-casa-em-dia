@@ -136,7 +136,7 @@ import { mdiChevronDown } from "@mdi/js";
 import { useRoute } from "vue-router";
 import { useSidebar, type NavItem } from "./useSidebar";
 import { ref, reactive, onMounted, onUnmounted } from "vue";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 
 const { perfil } = usePerfil();
 

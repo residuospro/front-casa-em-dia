@@ -1,12 +1,22 @@
 import { useClient } from "@/client";
 import { useTarefas } from "./useTarefas";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import type { IResponseTarefa } from "./tipagem";
+import { useRespostaApi } from "@/utils/manipularRespotasApi";
+import { storeToRefs } from "pinia";
 
 export const useApiTarefas = () => {
-  const { parametros, manipularResposta, resetarParametros } = useTarefas();
-  const { perfil } = usePerfil();
+  const {
+    parametros,
+    tarefaSelecionada,
+    abrirModalDeletar,
+    abrirModalFiltro,
+    filtrado,
+    manipularResposta,
+    resetarParametros,
+  } = useTarefas();
+  const { perfil } = storeToRefs(usePerfil());
 
   const chamarApi = async () => {
     try {
@@ -21,6 +31,12 @@ export const useApiTarefas = () => {
     } catch {
       resetarParametros();
     }
+  };
+
+  const obterPorFiltro = async () => {
+    await chamarApi();
+    abrirModalFiltro.value = false;
+    filtrado.value = true;
   };
 
   const obterDadosPorOrdenacao = async (ordenacao: {
@@ -44,10 +60,22 @@ export const useApiTarefas = () => {
     await chamarApi();
   };
 
+  const deleteTarefa = async () => {
+    const resposta: AxiosResponse = await useClient.delete(
+      `/tarefas/${perfil.value.familiaId}/tarefas/${tarefaSelecionada.value?.id}`,
+    );
+
+    useRespostaApi(resposta.status);
+    abrirModalDeletar.value = false;
+    await chamarApi();
+  };
+
   return {
     chamarApi,
     obterDadosPorOrdenacao,
     obterDadosPorItensPorPagina,
     obterDadosPorPagina,
+    deleteTarefa,
+    obterPorFiltro,
   };
 };

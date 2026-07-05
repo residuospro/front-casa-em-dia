@@ -3,7 +3,7 @@ import { useMinhaFamilia } from "./useMinhaFamilia";
 import type { AxiosResponse } from "axios";
 import type { IFamilia } from "./tipagem";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import type { IOpcoes } from "@/utils/interfaces";
 
 export const useApiMinhaFamilia = () => {
@@ -21,7 +21,7 @@ export const useApiMinhaFamilia = () => {
 
   const deletarFamilia = async () => {
     const resposta: AxiosResponse = await useClient.delete(
-      `/families/${perfil.value.familiaId}`,
+      `/families/${perfil.familiaId}`,
     );
 
     useRespostaApi(resposta.status);
@@ -31,7 +31,7 @@ export const useApiMinhaFamilia = () => {
 
   const obterOpcoesFamiliares = async () => {
     const resposta: AxiosResponse<IOpcoes[]> = await useClient.get(
-      `/families/${perfil.value.familiaId}/membros/opcoes`,
+      `/families/${perfil.familiaId}/membros/opcoes`,
     );
 
     opcoesFamiliares.value = resposta.data;

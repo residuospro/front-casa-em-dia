@@ -24,12 +24,12 @@
         </p>
       </div>
 
-      <button
+      <Button
         @click="router.push('/minhas-tarefas/novo-ciclo')"
-        class="h-10 px-5 rounded-xl bg-[#53864C] text-white text-sm font-medium hover:scale-[1.02] transition sm:w-full"
+        class="!w-1/12 sm:!w-full"
       >
         + Novo ciclo
-      </button>
+      </Button>
     </div>
 
     <!-- Ciclo ativo -->
@@ -177,6 +177,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUtils } from "@/utils/useUtils";
 import ModalDeletar from "@/components/modal/index.vue";
+import Button from "@/components/botao/index.vue";
 
 const router = useRouter();
 const { formatarData } = useUtils();
@@ -187,7 +188,6 @@ const {
   opcoesMenu,
   ciclo,
   abrirModalDeletar,
-  ativo,
   calcularProgressoCiclo,
   diasDesdeInicio,
   calcularProximaRenovacao,

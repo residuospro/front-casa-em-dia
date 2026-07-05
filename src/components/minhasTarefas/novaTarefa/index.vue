@@ -1,12 +1,33 @@
 <template>
   <div class="w-full bg-white rounded-2xl p-6">
-    <div class="mb-5">
-      <h1 class="text-2xl font-semibold text-[#1C1F1F]">Nova tarefa</h1>
+    <div
+      class="flex flex-row items-center justify-between mb-5 sm:flex-col gap-2 sm:items-start"
+    >
+      <div class="flex flex-col gap-1">
+        <h1 class="text-2xl font-semibold text-[#1C1F1F]">
+          {{ acao === "criar" ? "Nova tarefa" : "Editar tarefa" }}
+        </h1>
 
-      <p class="text-sm text-black/50">Crie as suas tarefas aqui.</p>
+        <p class="text-sm text-black/50">
+          {{
+            acao === "criar"
+              ? "Crie as suas tarefas aqui."
+              : "Edite as informações da tarefa."
+          }}
+        </p>
+      </div>
+
+      <Button
+        variant="primary"
+        type="button"
+        class="!w-1/6 sm:!w-full"
+        @click="router.push('/minhas-tarefas')"
+      >
+        Visualizar tarefas
+      </Button>
     </div>
 
-    <div class="flex flex-row gap-2">
+    <div class="flex flex-row gap-2 sm:flex-col md:!flex-col">
       <div class="border border-[#ECE4D8] rounded-2xl overflow-hidden flex-1">
         <div class="p-5 space-y-5">
           <h2 class="font-semibold">Informações da tarefa</h2>
@@ -25,7 +46,7 @@
             placeholder="Descreva a tarefa..."
           />
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:grid-rows-2">
             <Select
               label="Tipo de tarefa *"
               v-model="form.tipo"
@@ -44,7 +65,7 @@
           <div class="">
             <p class="text-sm mb-2">Como será a distribuição?</p>
 
-            <div class="flex flex-row items-center gap-2 w-full">
+            <div class="flex flex-row items-center gap-2 w-full sm:flex-col">
               <button
                 type="button"
                 @click="form.modoDistribuicao = 'FIXA'"
@@ -73,7 +94,7 @@
                 :class="{
                   'border-[#53864C] bg-[#EEF5EA]':
                     form.modoDistribuicao === 'REVEZAMENTO',
-                  'bg-slate-400': form.tipo === 'PESSOAL',
+                  'bg-gray-200': form.tipo === 'PESSOAL',
                 }"
               >
                 <div class="flex flex-row items-center gap-1">
@@ -115,56 +136,30 @@
               Defina em quais dias e horários essa tarefa será executada.
             </p>
 
-            <div class="grid grid-cols-2 gap-3">
-              <Input
-                label="Horário"
-                type="time"
-                v-model="novoAgendamento.horario"
-              />
-
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:grid-rows-2">
               <ce-date-picker
                 range
                 modal
                 id="periodo-nova-tarefa"
                 label="Período"
                 format="yyyy-MM-dd"
+                v-model:start="dataInicio"
+                v-model:end="dataFim"
                 @update:start="(valor) => onUpdateStart(valor as string)"
                 @update:end="(valor) => onUpdateEnd(valor as string)"
               />
+
+              <Input label="Horário" type="time" v-model="horario" />
             </div>
 
-            <Button type="button" variant="outline" @click="() => {}">
+            <Button
+              type="button"
+              variant="outline"
+              class="!w-full"
+              @click="gerarExecucoes"
+            >
               Adicionar horário
             </Button>
-
-            <!-- <div
-              v-if="form.agendamentos.length"
-              class="space-y-2 max-h-[15rem] overflow-auto"
-            >
-              <div
-                v-for="(item, index) in form.agendamentos"
-                :key="index"
-                class="flex items-center justify-between border rounded-xl p-3"
-              >
-                <div>
-                  <p class="font-medium text-sm">
-                    {{ nomeDia(item.diaSemana || 0) }}
-                  </p>
-
-                  <p class="text-xs text-black/50">
-                    {{ item.horario }}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  @click="removerAgendamento(index)"
-                  class="text-red-500 text-sm"
-                >
-                  Remover
-                </button>
-              </div>
-            </div> -->
           </div>
 
           <div class="border-t border-[#ECE4D8] pt-5">
@@ -206,8 +201,8 @@
             <ResumoItem
               label="Frequência"
               :value="
-                form.agendamentos.length
-                  ? `${form.agendamentos.length} horários`
+                form.execucoes.length
+                  ? `${form.execucoes.length} horários`
                   : '-'
               "
             />
@@ -226,14 +221,15 @@
           </div>
         </div>
 
-        <div class="flex items-end gap-3">
+        <div class="flex justify-end w-full gap-3 sm:flex-col">
           <Button variant="outline" type="button">Cancelar</Button>
 
           <Button
-            class="px-8 h-11 rounded-xl bg-[#53864C] text-white"
-            @click="criarNovaTarefa"
+            variant="primary"
+            type="button"
+            @click="acao === 'criar' ? criarNovaTarefa() : editarTarefa()"
           >
-            Salvar tarefa
+            {{ acao === "criar" ? "Criar tarefa" : "Salvar alterações" }}
           </Button>
         </div>
       </div>
@@ -257,8 +253,14 @@ import { useApiCiclos } from "../ciclos/useApiCiclos";
 import { useNovaTarefa } from "./useNovaTarefa";
 import { computed, onMounted, watch } from "vue";
 import { useApiNovaTarefa } from "./useApiNovaTarefa";
-import { CeDatePicker } from "@comercti/vue-components";
+import { CeDatePicker } from "@comercti/vue-components-hmg";
+import { useRouter } from "vue-router";
 
+const props = defineProps<{
+  acao: "criar" | "editar";
+}>();
+
+const router = useRouter();
 const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const { opcoesFamiliares } = useMinhaFamilia();
 const { obterCicloAtivo } = useApiCiclos();
@@ -267,15 +269,16 @@ const {
   categorias,
   tipos,
   form,
-  novoAgendamento,
-  diasSemana,
+  horario,
+  dataFim,
+  dataInicio,
+  idTarefa,
+  gerarExecucoes,
   onUpdateStart,
   onUpdateEnd,
-  removerAgendamento,
-  nomeDia,
 } = useNovaTarefa();
 
-const { criarNovaTarefa } = useApiNovaTarefa();
+const { criarNovaTarefa, editarTarefa, obterTarefaPorId } = useApiNovaTarefa();
 
 onMounted(async () => {
   await Promise.all([obterOpcoesFamiliares(), obterCicloAtivo()]);
@@ -291,12 +294,26 @@ const responsavel = computed(
 watch(
   () => form.value.tipo,
   (valor) => {
-    console.log("valor", valor);
-
     if (valor === "PESSOAL") {
       form.value.modoDistribuicao = "FIXA";
     }
   },
   { deep: true },
 );
+
+onMounted(async () => {
+  if (props.acao === "editar") {
+    const id = router.currentRoute.value.query.id as string;
+    console.log("id", id);
+
+    idTarefa.value = id;
+    await obterTarefaPorId(id);
+  }
+});
 </script>
+
+<style>
+.border-gray-300 {
+  border: 1px solid #334155 !important;
+}
+</style>

@@ -24,6 +24,16 @@ const ModoDistribuicaoValues = {
   REVEZAMENTO: "REVEZAMENTO",
 } as const;
 
+const StatusExecucaoValues = {
+  AGENDADA: "AGENDADA",
+  CONCLUIDA: "CONCLUIDA",
+  ATRASADA: "ATRASADA",
+  CANCELADA: "CANCELADA",
+} as const;
+
+type StatusExecucao =
+  (typeof StatusExecucaoValues)[keyof typeof StatusExecucaoValues];
+
 type TipoPessoa = (typeof TipoPessoaValues)[keyof typeof TipoPessoaValues];
 type Categorias = (typeof CategoriaValues)[keyof typeof CategoriaValues];
 type TipoTarefa = (typeof TipoTarefaValues)[keyof typeof TipoTarefaValues];
@@ -35,8 +45,10 @@ export {
   TipoPessoaValues,
   TipoTarefaValues,
   ModoDistribuicaoValues,
+  StatusExecucaoValues,
   type ModoDistribuicao,
   type TipoPessoa,
   type Categorias,
   type TipoTarefa,
+  type StatusExecucao,
 };

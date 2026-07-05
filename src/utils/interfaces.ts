@@ -10,6 +10,7 @@ interface IResponseError {
 interface IOpcoes {
   text: string;
   value: string;
+  fotoPerfil: string;
 }
 
 export type { IResponseError, IOpcoes };

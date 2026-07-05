@@ -1,12 +1,4 @@
-const StatusExecucaoValues = {
-  AGENDADA: "AGENDADA",
-  CONCLUIDA: "CONCLUIDA",
-  ATRASADA: "ATRASADA",
-  CANCELADA: "CANCELADA",
-} as const;
-
-type StatusExecucao =
-  (typeof StatusExecucaoValues)[keyof typeof StatusExecucaoValues];
+import type { StatusExecucao } from "@/utils/tipagem";
 
 type Execucao = {
   data: string;
@@ -23,7 +15,7 @@ type FormNovaTarefa = {
   responsavelAtualId: string | null;
   pontos: number | null;
   cicloId: string | null;
-  agendamentos: Execucao[];
+  execucoes: Execucao[];
 };
 
-export type { FormNovaTarefa, Execucao, StatusExecucao };
+export type { FormNovaTarefa, Execucao };

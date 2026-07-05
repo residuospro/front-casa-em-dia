@@ -78,6 +78,7 @@ const { dataFamilia, editando, abrirModalDeletar, permitirEdicao } =
 const { obterFamilia, deletarFamilia } = useApiMinhaFamilia();
 
 onMounted(async () => {
+  console.log("c");
   await obterFamilia();
 });
 </script>

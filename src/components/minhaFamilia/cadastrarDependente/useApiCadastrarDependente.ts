@@ -1,6 +1,6 @@
 import { useCadastrarDependente } from "./useCadastrarDependente";
 import { useClient } from "@/client";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { useApiListaMembros } from "@/components/minhaFamilia/lista/useApiListaMembros";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import { useUtils } from "@/utils/useUtils";
@@ -18,7 +18,7 @@ export const useApiCadastrarDependente = () => {
     );
 
     useRespostaApi(resposta.status);
-    await listarMembros(perfil.value.familiaId);
+    await listarMembros(perfil.familiaId);
     limparNovoPedentende();
   };
   return {

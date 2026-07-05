@@ -27,7 +27,7 @@ const props = withDefaults(
 
 const buttonClasses = computed(() => {
   const base =
-    "w-full py-2 rounded-lg font-semibold transition disabled:opacity-60 active:scale-90";
+    "w-auto p-2 rounded-lg font-semibold transition disabled:opacity-60 active:scale-90";
 
   const variants = {
     primary: "text-white bg-[#53864C]",

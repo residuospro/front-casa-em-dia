@@ -1,14 +1,15 @@
 import { ref } from "vue";
+import router from "@/router";
 import type {
   Filtro,
   ParametrosTarefas,
   IResponseTarefa,
-  Agendamento,
-  AgendamentoComData,
+  Execucao,
 } from "./tipagem";
 import type {
   Categorias,
   ModoDistribuicao,
+  StatusExecucao,
   TipoTarefa,
   TipoTarefaValues,
 } from "@/utils/tipagem";
@@ -18,6 +19,10 @@ import {
   mdiListBoxOutline,
   mdiHomeEditOutline,
   mdiAccountSchoolOutline,
+  mdiCalendarMonthOutline,
+  mdiCheckCircleOutline,
+  mdiClockAlertOutline,
+  mdiCloseCircleOutline,
 } from "@mdi/js";
 
 const criarFiltroInicial = (): Filtro => ({
@@ -27,10 +32,31 @@ const criarFiltroInicial = (): Filtro => ({
   modoDistribuicao: null,
   responsavelAtualId: "",
   ativo: null,
+  dataInicial: null,
+  dataFinal: null,
+  status: null,
+  busca: null,
 });
 
-const filtroInicial: Filtro = criarFiltroInicial();
+const modoExibicao = ref<"tabela" | "calendario">("tabela");
 
+const setModoExibicao = (modo: "tabela" | "calendario") => {
+  modoExibicao.value = modo;
+  localStorage.setItem("modoExibicao", modo);
+};
+
+const carregarModoExibicao = () => {
+  const salvo = localStorage.getItem("modoExibicao");
+  if (salvo === "tabela" || salvo === "calendario") {
+    modoExibicao.value = salvo;
+  }
+};
+
+const filtrado = ref(false);
+const filtroInicial: Filtro = criarFiltroInicial();
+const abrirModalDeletar = ref(false);
+const abrirModalFiltro = ref(false);
+const tarefaSelecionada = ref<{ id: string; titulo: string } | null>(null);
 const estadoInicial: ParametrosTarefas = {
   paginacao: {
     pagina: 1,
@@ -60,6 +86,12 @@ const opcoesMenu = [
   { label: "Excluir", value: "excluir", color: "#ff0000" },
 ];
 
+const opcoesStatusTarefa = [
+  { label: "Atrasadas", bg: "#FEE2E2", cor: "#DC2626" },
+  { label: "Pra hoje", bg: "#FFF7ED", cor: "#EA580C" },
+  { label: "Agendadas", bg: "#DCFCE7", cor: "#16A34A" },
+];
+
 const options = [5, 10, 25, 50, 100];
 const headers = [
   { text: "Tarefa", value: "titulo", sortable: true },
@@ -67,7 +99,7 @@ const headers = [
   { text: "Tipo", value: "tipo", sortable: true },
   { text: "Responsável", value: "responsavelAtual", sortable: true },
   { text: "Pontos", value: "pontos", sortable: false },
-  { text: "Agenda", value: "agendamentos", sortable: false },
+  { text: "Agenda", value: "execucoes", sortable: false },
   { text: "Status", value: "ativo", sortable: true },
   { text: "Ações", value: "acoes", sortable: false, width: "5rem" },
 ];
@@ -80,6 +112,7 @@ const manipularResposta = (res: IResponseTarefa) => {
 
 const resetarParametros = () => {
   parametros.value = criarEstadoInicial();
+  filtrado.value = false;
 };
 
 const setarIconePorCategoria = (item: Categorias) => {
@@ -156,86 +189,203 @@ const getTagTarefaStyle = (tipo?: TipoTarefa, modo?: ModoDistribuicao) => {
   };
 };
 
-const obterProximoAgendamento = (
-  agendamentos: Agendamento[],
-  agora = new Date(),
-): Agendamento | null => {
-  if (!agendamentos.length) return null;
+const obterProximaExecucao = (execucoes: Execucao[]): Execucao | null => {
+  if (!execucoes.length) return null;
 
-  const diaAtual = agora.getDay();
-  const horaAtual = agora.getHours();
-  const minutoAtual = agora.getMinutes();
+  const agora = new Date();
 
-  const candidatos: AgendamentoComData[] = agendamentos.map((agendamento) => {
-    const [horaString, minutoString] = agendamento.horario.split(":");
+  const futuras = execucoes
+    .filter(
+      (e) =>
+        e.status === "AGENDADA" &&
+        new Date(e.data).getTime() >= agora.getTime(),
+    )
+    .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
 
-    const hora = Number(horaString ?? 0);
-    const minuto = Number(minutoString ?? 0);
+  if (futuras.length) {
+    return futuras[0] || null;
+  }
 
-    let diasAteAgendamento = agendamento.diaSemana - diaAtual;
-
-    if (diasAteAgendamento < 0) {
-      diasAteAgendamento += 7;
-    }
-
-    if (
-      diasAteAgendamento === 0 &&
-      (hora < horaAtual || (hora === horaAtual && minuto <= minutoAtual))
-    ) {
-      diasAteAgendamento = 7;
-    }
-
-    const dataAgendamento = new Date(agora);
-
-    dataAgendamento.setDate(agora.getDate() + diasAteAgendamento);
-
-    dataAgendamento.setHours(hora, minuto, 0, 0);
-
-    return {
-      ...agendamento,
-      dataAgendamento,
-    };
-  });
-
-  const proximo = candidatos.sort(
-    (a, b) => a.dataAgendamento.getTime() - b.dataAgendamento.getTime(),
-  )[0];
-
-  return proximo ?? null;
+  return (
+    [...execucoes].sort(
+      (a, b) => new Date(b.data).getTime() - new Date(a.data).getTime(),
+    )[0] || null
+  );
 };
 
-const formatarAgendamento = (agendamento: Agendamento | null) => {
-  if (!agendamento) return "";
+const formatarExecucao = (execucao: Execucao | null) => {
+  if (!execucao) {
+    return {
+      titulo: "",
+      subtitulo: "",
+    };
+  }
+
+  const data = new Date(execucao.data);
 
   const hoje = new Date();
-  const diaAtual = hoje.getDay();
+  const inicioHoje = new Date(hoje);
+  inicioHoje.setHours(0, 0, 0, 0);
 
-  const diferenca =
-    agendamento.diaSemana - diaAtual < 0
-      ? agendamento.diaSemana - diaAtual + 7
-      : agendamento.diaSemana - diaAtual;
+  const amanha = new Date(inicioHoje);
+  amanha.setDate(amanha.getDate() + 1);
+
+  const somenteData = new Date(data);
+  somenteData.setHours(0, 0, 0, 0);
+
+  const hora = data.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   let dia = "";
 
-  if (diferenca === 0) {
+  if (somenteData.getTime() === inicioHoje.getTime()) {
     dia = "Hoje";
-  } else if (diferenca === 1) {
+  } else if (somenteData.getTime() === amanha.getTime()) {
     dia = "Amanhã";
   } else {
-    const diasSemana = [
-      "Domingo",
-      "Segunda",
-      "Terça",
-      "Quarta",
-      "Quinta",
-      "Sexta",
-      "Sábado",
-    ];
+    dia = data.toLocaleDateString("pt-BR", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+    });
 
-    dia = diasSemana[agendamento.diaSemana] || "";
+    dia = dia.replace(".", "").replace(",", "").replace(" de", "");
+
+    dia = dia.charAt(0).toUpperCase() + dia.slice(1);
   }
 
-  return `${dia} às ${agendamento.horario}`;
+  const nomes = {
+    AGENDADA: "Agendada",
+    ATRASADA: "Atrasada",
+    CONCLUIDA: "Concluída",
+    CANCELADA: "Cancelada",
+  };
+
+  return {
+    titulo: `${dia} • ${hora}`,
+    subtitulo: nomes[execucao.status],
+  };
+};
+
+const obterClasseExecucao = (execucao: Execucao | null) => {
+  if (!execucao) return "";
+
+  switch (execucao.status) {
+    case "ATRASADA":
+      return {
+        text: "text-red-600",
+        border: "border-red-500",
+        dot: "bg-red-500",
+      };
+
+    case "CONCLUIDA":
+      return {
+        text: "text-green-700",
+        border: "border-green-600",
+        dot: "bg-green-600",
+      };
+
+    case "CANCELADA":
+      return {
+        text: "text-gray-500",
+        border: "border-gray-300",
+        dot: "bg-gray-400",
+      };
+
+    default: {
+      const diff = new Date(execucao.data).getTime() - new Date().getTime();
+
+      if (diff <= 1000 * 60 * 60 * 24) {
+        return {
+          text: "text-[#F5A623]",
+          border: "border-[#F5A623]",
+          dot: "bg-[#F5A623]",
+        };
+      }
+
+      return {
+        text: "text-green-700",
+        border: "border-green-700",
+        dot: "bg-green-700",
+      };
+    }
+  }
+};
+
+const executarOpcoesMenu = (acao: string, id: string, titulo: string) => {
+  const maps = {
+    editar: () => {
+      router.push({ name: "minhas-tarefas.editar-tarefa", query: { id } });
+    },
+    excluir: () => {
+      abrirModalDeletar.value = true;
+      tarefaSelecionada.value = {
+        id,
+        titulo,
+      };
+    },
+  };
+
+  const action = maps[acao as keyof typeof maps];
+
+  if (action) {
+    action();
+  }
+};
+
+const statusExecucao = [
+  {
+    text: "Agendada",
+    value: "AGENDADA",
+    icon: mdiCalendarMonthOutline,
+    color: "#3B82F6",
+    background: "#EFF6FF",
+  },
+  {
+    text: "Concluída",
+    value: "CONCLUIDA",
+    icon: mdiCheckCircleOutline,
+    color: "#22C55E",
+    background: "#F0FDF4",
+  },
+  {
+    text: "Atrasada",
+    value: "ATRASADA",
+    icon: mdiClockAlertOutline,
+    color: "#F59E0B",
+    background: "#FFFBEB",
+  },
+  {
+    text: "Cancelada",
+    value: "CANCELADA",
+    icon: mdiCloseCircleOutline,
+    color: "#A78BFA",
+    background: "#F5F3FF",
+  },
+] as const;
+
+const toggleStatus = (status: StatusExecucao) => {
+  if (!parametros.value.filtro.status) {
+    parametros.value.filtro.status = [];
+  }
+
+  const index = parametros.value.filtro.status.indexOf(status);
+
+  if (index >= 0) {
+    parametros.value.filtro.status.splice(index, 1);
+
+    if (parametros.value.filtro.status.length === 0) {
+      parametros.value.filtro.status = null;
+    }
+  } else {
+    parametros.value.filtro.status.push(status);
+  }
+};
+
+const statusSelecionado = (status: StatusExecucao) => {
+  return parametros.value.filtro.status?.includes(status) ?? false;
 };
 
 export const useTarefas = () => {
@@ -246,12 +396,25 @@ export const useTarefas = () => {
     headers,
     opcoesMenu,
     options,
+    abrirModalDeletar,
+    tarefaSelecionada,
+    abrirModalFiltro,
+    statusExecucao,
+    filtrado,
+    modoExibicao,
+    opcoesStatusTarefa,
+    setModoExibicao,
+    carregarModoExibicao,
+    toggleStatus,
+    statusSelecionado,
     setarIconePorCategoria,
     getCategoriaStyle,
     getTagTarefaStyle,
     manipularResposta,
     resetarParametros,
-    obterProximoAgendamento,
-    formatarAgendamento,
+    obterProximaExecucao,
+    formatarExecucao,
+    obterClasseExecucao,
+    executarOpcoesMenu,
   };
 };

@@ -143,7 +143,7 @@
 <script setup lang="ts">
 import { watch, watchEffect } from "vue";
 import { useApiListaMembros } from "./useApiListaMembros";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { useListaMembros } from "./useListaMembros";
 import { useUtils } from "@/utils/useUtils";
 import MenuContexto from "@/components/menuContexto/index.vue";
@@ -177,7 +177,7 @@ const {
 const { parseFotoPerfil } = useUtils();
 
 watchEffect(async () => {
-  if (perfil.value.familiaId) await listarMembros(perfil.value.familiaId);
+  if (perfil.familiaId) await listarMembros(perfil.familiaId);
 });
 
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -189,7 +189,7 @@ watch(
       if (debounceTimeout) clearTimeout(debounceTimeout);
 
       debounceTimeout = setTimeout(async () => {
-        await buscarMembroPorNomeOuEmail(valor, perfil.value.familiaId);
+        await buscarMembroPorNomeOuEmail(valor, perfil.familiaId);
       }, 500);
     }
   },

@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import { useClient } from "@/client";
 import { useApiMinhaFamilia } from "../useApiMinhaFamilia";

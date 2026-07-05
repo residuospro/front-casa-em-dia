@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 
 const { perfil } = usePerfil();
 </script>

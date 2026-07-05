@@ -71,7 +71,7 @@ import Input from "@/components/input/index.vue";
 import Select from "@/components/select/index.vue";
 import { useCadastrarDependente } from "./useCadastrarDependente";
 import { useApiCadastrarDependente } from "./useApiCadastrarDependente";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { useMinhaFamilia } from "../useMinhaFamilia";
 
 const { cadastrarNovoDependente } = useApiCadastrarDependente();

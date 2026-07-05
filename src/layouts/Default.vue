@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen bg-[#fff] dark:bg-ce_black flex flex-col">
     <div
-      class="flex bg-[#FCFAF8] border-b border-[#ECE4D8] px-6 items-center justify-between h-16 shrink-0 z-30"
+      class="flex bg-[#FCFAF8] border-b border-[#ECE4D8] px-6 items-center justify-between h-16 shrink-0 z-20"
     >
       <button @click="toggleSidebar" class="text-cinza_363637 transition">
         <svg-icon type="mdi" :path="mdiMenu" class="w-6 h-6" />
@@ -43,19 +43,10 @@
       <Sidebar />
 
       <main
-        class="flex-1 min-w-0 relative overflow-auto"
-        :class="{ 'bg-[#F9F9F6]': !isDesktop }"
+        class="flex-1 min-w-0 relative overflow-auto bg-cover bg-center bg-no-repeat"
+        style="background-image: url(&quot;/fundoConteudo.png&quot;)"
       >
-        <img
-          v-if="isDesktop"
-          src="/fundoConteudo.png"
-          alt=""
-          class="absolute inset-0 w-full h-full object-cover"
-        />
-
-        <div class="absolute inset-0" />
-
-        <div class="relative z-10 pb-20 w-full p-4">
+        <div class="pb-20 w-full p-4">
           <router-view />
         </div>
       </main>
@@ -72,7 +63,7 @@ import { mdiMenu } from "@mdi/js";
 import { useSidebar } from "@/components/sidebar/useSidebar";
 import Sidebar from "@/components/sidebar/index.vue";
 import { ref, onMounted, onUnmounted } from "vue";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { CeBadge } from "@comercti/vue-components";
 import { useUtils } from "@/utils/useUtils";
 import NotificacaoNaoLidas from "@/components/notificacao/naoLidas/index.vue";

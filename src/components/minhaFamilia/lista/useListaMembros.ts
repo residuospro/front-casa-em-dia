@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import type { IFamiliaPessoa } from "../tipagem";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { useEditarMembro } from "../editarMembro/useEditarMembro";
 
 const { perfil } = usePerfil();

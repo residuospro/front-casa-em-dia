@@ -1,7 +1,7 @@
 import { useClient } from "@/client";
 import { useCiclos } from "./useCiclos";
 import type { IResponseCiclos } from "./type";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import type { IOpcoes, IResponseError } from "@/utils/interfaces";
@@ -12,7 +12,7 @@ export const useApiCiclos = () => {
 
   const obterCiclos = async () => {
     const resposta: AxiosResponse<IResponseCiclos[]> = await useClient.get(
-      `/ciclos/${perfil.value.familiaId}/ciclos`,
+      `/ciclos/${perfil.familiaId}/ciclos`,
     );
 
     dataCiclos.value = resposta.data;
@@ -20,7 +20,7 @@ export const useApiCiclos = () => {
 
   const deletarCiclo = async () => {
     const resposta: AxiosResponse = await useClient.delete(
-      `/ciclos/${perfil.value.familiaId}/ciclos/${ciclo.value.id}`,
+      `/ciclos/${perfil.familiaId}/ciclos/${ciclo.value.id}`,
     );
 
     useRespostaApi(resposta.status);
@@ -31,7 +31,7 @@ export const useApiCiclos = () => {
   const atualizarStatusCiclo = async (id: string, ativo: boolean) => {
     try {
       const resposta: AxiosResponse = await useClient.patch(
-        `/ciclos/${perfil.value.familiaId}/ciclos/${id}/ativo`,
+        `/ciclos/${perfil.familiaId}/ciclos/${id}/ativo`,
         {
           ativo,
         },
@@ -47,7 +47,7 @@ export const useApiCiclos = () => {
 
   const obterCicloAtivo = async () => {
     const resposta: AxiosResponse<IOpcoes[]> = await useClient.get(
-      `/ciclos/${perfil.value.familiaId}/ciclos/ativos`,
+      `/ciclos/${perfil.familiaId}/ciclos/ativos`,
     );
 
     opcaoCiclo.value = resposta.data;

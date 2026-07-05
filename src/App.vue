@@ -1,5 +1,5 @@
 <template>
-  <router-view v-slot="{ Component, route }">
+  <router-view v-slot="{ Component, route }" v-if="carregado">
     <transition name="fade-soft" mode="out-in">
       <component :is="Component" :key="route.fullPath" />
     </transition>
@@ -7,20 +7,22 @@
 
   <PWABadge />
 
-  <Loading />
+  <Loading :show-loading="!carregado" />
 </template>
 
 <script setup lang="ts">
 import PWABadge from "./components/atualizarVersaoAplicacao.vue";
 import Loading from "@/components/loading/index.vue";
 import { useSessao } from "./utils/sessao";
-import { onMounted, onUnmounted } from "vue";
+import { ref, onBeforeMount, onMounted, onUnmounted } from "vue";
 import { useSocket } from "@/composables/useSocket";
 import { useNotificacao } from "@/components/notificacao/useNotificacao.ts";
 import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts";
 import type { INotificacao } from "./components/notificacao/tipagem.ts";
+import { usePerfil } from "@/store/usePerfil";
 
 const { estaAutenticado, setBearerAuthorization } = useSessao();
+const { obterPerfil } = usePerfil();
 const {
   socket,
   notificacoes,
@@ -30,11 +32,27 @@ const {
 const { listar, obterNotificacoesNaoLidas } = useApiNotificacao();
 const { conectar } = useSocket();
 
-if (estaAutenticado()) {
+const temToken = !!localStorage.getItem("token");
+
+const carregado = ref(!temToken);
+
+if (temToken) {
   setBearerAuthorization();
 }
 
-onMounted(() => {
+onBeforeMount(async () => {
+  if (!temToken) return;
+
+  try {
+    await obterPerfil();
+  } catch (erro) {
+    console.error("Erro ao carregar perfil:", erro);
+  } finally {
+    carregado.value = true;
+  }
+});
+
+onMounted(async () => {
   const estaDeslogado = !localStorage.getItem("token");
 
   if (estaDeslogado) return;

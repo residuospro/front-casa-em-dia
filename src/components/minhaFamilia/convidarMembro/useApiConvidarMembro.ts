@@ -1,5 +1,5 @@
 import { useClient } from "@/client";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { useConvidarMembro } from "./useConvidarMembro";
 import { useApiListaMembros } from "@/components/minhaFamilia/lista/useApiListaMembros";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
@@ -11,12 +11,12 @@ export const useApiConvidarMembro = () => {
 
   const convidarMembro = async () => {
     const resposta = await useClient.post(
-      `/families/${perfil.value.familiaId}/membros`,
+      `/families/${perfil.familiaId}/membros`,
       novoMembro.value,
     );
 
     useRespostaApi(resposta.status);
-    await listarMembros(perfil.value.familiaId);
+    await listarMembros(perfil.familiaId);
     limparNovoMembro();
   };
 

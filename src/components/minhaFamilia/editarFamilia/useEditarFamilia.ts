@@ -3,7 +3,7 @@ import { useMinhaFamilia } from "../useMinhaFamilia";
 import { useClient } from "@/client";
 import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { useApiMinhaFamilia } from "../useApiMinhaFamilia";
 
 export const useEditarFamilia = () => {
@@ -14,7 +14,7 @@ export const useEditarFamilia = () => {
 
   const atualizarFamilia = async () => {
     const resposta: AxiosResponse = await useClient.put(
-      `/families/${perfil.value.familiaId}`,
+      `/families/${perfil.familiaId}`,
       { nome: nome.value },
     );
 

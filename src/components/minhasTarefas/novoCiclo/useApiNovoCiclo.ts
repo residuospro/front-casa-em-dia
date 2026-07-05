@@ -1,6 +1,6 @@
 import { useClient } from "@/client";
 import { useNovoCiclo } from "./useNovoCiclo";
-import { usePerfil } from "@/composables/usePerfil";
+import { usePerfil } from "@/store/usePerfil";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import type { AxiosResponse } from "axios";
 import type { IResponseError } from "@/utils/interfaces";
@@ -15,7 +15,7 @@ export const useApiNovoCiclo = () => {
   const criaNovoCiclo = async () => {
     try {
       const resposta: AxiosResponse = await useClient.post(
-        `/ciclos/${perfil.value.familiaId}/ciclos`,
+        `/ciclos/${perfil.familiaId}/ciclos`,
         form.value,
       );
 
@@ -30,7 +30,7 @@ export const useApiNovoCiclo = () => {
   const atualizarCiclo = async () => {
     try {
       const resposta: AxiosResponse = await useClient.put(
-        `/ciclos/${perfil.value.familiaId}/ciclos/${idCiclo.value}`,
+        `/ciclos/${perfil.familiaId}/ciclos/${idCiclo.value}`,
         form.value,
       );
 
@@ -44,7 +44,7 @@ export const useApiNovoCiclo = () => {
   const obterCicloPorId = async () => {
     try {
       const resposta: AxiosResponse<IResponseCiclos> = await useClient.get(
-        `/ciclos/${perfil.value.familiaId}/ciclos/${idCiclo.value}`,
+        `/ciclos/${perfil.familiaId}/ciclos/${idCiclo.value}`,
       );
 
       form.value = {

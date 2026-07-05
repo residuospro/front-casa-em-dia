@@ -1,6 +1,10 @@
 import { ref } from "vue";
-import type { Execucao, FormNovaTarefa, StatusExecucao } from "./tipagem";
-import { CategoriaValues, TipoTarefaValues } from "@/utils/tipagem";
+import type { FormNovaTarefa } from "./tipagem";
+import {
+  CategoriaValues,
+  TipoTarefaValues,
+  type StatusExecucao,
+} from "@/utils/tipagem";
 
 const categorias = [
   {
@@ -39,7 +43,7 @@ const tipos = [
   },
 ];
 
-const form = ref<FormNovaTarefa>({
+const estadoInicial = {
   titulo: "",
   descricao: "",
   tipo: "",
@@ -48,81 +52,32 @@ const form = ref<FormNovaTarefa>({
   responsavelAtualId: "",
   pontos: null,
   cicloId: null,
-  agendamentos: [],
-});
-
-const novoAgendamento = ref<{ diaSemana: number | null; horario: string }>({
-  diaSemana: null,
-  horario: "",
-});
-
-const diasSemana = [
-  {
-    text: "Diariamente",
-    value: 7,
-  },
-  {
-    text: "Domingo",
-    value: 0,
-  },
-
-  {
-    text: "Segunda",
-    value: 1,
-  },
-
-  {
-    text: "Terça",
-    value: 2,
-  },
-
-  {
-    text: "Quarta",
-    value: 3,
-  },
-
-  {
-    text: "Quinta",
-    value: 4,
-  },
-
-  {
-    text: "Sexta",
-    value: 5,
-  },
-
-  {
-    text: "Sábado",
-    value: 6,
-  },
-];
-
-const arrayAgendamentos = ref<{ dia: number; horario: string }[]>([]);
-
-const removerAgendamento = (index: number) => {
-  form.value.agendamentos.splice(index, 1);
+  execucoes: [],
 };
 
-const nomeDia = (dia: number) => {
-  const dias = [
-    "Domingo",
-    "Segunda",
-    "Terça",
-    "Quarta",
-    "Quinta",
-    "Sexta",
-    "Sábado",
-    "Diariamente",
-  ];
-
-  return dias[dia];
-};
-
+const idTarefa = ref("");
+const form = ref<FormNovaTarefa>({ ...estadoInicial });
 const dataInicio = ref<string | null>(null);
 const dataFim = ref<string | null>(null);
-const horario = ref("18:00");
+const horario = ref("");
 
-const execucoes = ref<Execucao[]>([]);
+const criarDataLocal = (valor: string | Date) => {
+  if (valor instanceof Date) {
+    return new Date(valor);
+  }
+
+  // yyyy-MM-dd
+  if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+    const [ano = 0, mes = 0, dia = 0] = valor.split("-").map(Number);
+
+    return new Date(ano, mes - 1, dia);
+  }
+
+  // ISO
+  const data = new Date(valor);
+
+  return new Date(data.getFullYear(), data.getMonth(), data.getDate());
+};
 
 const criarExecucoes = (
   start: [string, ...string[]],
@@ -131,9 +86,9 @@ const criarExecucoes = (
 ) => {
   if (!start.length) return [];
 
-  const inicio = new Date(start[0]);
+  const inicio = criarDataLocal(start[0]);
 
-  const fim = end?.length ? new Date(end[0]) : new Date(start[0]);
+  const fim = end?.length ? criarDataLocal(end[0]) : criarDataLocal(start[0]);
 
   const [hora = 0, minuto = 0] = horario.split(":").map(Number);
 
@@ -164,24 +119,26 @@ const gerarExecucoes = () => {
   const inicio = dataInicio.value;
   const fim = dataFim.value ?? dataInicio.value;
 
-  execucoes.value = criarExecucoes([inicio], [fim], horario.value);
+  console.log("inicio", inicio);
+  console.log("fim", fim);
 
-  console.log("exec", execucoes.value);
+  form.value.execucoes = criarExecucoes([inicio], [fim], horario.value);
+  console.log("ex", form.value.execucoes);
 };
 
 const onUpdateStart = (datas: string) => {
   dataInicio.value = datas ?? null;
-
-  // Caso o usuário esteja selecionando apenas uma data
-  if (!dataFim.value) {
-    gerarExecucoes();
-  }
 };
 
 const onUpdateEnd = (datas: string) => {
   dataFim.value = datas ?? null;
+};
 
-  gerarExecucoes();
+const limparFormulario = () => {
+  form.value = { ...estadoInicial };
+  dataInicio.value = null;
+  dataFim.value = null;
+  horario.value = "";
 };
 
 export const useNovaTarefa = () => {
@@ -189,15 +146,13 @@ export const useNovaTarefa = () => {
     categorias,
     tipos,
     form,
-    novoAgendamento,
-    diasSemana,
-    arrayAgendamentos,
     dataInicio,
     dataFim,
+    horario,
+    idTarefa,
+    gerarExecucoes,
     onUpdateStart,
     onUpdateEnd,
-
-    removerAgendamento,
-    nomeDia,
+    limparFormulario,
   };
 };
