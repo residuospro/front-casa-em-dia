@@ -8,6 +8,7 @@
       <select
         :value="modelValue"
         @change="onChange"
+        :multiple="multiple"
         class="w-full px-4 py-2 rounded-lg border bg-white text-black border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#53864C] appearance-none cursor-pointer pr-10"
       >
         <option v-if="placeholder" value="" disabled>
@@ -48,18 +49,25 @@ interface SelectItem {
 }
 
 const props = defineProps<{
-  modelValue?: string | number | null;
+  modelValue?: string | string[] | null;
   label?: string;
   placeholder?: string;
   items: SelectItem[];
+  multiple?: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: string): void;
+  (e: "update:modelValue", value: string | string[]): void;
 }>();
 
 const onChange = (event: Event) => {
   const select = event.target as HTMLSelectElement;
-  emit("update:modelValue", select.value);
+
+  if (props.multiple) {
+    const valores = Array.from(select.selectedOptions).map((o) => o.value);
+    emit("update:modelValue", valores);
+  } else {
+    emit("update:modelValue", select.value);
+  }
 };
 </script>

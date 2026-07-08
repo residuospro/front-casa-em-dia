@@ -3,35 +3,27 @@ import { useNovaTarefa } from "./useNovaTarefa";
 import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
+import router from "@/router";
+import type { IResponseTarefa } from "../tipagem";
 
 export const useApiNovaTarefa = () => {
   const { perfil } = usePerfil();
-  const { form, idTarefa, dataFim, horario, dataInicio, limparFormulario } =
-    useNovaTarefa();
+  const { form, idTarefa, limparFormulario } = useNovaTarefa();
 
   const obterTarefaPorId = async (id: string) => {
     const resposta: AxiosResponse = await useClient.get(
       `/tarefas/${perfil.familiaId}/tarefas/${id}`,
     );
 
+    console.log("tarefa ud", resposta);
+
     if (resposta.status === 200) {
       form.value = resposta.data;
-
-      const primeiraData = form.value?.execucoes[0]?.data;
-      dataInicio.value = primeiraData || null;
-      dataFim.value =
-        form.value?.execucoes[form.value.execucoes.length - 1]?.data || null;
-      horario.value = primeiraData
-        ? new Date(primeiraData).toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "";
     }
   };
 
   const criarNovaTarefa = async () => {
-    const resposta: AxiosResponse = await useClient.post(
+    const resposta: AxiosResponse<IResponseTarefa> = await useClient.post(
       `/tarefas/${perfil.familiaId}/tarefas`,
       form.value,
     );
@@ -47,6 +39,10 @@ export const useApiNovaTarefa = () => {
     );
 
     useRespostaApi(resposta.status);
+    router.push({
+      name: "minhas-tarefas.visualizar-tarefa",
+      query: { id: resposta.data.id },
+    });
   };
 
   return {

@@ -1,6 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center gap-3 px-2 items-center">
-    
+  <div class="w-full flex flex-col gap-6 bg-white rounded-2xl p-6">
     <Header />
 
     <Filtro />
@@ -18,10 +17,10 @@
       <div class="flex items-start gap-4">
         <div class="flex-1">
           <div
-            v-if="notificacao.remetente"
-            class="flex items-center justify-between w-full mb-3"
+            class="flex items-center w-full mb-3"
+            :class="notificacao.remetente ? 'justify-between' : 'justify-end'"
           >
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3" v-if="notificacao.remetente">
               <img
                 :src="parseFotoPerfil(notificacao.remetente.fotoPerfil)"
                 class="w-9 h-9 rounded-full object-cover"
@@ -35,20 +34,6 @@
                 <p class="text-xs text-black/50">enviou uma notificação</p>
               </div>
             </div>
-
-            <MenuContexto
-              :items="menuItens"
-              @select="
-                onMenuSelect(
-                  notificacao.id,
-                  $event,
-                  marcarComoLido,
-                  excluirNotificacao,
-                )
-              "
-            >
-              <button class="text-black/50 hover:text-black">⋮</button>
-            </MenuContexto>
           </div>
 
           <div class="flex justify-between">
@@ -56,9 +41,25 @@
               {{ notificacao.titulo }}
             </h3>
 
-            <span class="text-[#53864C]">{{
-              notificacao.lido ? "Lida" : ""
-            }}</span>
+            <div class="flex flex-row items-center gap-2">
+              <span class="text-[#53864C]">{{
+                notificacao.lido ? "Lida" : ""
+              }}</span>
+
+              <MenuContexto
+                :items="menuItens"
+                @select="
+                  onMenuSelect(
+                    notificacao.id,
+                    $event,
+                    marcarComoLido,
+                    excluirNotificacao,
+                  )
+                "
+              >
+                <button class="text-black/50 hover:text-black">⋮</button>
+              </MenuContexto>
+            </div>
           </div>
 
           <p class="text-sm text-black/60 mt-1">

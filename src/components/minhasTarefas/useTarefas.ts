@@ -127,7 +127,14 @@ const setarIconePorCategoria = (item: Categorias) => {
   return mapCategorias[item];
 };
 
-const getCategoriaStyle = (categoria: Categorias) => {
+const getCategoriaStyle = (categoria?: Categorias) => {
+  if (!categoria) {
+    return {
+      cor: "#424242",
+      background: "",
+    };
+  }
+
   const styles = {
     CASA: {
       cor: "#53864C",
@@ -272,6 +279,8 @@ const formatarExecucao = (execucao: Execucao | null) => {
 const obterClasseExecucao = (execucao: Execucao | null) => {
   if (!execucao) return "";
 
+  console.log("eeeeeeexxxx", execucao.status);
+
   switch (execucao.status) {
     case "ATRASADA":
       return {
@@ -314,6 +323,13 @@ const obterClasseExecucao = (execucao: Execucao | null) => {
   }
 };
 
+const obterClasseExecucaoFormatada = (execucao: Execucao | null) => {
+  const classe = obterClasseExecucao(execucao);
+  return typeof classe === "string"
+    ? { text: "", border: "", dot: "" }
+    : classe;
+};
+
 const executarOpcoesMenu = (acao: string, id: string, titulo: string) => {
   const maps = {
     editar: () => {
@@ -325,6 +341,9 @@ const executarOpcoesMenu = (acao: string, id: string, titulo: string) => {
         id,
         titulo,
       };
+    },
+    visualizar: () => {
+      router.push({ name: "minhas-tarefas.visualizar-tarefa", query: { id } });
     },
   };
 
@@ -416,5 +435,6 @@ export const useTarefas = () => {
     formatarExecucao,
     obterClasseExecucao,
     executarOpcoesMenu,
+    obterClasseExecucaoFormatada,
   };
 };

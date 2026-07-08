@@ -21,7 +21,14 @@
         variant="primary"
         type="button"
         class="!w-1/6 sm:!w-full"
-        @click="router.push('/minhas-tarefas')"
+        @click="
+          acao === 'criar'
+            ? router.push('/minhas-tarefas')
+            : router.push({
+                name: 'minhas-tarefas.visualizar-tarefa',
+                query: { id: idTarefa },
+              })
+        "
       >
         Visualizar tarefas
       </Button>
@@ -199,6 +206,11 @@
             <ResumoItem label="Responsável" :value="responsavel || '-'" />
 
             <ResumoItem
+              label="Pontuação"
+              :value="form.pontos ? `${form.pontos} pts` : '-'"
+            />
+
+            <ResumoItem
               label="Frequência"
               :value="
                 form.execucoes.length
@@ -207,10 +219,34 @@
               "
             />
 
-            <ResumoItem
-              label="Pontuação"
-              :value="form.pontos ? `${form.pontos} pts` : '-'"
-            />
+            <div class="flex flex-col gap-2">
+              <div
+                class="flex flex-row items-center justify-between font-medium"
+                v-for="(item, index) in form.execucoes"
+                :key="index"
+              >
+                <div class="flex flex-row gap-2">
+                  <div
+                    class="w-5 h-5 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold p-1"
+                  >
+                    <svg-icon
+                      type="mdi"
+                      :path="mdiClockTimeEightOutline"
+                      class="text-emerald-600"
+                    />
+                  </div>
+                  <span>{{ formatarDataAgenda(item.data) }}</span>
+                </div>
+
+                <button @click="excluirData(item.data)">
+                  <svg-icon
+                    type="mdi"
+                    :path="mdiTrashCanOutline"
+                    class="text-red-500"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
 
           <div
@@ -222,7 +258,16 @@
         </div>
 
         <div class="flex justify-end w-full gap-3 sm:flex-col">
-          <Button variant="outline" type="button">Cancelar</Button>
+          <Button
+            variant="outline"
+            type="button"
+            @click="
+              acao === 'criar'
+                ? limparFormulario()
+                : router.push('/minhas-tarefas')
+            "
+            >{{ acao === "criar" ? "Limpar" : "Cancelar" }}</Button
+          >
 
           <Button
             variant="primary"
@@ -245,7 +290,12 @@ import Input from "@/components/input/index.vue";
 import Select from "@/components/select/index.vue";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiAccountOutline, mdiAccountGroupOutline } from "@mdi/js";
+import {
+  mdiAccountOutline,
+  mdiAccountGroupOutline,
+  mdiTrashCanOutline,
+  mdiClockTimeEightOutline,
+} from "@mdi/js";
 import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 import { useCiclos } from "../ciclos/useCiclos";
@@ -270,12 +320,16 @@ const {
   tipos,
   form,
   horario,
+  idTarefa,
   dataFim,
   dataInicio,
-  idTarefa,
+  excluirData,
+  limparFormulario,
   gerarExecucoes,
   onUpdateStart,
   onUpdateEnd,
+  preencherFormulario,
+  formatarDataAgenda,
 } = useNovaTarefa();
 
 const { criarNovaTarefa, editarTarefa, obterTarefaPorId } = useApiNovaTarefa();
@@ -302,12 +356,19 @@ watch(
 );
 
 onMounted(async () => {
-  if (props.acao === "editar") {
-    const id = router.currentRoute.value.query.id as string;
-    console.log("id", id);
+  const { id, data } = router.currentRoute.value.query as unknown as {
+    id: string;
+    data: string;
+  };
 
+  limparFormulario();
+
+  if (props.acao === "editar" && id) {
+    const id = router.currentRoute.value.query.id as string;
     idTarefa.value = id;
     await obterTarefaPorId(id);
+  } else if (data) {
+    preencherFormulario(data);
   }
 });
 </script>

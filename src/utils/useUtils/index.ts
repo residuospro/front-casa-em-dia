@@ -1,3 +1,5 @@
+import type { StatusExecucao } from "../tipagem";
+
 export const useUtils = () => {
   const formatarData = (data: string) => {
     const date = new Date(data);
@@ -27,6 +29,56 @@ export const useUtils = () => {
     return permissao === "ADMIN" ? "Administrador" : "Usuário";
   };
 
+  const criarDataLocal = (valor: string | Date) => {
+    if (valor instanceof Date) {
+      return new Date(valor);
+    }
+
+    // yyyy-MM-dd
+    if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+      const [ano = 0, mes = 0, dia = 0] = valor.split("-").map(Number);
+
+      return new Date(ano, mes - 1, dia);
+    }
+
+    // ISO
+    return new Date(valor);
+  };
+
+  const criarExecucoes = (
+    start: [string, ...string[]],
+    end: [string, ...string[]] | undefined,
+    horario: string,
+  ) => {
+    if (!start.length) return [];
+
+    const inicio = criarDataLocal(start[0]);
+
+    const fim = end?.length ? criarDataLocal(end[0]) : criarDataLocal(start[0]);
+
+    const [hora = 0, minuto = 0] = horario.split(":").map(Number);
+
+    const execucoes = [];
+
+    const dataAtual = new Date(inicio);
+
+    while (dataAtual <= fim) {
+      const data = new Date(dataAtual);
+
+      data.setHours(hora, minuto, 0, 0);
+
+      execucoes.push({
+        data: data.toISOString(),
+        status: "AGENDADA" as StatusExecucao,
+        pontosObtidos: null,
+      });
+
+      dataAtual.setDate(dataAtual.getDate() + 1);
+    }
+
+    return execucoes;
+  };
+
   const setarFormDataDependente = (dependente: {
     nome: string;
     genero: string;
@@ -49,5 +101,7 @@ export const useUtils = () => {
     parseFotoPerfil,
     parsePermissao,
     setarFormDataDependente,
+    criarDataLocal,
+    criarExecucoes,
   };
 };

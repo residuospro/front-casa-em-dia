@@ -1,10 +1,7 @@
 import { ref } from "vue";
 import type { FormNovaTarefa } from "./tipagem";
-import {
-  CategoriaValues,
-  TipoTarefaValues,
-  type StatusExecucao,
-} from "@/utils/tipagem";
+import { CategoriaValues, TipoTarefaValues } from "@/utils/tipagem";
+import { useUtils } from "@/utils/useUtils";
 
 const categorias = [
   {
@@ -55,62 +52,22 @@ const estadoInicial = {
   execucoes: [],
 };
 
+const { criarDataLocal, criarExecucoes } = useUtils();
 const idTarefa = ref("");
 const form = ref<FormNovaTarefa>({ ...estadoInicial });
 const dataInicio = ref<string | null>(null);
 const dataFim = ref<string | null>(null);
 const horario = ref("");
 
-const criarDataLocal = (valor: string | Date) => {
-  if (valor instanceof Date) {
-    return new Date(valor);
-  }
+const preencherFormulario = (dataIso: string) => {
+  const data = criarDataLocal(dataIso);
 
-  // yyyy-MM-dd
-  if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
-    const [ano = 0, mes = 0, dia = 0] = valor.split("-").map(Number);
+  dataInicio.value = data.toISOString().split("T")[0] || null;
+  dataFim.value = data.toISOString().split("T")[0] || null;
 
-    return new Date(ano, mes - 1, dia);
-  }
-
-  // ISO
-  const data = new Date(valor);
-
-  return new Date(data.getFullYear(), data.getMonth(), data.getDate());
-};
-
-const criarExecucoes = (
-  start: [string, ...string[]],
-  end: [string, ...string[]] | undefined,
-  horario: string,
-) => {
-  if (!start.length) return [];
-
-  const inicio = criarDataLocal(start[0]);
-
-  const fim = end?.length ? criarDataLocal(end[0]) : criarDataLocal(start[0]);
-
-  const [hora = 0, minuto = 0] = horario.split(":").map(Number);
-
-  const execucoes = [];
-
-  const dataAtual = new Date(inicio);
-
-  while (dataAtual <= fim) {
-    const data = new Date(dataAtual);
-
-    data.setHours(hora, minuto, 0, 0);
-
-    execucoes.push({
-      data: data.toISOString(),
-      status: "AGENDADA" as StatusExecucao,
-      pontosObtidos: null,
-    });
-
-    dataAtual.setDate(dataAtual.getDate() + 1);
-  }
-
-  return execucoes;
+  horario.value = `${String(data.getHours()).padStart(2, "0")}:${String(
+    data.getMinutes(),
+  ).padStart(2, "0")}`;
 };
 
 const gerarExecucoes = () => {
@@ -119,11 +76,15 @@ const gerarExecucoes = () => {
   const inicio = dataInicio.value;
   const fim = dataFim.value ?? dataInicio.value;
 
-  console.log("inicio", inicio);
-  console.log("fim", fim);
+  form.value.execucoes.push(...criarExecucoes([inicio], [fim], horario.value));
 
-  form.value.execucoes = criarExecucoes([inicio], [fim], horario.value);
-  console.log("ex", form.value.execucoes);
+  dataInicio.value = null;
+  dataFim.value = null;
+  horario.value = "";
+};
+
+const excluirData = (data: string) => {
+  form.value.execucoes = form.value.execucoes.filter((d) => d.data !== data);
 };
 
 const onUpdateStart = (datas: string) => {
@@ -132,6 +93,35 @@ const onUpdateStart = (datas: string) => {
 
 const onUpdateEnd = (datas: string) => {
   dataFim.value = datas ?? null;
+};
+
+const formatarDataAgenda = (dataIso: string) => {
+  const data = criarDataLocal(dataIso);
+
+  const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+  const meses = [
+    "jan.",
+    "fev.",
+    "mar.",
+    "abr.",
+    "mai.",
+    "jun.",
+    "jul.",
+    "ago.",
+    "set.",
+    "out.",
+    "nov.",
+    "dez.",
+  ];
+
+  const diaSemana = diasSemana[data.getDay()];
+  const dia = String(data.getDate()).padStart(2, "0");
+  const mes = meses[data.getMonth()];
+  const hora = String(data.getHours()).padStart(2, "0");
+  const minuto = String(data.getMinutes()).padStart(2, "0");
+
+  return `${diaSemana} ${dia} ${mes} · ${hora}:${minuto}`;
 };
 
 const limparFormulario = () => {
@@ -150,9 +140,12 @@ export const useNovaTarefa = () => {
     dataFim,
     horario,
     idTarefa,
+    preencherFormulario,
     gerarExecucoes,
     onUpdateStart,
     onUpdateEnd,
     limparFormulario,
+    formatarDataAgenda,
+    excluirData,
   };
 };

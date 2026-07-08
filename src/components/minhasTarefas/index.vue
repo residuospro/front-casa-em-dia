@@ -61,7 +61,11 @@
 
         <div class="flex flex-col justify-center gap-1">
           <span class="font-medium">{{ item.titulo }}</span>
-          <span class="text-slate-400 text-sm">{{ item.descricao }}</span>
+          <span
+            :title="item.descricao"
+            class="text-slate-400 text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
+            >{{ item.descricao }}</span
+          >
         </div>
       </div>
     </template>
@@ -204,6 +208,12 @@
             size="20"
             :path="mdiEyeOutline"
             class="text-gray-400 cursor-pointer"
+            @click="
+              router.push({
+                name: 'minhas-tarefas.visualizar-tarefa',
+                query: { id: item.id },
+              })
+            "
           />
         </button>
 
@@ -265,9 +275,10 @@ import {
 import { useUtils } from "@/utils/useUtils";
 import type { Execucao } from "./tipagem";
 import Button from "@/components/botao/index.vue";
+import { useRouter } from "vue-router";
 
 const { parseFotoPerfil } = useUtils();
-
+const router = useRouter();
 const {
   chamarApi,
   obterDadosPorItensPorPagina,
@@ -289,15 +300,8 @@ const {
   setarIconePorCategoria,
   obterProximaExecucao,
   formatarExecucao,
-  obterClasseExecucao,
+  obterClasseExecucaoFormatada,
 } = useTarefas();
-
-const obterClasseExecucaoFormatada = (execucao: Execucao | null) => {
-  const classe = obterClasseExecucao(execucao);
-  return typeof classe === "string"
-    ? { text: "", border: "", dot: "" }
-    : classe;
-};
 
 onMounted(async () => {
   await chamarApi();

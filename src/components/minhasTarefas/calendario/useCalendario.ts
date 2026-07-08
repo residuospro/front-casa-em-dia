@@ -1,35 +1,36 @@
 import { computed, ref } from "vue";
 import type { ModoCalendario, TarefaComExecucao } from "./tipagem";
 import router from "@/router";
-import { useTarefas } from "../tarefas/useTarefas";
+import { useTarefas } from "../useTarefas";
 
 const { dataTarefas } = useTarefas();
-const modo = ref<ModoCalendario>("SEMANA");
-const dataAtual = ref(new Date());
-
-const meses = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
-];
-const dias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-
-const opcoesMenu = [
-  { label: "Visualizar", value: "visualziar" },
-  { label: "Editar", value: "editar" },
-  { label: "Excluir", value: "excluir", color: "#ff0000" },
-];
 
 export function useCalendario() {
+  const modo = ref<ModoCalendario>("SEMANA");
+  const dataAtual = ref(new Date());
+
+  const meses = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ];
+  const dias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+  const opcoesMenu = [
+    { label: "Visualizar", value: "visualizar" },
+    { label: "Editar", value: "editar" },
+    { label: "Excluir", value: "excluir", color: "#ff0000" },
+  ];
+
   const titulo = computed(
     () =>
       `${meses[dataAtual.value.getMonth()]} de ${dataAtual.value.getFullYear()}`,

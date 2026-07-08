@@ -31,8 +31,7 @@ const buttonClasses = computed(() => {
 
   const variants = {
     primary: "text-white bg-[#53864C]",
-    outline:
-      "border border-slate-700 text-slate-700 hover:bg-slate-400/5 hover:text-[#53864C]",
+    outline: "border border-gray-300 hover:bg-gray-50 transition-colors",
   };
 
   const tamanho = {

@@ -5,7 +5,7 @@ import type {
   StatusExecucao,
 } from "@/utils/tipagem";
 
-type Tarefa = {
+interface Tarefa {
   id: string;
   familiaId: string;
   cicloId: string | null;
@@ -27,7 +27,7 @@ type Tarefa = {
   criadoEm: Date;
   atualizadoEm: Date;
   execucoes: Execucao[];
-};
+}
 
 type Paginacao = {
   total: number;

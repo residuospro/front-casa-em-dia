@@ -164,8 +164,8 @@ import Input from "@/components/input/index.vue";
 import Select from "@/components/select/index.vue";
 import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
-import { useTarefas } from "../tarefas/useTarefas";
-import { useApiTarefas } from "../tarefas/useApiTarefas";
+import { useTarefas } from "../useTarefas";
+import { useApiTarefas } from "../useApiTarefas";
 import { onMounted } from "vue";
 
 const { obterOpcoesFamiliares } = useApiMinhaFamilia();

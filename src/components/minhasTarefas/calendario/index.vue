@@ -130,23 +130,44 @@
           </div>
 
           <!-- Colunas dos dias -->
+
+          <!-- Colunas dos dias -->
           <div class="grid grid-cols-7 h-full w-[100rem] xl:!w-full">
             <div
               v-for="dia in semana"
               :key="dia.data.toISOString()"
-              class="relative border-r last:border-r-0 min-h-full flex flex-row"
-              @click="() => console.log('dia', dia)"
+              class="relative border-r last:border-r-0 min-h-full"
             >
+              <!-- Grade clicável -->
+              <div
+                v-for="hora in horas"
+                :key="`${dia.data.toISOString()}-${hora}`"
+              >
+                <!-- Parte superior = hora cheia -->
+                <div
+                  class="h-[30px] border-t border-gray-100 hover:bg-[#F5FAF6] cursor-pointer transition-colors"
+                  @click="criarTarefa(dia.data, hora)"
+                />
+
+                <!-- Parte inferior = meia hora -->
+                <div
+                  class="h-[30px] border-t border-dashed border-gray-100 hover:bg-[#EDF8EF] cursor-pointer transition-colors"
+                  @click="criarTarefa(dia.data, hora, 30)"
+                />
+              </div>
+
               <!-- Tarefas -->
               <div
                 v-for="(tarefa, index) in getTarefasDoDia(dia.data)"
                 :key="index"
-                :class="dia.semana === 'Dom' ? 'left-10' : 'left-2'"
-                class="w-auto h-fit task-block absolute right-2 text-xs rounded-xl px-3 py-2 shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
+                class="absolute left-2 task-block right-2 text-xs rounded-xl px-3 py-2 shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
                 :style="getTaskPositionStyle(tarefa)"
               >
                 <div class="flex flex-row items-center justify-between">
-                  <span class="font-bold">{{ tarefa.titulo }}</span>
+                  <span class="font-bold">
+                    {{ tarefa.titulo }}
+                  </span>
+
                   <ce-context-menu
                     :items="opcoesMenu"
                     @select="
@@ -157,24 +178,35 @@
                       <svg-icon
                         type="mdi"
                         :path="mdiDotsVertical"
-                        class="text-gray-400 cursor-pointer"
+                        class="text-gray-400"
                         size="15"
                       />
                     </button>
                   </ce-context-menu>
                 </div>
+
                 <span
-                  class="truncate !text-black font-bold max-w-[80px] sm:max-w-[80px] md:max-w-[80px]"
+                  class="truncate !text-black font-bold max-w-[80px]"
                   :title="tarefa.responsavelAtual?.nome"
                 >
                   {{ tarefa.responsavelAtual?.nome }}
                 </span>
 
-                <span class="capitalize">{{
-                  tarefa.status.toLocaleLowerCase()
-                }}</span>
+                <span class="capitalize">
+                  {{ tarefa.status.toLowerCase() }}
+                </span>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-7 border-t w-[100rem] xl:!w-full">
+          <div
+            v-for="dia in semana"
+            :key="dia.data.toISOString()"
+            class="text-center py-2 border-r last:border-r-0"
+          >
+            <div class="text-xs text-gray-500">{{ dia.semana }}</div>
+            <div class="text-xl font-semibold">{{ dia.dia }}</div>
           </div>
         </div>
       </section>
@@ -191,10 +223,12 @@ import { useUtils } from "@/utils/useUtils";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiAutorenew, mdiTable, mdiDotsVertical } from "@mdi/js";
-import { useApiTarefas } from "../tarefas/useApiTarefas";
-import { useTarefas } from "../tarefas/useTarefas";
+import { useApiTarefas } from "../useApiTarefas";
+import { useTarefas } from "../useTarefas";
 import { CeContextMenu } from "@comercti/vue-components-hmg";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const { parseFotoPerfil } = useUtils();
 const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const { opcoesFamiliares } = useMinhaFamilia();
@@ -220,6 +254,21 @@ const {
 onMounted(async () => {
   await Promise.all([obterOpcoesFamiliares(), chamarApi()]);
 });
+
+const criarTarefa = (dia: Date, hora: number, minuto = 0) => {
+  const data = new Date(dia);
+
+  data.setHours(hora, minuto, 0, 0);
+
+  console.log("datatata", data);
+
+  router.push({
+    name: "minhas-tarefas.nova-tarefa",
+    query: {
+      data: data.toISOString(),
+    },
+  });
+};
 </script>
 
 <style scoped>
