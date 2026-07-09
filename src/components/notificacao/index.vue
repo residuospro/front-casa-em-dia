@@ -9,9 +9,7 @@
       :key="notificacao.id"
       class="rounded-2xl border p-5 shadow-lg transition"
       :class="
-        !notificacao.lido
-          ? 'border-[#53864C]/30 bg-[#EEF5EA]/40'
-          : 'border-[#ECE4D8] bg-white'
+        !notificacao.lido ? 'border-[#53864C]/30 bg-[#EEF5EA]/40' : ' bg-white'
       "
     >
       <div class="flex items-start gap-4">
@@ -102,16 +100,15 @@ import { useApiNotificacao } from "./useApiNotificacao.ts";
 import Header from "./header/index.vue";
 import Filtro from "./filtro/index.vue";
 import MenuContexto from "@/components/menuContexto/index.vue";
+import { onMounted } from "vue";
 
 const { parseFotoPerfil, formatarData } = useUtils();
-const {
-  notificacoes,
-  notificacoesFiltradas,
-  menuItens,
-  onMenuSelect,
-  iconeTipo,
-  acoes,
-} = useNotificacao();
-const { aceitar, recusar, marcarComoLido, excluirNotificacao } =
+const { notificacoes, notificacoesFiltradas, menuItens, onMenuSelect, acoes } =
+  useNotificacao();
+const { aceitar, recusar, marcarComoLido, excluirNotificacao, listar } =
   useApiNotificacao();
+
+onMounted(async () => {
+  await listar();
+});
 </script>

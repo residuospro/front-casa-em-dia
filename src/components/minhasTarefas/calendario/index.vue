@@ -100,9 +100,11 @@
       </aside>
 
       <!-- Calendário -->
-      <section class="flex-1 overflow-auto h-[30rem]">
+      <section class="flex-1 overflow-auto h-[30rem] relative">
         <!-- Dias da semana -->
-        <div class="grid grid-cols-7 border-b w-[100rem] xl:!w-full">
+        <div
+          class="sticky top-0 z-30 grid grid-cols-7 border-b bg-white w-[100rem] xl:!w-full"
+        >
           <div
             v-for="dia in semana"
             :key="dia.data.toISOString()"
@@ -199,16 +201,6 @@
             </div>
           </div>
         </div>
-        <div class="grid grid-cols-7 border-t w-[100rem] xl:!w-full">
-          <div
-            v-for="dia in semana"
-            :key="dia.data.toISOString()"
-            class="text-center py-2 border-r last:border-r-0"
-          >
-            <div class="text-xs text-gray-500">{{ dia.semana }}</div>
-            <div class="text-xl font-semibold">{{ dia.dia }}</div>
-          </div>
-        </div>
       </section>
     </div>
   </div>
@@ -227,6 +219,8 @@ import { useApiTarefas } from "../useApiTarefas";
 import { useTarefas } from "../useTarefas";
 import { CeContextMenu } from "@comercti/vue-components-hmg";
 import { useRouter } from "vue-router";
+import BuscaRapida from "@/components/minhasTarefas/buscaRapida/index.vue";
+import AcionarFiltro from "@/components/minhasTarefas/acionarFiltro/index.vue";
 
 const router = useRouter();
 const { parseFotoPerfil } = useUtils();

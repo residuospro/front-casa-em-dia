@@ -48,7 +48,7 @@ const tabClasses = (value: string) => {
   const active =
     value === props.modelValue
       ? "bg-[#53864C] text-white shadow-sm"
-      : "bg-white text-black/70 border border-[#ECE4D8] hover:border-[#53864C]/40 hover:text-[#53864C]";
+      : "bg-white text-black/70 border  hover:border-[#53864C]/40 hover:text-[#53864C]";
 
   return `${base} ${active}`;
 };

@@ -20,8 +20,16 @@ const limparSessao = (redirectPath?: string) => {
   localStorage.removeItem("token");
   useClient.defaults.headers.common["Authorization"] = "";
   if (redirectPath) {
-    if (redirectPath === "/login" && globalThis.location.pathname !== "/login") {
-      sessionStorage.setItem("redirectAfterLogin", globalThis.location.pathname);
+    if (
+      redirectPath === "/login" &&
+      globalThis.location.pathname !== "/login"
+    ) {
+      sessionStorage.setItem(
+        "redirectAfterLogin",
+        globalThis.location.pathname +
+          globalThis.location.search +
+          globalThis.location.hash,
+      );
     }
     window.location.href = redirectPath;
   }

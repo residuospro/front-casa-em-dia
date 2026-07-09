@@ -2,6 +2,7 @@ import { computed, ref, watch } from "vue";
 import type { INotificacao, TipoFiltro } from "./tipagem";
 
 import { Socket } from "socket.io-client";
+import router from "@/router";
 
 const notificacoes = ref<INotificacao[]>([]);
 const notificacoesFiltradas = ref<INotificacao[]>([]);
@@ -87,6 +88,22 @@ const acoes = (
           if (recusar) recusar(notificacao);
         },
         class: "border border-red-300 text-red-600",
+      },
+    ];
+  }
+  if (
+    notificacao.tipo === "EXECUCAO_TAREFA" ||
+    notificacao.tipo === "TAREFA_ATRIBUIDA"
+  ) {
+    return [
+      {
+        text: "Visualizar tarefa",
+        action: () =>
+          router.push({
+            name: "minhas-tarefas.visualizar-tarefa",
+            query: { id: notificacao.dados.tarefaId },
+          }),
+        class: "bg-[#53864C] text-white",
       },
     ];
   }

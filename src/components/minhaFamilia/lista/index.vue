@@ -23,7 +23,7 @@
 
   <EditarMembro />
 
-  <div class="bg-white rounded-2xl border border-[#ECE4D8] shadow-sm w-full">
+  <div class="bg-white rounded-2xl border shadow-sm w-full">
     <div class="p-5 border-b flex flex-col gap-2">
       <h2 class="font-semibold text-lg">Membros cadastrados</h2>
 

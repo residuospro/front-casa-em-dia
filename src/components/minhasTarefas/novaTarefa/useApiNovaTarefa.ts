@@ -15,8 +15,6 @@ export const useApiNovaTarefa = () => {
       `/tarefas/${perfil.familiaId}/tarefas/${id}`,
     );
 
-    console.log("tarefa ud", resposta);
-
     if (resposta.status === 200) {
       form.value = resposta.data;
     }
@@ -25,7 +23,7 @@ export const useApiNovaTarefa = () => {
   const criarNovaTarefa = async () => {
     const resposta: AxiosResponse<IResponseTarefa> = await useClient.post(
       `/tarefas/${perfil.familiaId}/tarefas`,
-      form.value,
+      { ...form.value, pontos: form.value.pontos ?? 0 },
     );
 
     useRespostaApi(resposta.status);

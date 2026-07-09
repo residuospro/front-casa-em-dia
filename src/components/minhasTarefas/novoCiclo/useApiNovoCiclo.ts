@@ -48,14 +48,11 @@ export const useApiNovoCiclo = () => {
       );
 
       form.value = {
-        nome: resposta.data.nome,
-        duracaoDias: resposta.data.duracaoDias,
+        ...resposta.data,
         inicio: formatarData(resposta.data.inicio)
           .split("/")
           .reverse()
           .join("-"),
-        ativo: resposta.data.ativo,
-        descricao: "",
       };
     } catch (error: unknown) {
       const erro = error as IResponseError;

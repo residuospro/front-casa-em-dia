@@ -11,10 +11,33 @@ const ciclo = ref({
   nome: "",
   id: "",
 });
-const opcoesMenu = [
+const estadoInicial = [
   { label: "Editar", value: "editar", disabled: false },
   { label: "Excluir", value: "excluir", disabled: false },
 ];
+
+const opcoesMenuCicloAtivo = ref([...estadoInicial]);
+const opcoesMenu = ref([...estadoInicial]);
+
+const ajustarOpçoesMenu = (ciclo: IResponseCiclos) => {
+  console.log("aquuiii", ciclo);
+
+  const existente = opcoesMenuCicloAtivo.value.some(
+    (opcao) => opcao.value === "renovar-ciclo",
+  );
+
+  if (ciclo.ativo && ciclo.expirado && !existente) {
+    opcoesMenuCicloAtivo.value.push({
+      label: "Renovar ciclo",
+      value: "renovar-ciclo",
+      disabled: false,
+    });
+
+    return;
+  }
+
+  opcoesMenuCicloAtivo.value = [...estadoInicial];
+};
 
 const calcularProgressoCiclo = (inicio: Date, duracaoDias: number) => {
   const hoje = new Date();
@@ -60,20 +83,28 @@ const diasDesdeInicio = (
 const calcularProximaRenovacao = (
   inicio: Date | string,
   duracaoDias: number,
+  renovadoEm: string | null,
 ): Date => {
   const hoje = new Date();
-  const dataInicio = new Date(inicio);
-
   hoje.setHours(0, 0, 0, 0);
+
+  const dataInicio = new Date(renovadoEm ?? inicio);
   dataInicio.setHours(0, 0, 0, 0);
 
-  let proximaData = new Date(dataInicio);
+  const diasPassados = Math.floor(
+    (hoje.getTime() - dataInicio.getTime()) / (1000 * 60 * 60 * 24),
+  );
 
-  while (proximaData <= hoje) {
-    proximaData.setDate(proximaData.getDate() + duracaoDias);
+  if (diasPassados <= 0) {
+    return dataInicio;
   }
 
-  return proximaData;
+  const ciclosCompletos = Math.floor(diasPassados / duracaoDias);
+
+  const renovacao = new Date(dataInicio);
+  renovacao.setDate(dataInicio.getDate() + ciclosCompletos * duracaoDias);
+
+  return renovacao;
 };
 
 const cicloAtivo = computed(() =>
@@ -84,16 +115,31 @@ const ciclosInativo = computed(() =>
   dataCiclos.value.filter((ciclo) => !ciclo.ativo),
 );
 
-const acoesMenuContext = (acao: string, id: string, nome: string) => {
-  if (acao === "editar") {
-    router.push({ name: "novo-ciclo", query: { id } });
-  } else if (acao === "excluir") {
-    abrirModalDeletar.value = true;
-    ciclo.value = {
-      nome,
-      id,
-    };
-  }
+const acoesMenuContext = (
+  acao: string,
+  id: string,
+  nome: string,
+  renovarCiclo: (cicloId: string) => Promise<void>,
+) => {
+  const mapsMenu = {
+    editar: () => {
+      router.push({ name: "novo-ciclo", query: { id } });
+    },
+    excluir: () => {
+      abrirModalDeletar.value = true;
+      ciclo.value = {
+        nome,
+        id,
+      };
+    },
+    "renovar-ciclo": async () => {
+      await renovarCiclo(id);
+    },
+  };
+
+  const executar = mapsMenu[acao as keyof typeof mapsMenu];
+
+  if (executar) executar();
 };
 
 export const useCiclos = () => {
@@ -106,9 +152,11 @@ export const useCiclos = () => {
     abrirModalDeletar,
     ativo,
     opcaoCiclo,
+    opcoesMenuCicloAtivo,
     calcularProgressoCiclo,
     diasDesdeInicio,
     calcularProximaRenovacao,
     acoesMenuContext,
+    ajustarOpçoesMenu,
   };
 };

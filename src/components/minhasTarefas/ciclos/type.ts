@@ -8,6 +8,8 @@ interface IResponseCiclos {
   ultimaRotacao: string | null;
   criadoEm: string;
   atualizadoEm: string;
+  renovadoEm: string | null;
+  expirado: boolean;
 }
 
 export type { IResponseCiclos };

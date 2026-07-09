@@ -26,30 +26,31 @@
 
       <Button
         @click="router.push('/minhas-tarefas/novo-ciclo')"
-        class="!w-1/12 sm:!w-full"
+        class="sm:!w-full"
       >
         + Novo ciclo
       </Button>
     </div>
 
-    <!-- Ciclo ativo -->
-
-    <div class="border border-[#ECE4D8] rounded-2xl p-5" v-if="cicloAtivo">
+    <div class="border rounded-2xl p-5" v-if="cicloAtivo">
       <div class="flex flex-row items-center justify-between">
         <h2 class="font-semibold mb-4">Ciclo ativo</h2>
 
         <ce-context-menu
-          :items="opcoesMenu"
+          :items="opcoesMenuCicloAtivo"
           @select="
             (acao) =>
               acoesMenuContext(
                 acao,
                 cicloAtivo?.id || '',
                 cicloAtivo?.nome || '',
+                renovarCiclo,
               )
           "
         >
-          <button class="text-xl">⋮</button>
+          <button class="text-xl" @click="ajustarOpçoesMenu(cicloAtivo)">
+            ⋮
+          </button>
         </ce-context-menu>
       </div>
 
@@ -77,13 +78,14 @@
             <p>🕒 Duração: {{ cicloAtivo?.duracaoDias }} dias</p>
 
             <p>
-              📅 Próxima redistribuição:
+              📅 Próxima renovação:
               {{
                 formatarData(
                   String(
                     calcularProximaRenovacao(
                       cicloAtivo?.inicio || "",
                       cicloAtivo?.duracaoDias || 0,
+                      cicloAtivo.renovadoEm,
                     ),
                   ),
                 )
@@ -122,7 +124,7 @@
         <div
           v-for="(ciclo, index) in ciclosInativo"
           :key="index"
-          class="bg-white border border-[#ECE4D8] rounded-xl p-4 flex items-center gap-4"
+          class="bg-white border rounded-xl p-4 flex items-center gap-4"
         >
           <div
             class="w-12 h-12 rounded-full bg-[#EEF5EA] flex items-center justify-center text-[#53864C] text-xl"
@@ -155,7 +157,10 @@
 
           <ce-context-menu
             :items="opcoesMenu"
-            @select="(acao) => acoesMenuContext(acao, ciclo.id, ciclo.nome)"
+            @select="
+              (acao) =>
+                acoesMenuContext(acao, ciclo.id, ciclo.nome, renovarCiclo)
+            "
           >
             <button class="text-xl">⋮</button>
           </ce-context-menu>
@@ -181,17 +186,20 @@ import Button from "@/components/botao/index.vue";
 
 const router = useRouter();
 const { formatarData } = useUtils();
-const { obterCiclos, deletarCiclo, atualizarStatusCiclo } = useApiCiclos();
+const { obterCiclos, deletarCiclo, atualizarStatusCiclo, renovarCiclo } =
+  useApiCiclos();
 const {
   cicloAtivo,
   ciclosInativo,
   opcoesMenu,
   ciclo,
   abrirModalDeletar,
+  opcoesMenuCicloAtivo,
   calcularProgressoCiclo,
   diasDesdeInicio,
   calcularProximaRenovacao,
   acoesMenuContext,
+  ajustarOpçoesMenu,
 } = useCiclos();
 
 onMounted(async () => {

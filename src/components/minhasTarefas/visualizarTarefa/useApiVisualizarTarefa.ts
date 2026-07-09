@@ -52,8 +52,6 @@ export const useApiVisualizarTarefa = () => {
   };
 
   const atualizarExecucao = async (execucaoId: string, tarefaId: string) => {
-    console.log("dtatatata");
-
     const data = setarDataAtualizar()[0]?.data;
 
     const resposta: AxiosResponse<Tarefa> = await useClient.put(

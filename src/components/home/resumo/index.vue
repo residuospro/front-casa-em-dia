@@ -3,7 +3,7 @@
     <div
       v-for="card in cards"
       :key="card.titulo"
-      class="bg-white rounded-2xl border border-[#ECE4D8] shadow-sm p-5 flex items-center gap-5 w-full"
+      class="bg-white rounded-2xl border shadow-sm p-5 flex items-center gap-5 w-full"
     >
       <div
         class="w-16 h-16 rounded-full flex items-center justify-center"

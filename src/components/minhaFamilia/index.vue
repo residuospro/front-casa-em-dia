@@ -13,7 +13,7 @@
   </ModalDeletar>
 
   <div
-    class="bg-white rounded-2xl border border-[#ECE4D8] shadow-sm p-5 w-full h-full flex flex-col gap-3"
+    class="bg-white rounded-2xl border shadow-sm p-5 w-full h-full flex flex-col gap-3"
   >
     <template v-if="dataFamilia.length === 0 && !editando">
       <CriarFamilia />

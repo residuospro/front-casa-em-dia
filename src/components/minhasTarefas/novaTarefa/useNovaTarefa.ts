@@ -125,7 +125,7 @@ const formatarDataAgenda = (dataIso: string) => {
 };
 
 const limparFormulario = () => {
-  form.value = { ...estadoInicial };
+  form.value = { ...estadoInicial, execucoes: [] };
   dataInicio.value = null;
   dataFim.value = null;
   horario.value = "";

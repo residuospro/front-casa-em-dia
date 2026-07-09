@@ -7,7 +7,7 @@
     <transition name="menu-fade">
       <div
         v-if="abrir"
-        class="absolute right-0 mt-2 w-48 bg-white rounded-xl border border-[#ECE4D8] shadow-lg z-50 overflow-hidden py-1"
+        class="absolute right-0 mt-2 w-48 bg-white rounded-xl border shadow-lg z-50 overflow-hidden py-1"
       >
         <button
           v-for="item in items"

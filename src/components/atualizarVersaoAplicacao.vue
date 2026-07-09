@@ -4,7 +4,7 @@ import { useRegisterSW } from "virtual:pwa-register/vue";
 import Button from "./botao/index.vue";
 
 // check for updates every hour
-const period = 60 * 60 * 1000;
+const period = 5 * 60 * 1000;
 
 const swActivated = ref(false);
 

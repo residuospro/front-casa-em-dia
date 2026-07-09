@@ -6,12 +6,10 @@
       @mousedown.self="emit('fecharModal')"
     >
       <div
-        class="relative w-full max-w-2xl bg-white rounded-2xl border border-[#ECE4D8] shadow-sm overflow-auto max-h-[85vh]"
+        class="relative w-full max-w-2xl bg-white rounded-2xl border shadow-sm overflow-auto max-h-[85vh]"
       >
         <!-- header -->
-        <div
-          class="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#ECE4D8]"
-        >
+        <div class="flex items-center justify-between px-6 pt-6 pb-4 border-b">
           <div>
             <h2 class="text-xl font-semibold text-[#363637]">
               {{ titulo }}

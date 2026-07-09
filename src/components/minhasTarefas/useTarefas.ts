@@ -36,6 +36,8 @@ const criarFiltroInicial = (): Filtro => ({
   dataFinal: null,
   status: null,
   busca: null,
+  cicloId: null,
+  dependente: null,
 });
 
 const modoExibicao = ref<"tabela" | "calendario">("tabela");
@@ -278,8 +280,6 @@ const formatarExecucao = (execucao: Execucao | null) => {
 
 const obterClasseExecucao = (execucao: Execucao | null) => {
   if (!execucao) return "";
-
-  console.log("eeeeeeexxxx", execucao.status);
 
   switch (execucao.status) {
     case "ATRASADA":

@@ -1,6 +1,6 @@
 <template>
   <form
-    class="bg-white rounded-2xl border border-[#ECE4D8] shadow-sm overflow-hidden flex flex-col gap-2 p-4 h-full"
+    class="bg-white rounded-2xl border shadow-sm overflow-hidden flex flex-col gap-2 p-4 h-full"
     @submit.prevent="convidarMembro"
   >
     <Input

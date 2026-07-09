@@ -10,9 +10,7 @@
           Defina um ciclo para o revezamento automático das tarefas.
         </p>
       </div>
-      <Button
-        @click="router.push('/minhas-tarefas/ciclos')"
-        class="!w-1/6 sm:!w-full"
+      <Button @click="router.push('/minhas-tarefas/ciclos')" class="sm:!w-full"
         >Visualizar Ciclos</Button
       >
     </div>
@@ -20,9 +18,11 @@
     <div
       class="grid grid-cols-2 xl:grid-cols-[1fr_340px] gap-5 sm:grid-cols-1 sm:grid-rows-2"
     >
-      <div class="bg-white rounded-2xl border border-[#ECE4D8] overflow-hidden">
+      <div class="bg-white rounded-2xl border overflow-hidden">
         <form
-          @submit.prevent="acao === 'criar' ? criaNovoCiclo : atualizarCiclo()"
+          @submit.prevent="
+            acao === 'criar' ? criaNovoCiclo() : atualizarCiclo()
+          "
         >
           <div class="p-6">
             <h2 class="font-semibold mb-5">Informações do ciclo</h2>
@@ -45,6 +45,14 @@
                 label="Data de início *"
                 type="date"
                 v-model="form.inicio"
+              />
+
+              <Select
+                label="Participantes"
+                placeholder="Selecione os membros"
+                v-model="form.participantes"
+                :items="opcoesFamiliares"
+                multiple
               />
 
               <div>
@@ -70,7 +78,7 @@
             </div>
           </div>
 
-          <div class="border-t border-[#ECE4D8] p-6">
+          <div class="border-t p-6">
             <h2 class="font-semibold">Status do ciclo</h2>
 
             <p class="text-sm text-black/50">
@@ -80,7 +88,26 @@
             <Toogle v-model="form.ativo" label="Ativo" />
           </div>
 
-          <div class="border-t border-[#ECE4D8] p-5 flex justify-end gap-3">
+          <div class="border-t p-6 flex flex-col gap-2">
+            <div>
+              <h2 class="font-semibold">Automatização</h2>
+
+              <p class="text-sm text-black/50">
+                Permita que o ciclo e o revezamento de tarefas se renovem
+                automaticamente.
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <Toogle v-model="form.renovacaoAutomatica" label="Renovação" />
+              <Toogle
+                v-model="form.revezamentoAutomatico"
+                label="Revezamento"
+              />
+            </div>
+          </div>
+
+          <div class="border-t p-5 flex justify-end gap-3">
             <Button type="button" variant="outline" @click="limparForm">
               Limpar
             </Button>
@@ -140,12 +167,19 @@ import { useApiNovoCiclo } from "./useApiNovoCiclo";
 import Button from "@/components/botao/index.vue";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
+import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
+import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
+import Select from "@/components/select/index.vue";
+
+const { obterOpcoesFamiliares } = useApiMinhaFamilia();
+const { opcoesFamiliares } = useMinhaFamilia();
 
 const { form, passos, acao, idCiclo, limparForm } = useNovoCiclo();
 const { criaNovoCiclo, obterCicloPorId, atualizarCiclo } = useApiNovoCiclo();
 const router = useRouter();
 
 onMounted(async () => {
+  await obterOpcoesFamiliares();
   const { id } = router.currentRoute.value.query;
 
   if (id) {

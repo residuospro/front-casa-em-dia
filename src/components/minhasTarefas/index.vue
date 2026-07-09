@@ -8,40 +8,12 @@
     order-by-server
     @order-by="obterDadosPorOrdenacao"
   >
+    <template #title>
+      <BuscaRapida />
+    </template>
+
     <template #groupButton>
-      <div class="flex flex-row gap-2 sm: justify-between sm:w-full">
-        <div class="flex items-center gap-2">
-          <div class="p-2 rounded-lg shadow-lg border">
-            <button
-              @click="setModoExibicao('calendario')"
-              class="flex flex-row items-center gap-2 text-[#16742F] font-medium"
-            >
-              <svg-icon type="mdi" :path="mdiCalendarMonthOutline" />
-            </button>
-          </div>
-        </div>
-
-        <button
-          @click="abrirModalFiltro = true"
-          class="flex flex-row items-center gap-2 text-[#16742F] font-medium"
-        >
-          <svg-icon type="mdi" :path="mdiFilterVariant" />
-          Filtrar
-        </button>
-
-        <Button
-          variant="outline"
-          @click="
-            async () => {
-              resetarParametros();
-              await chamarApi();
-            }
-          "
-          v-if="filtrado"
-        >
-          Limpar filtro
-        </Button>
-      </div>
+      <AcionarFiltro />
     </template>
 
     <template #titulo="{ item }">
@@ -266,16 +238,12 @@ import {
 } from "@comercti/vue-components-hmg";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import {
-  mdiEyeOutline,
-  mdiDotsVertical,
-  mdiFilterVariant,
-  mdiCalendarMonthOutline,
-} from "@mdi/js";
+import { mdiEyeOutline, mdiDotsVertical } from "@mdi/js";
 import { useUtils } from "@/utils/useUtils";
 import type { Execucao } from "./tipagem";
-import Button from "@/components/botao/index.vue";
 import { useRouter } from "vue-router";
+import BuscaRapida from "@/components/minhasTarefas/buscaRapida/index.vue";
+import AcionarFiltro from "@/components/minhasTarefas/acionarFiltro/index.vue";
 
 const { parseFotoPerfil } = useUtils();
 const router = useRouter();
@@ -285,6 +253,7 @@ const {
   obterDadosPorOrdenacao,
   obterDadosPorPagina,
 } = useApiTarefas();
+
 const {
   dataTarefas,
   headers,

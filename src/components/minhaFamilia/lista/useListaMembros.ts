@@ -2,8 +2,9 @@ import { ref } from "vue";
 import type { IFamiliaPessoa } from "../tipagem";
 import { usePerfil } from "@/store/usePerfil";
 import { useEditarMembro } from "../editarMembro/useEditarMembro";
+import { storeToRefs } from "pinia";
 
-const { perfil } = usePerfil();
+const { perfil } = storeToRefs(usePerfil());
 const { setarMembroParaEdicao } = useEditarMembro();
 const dataMembrosFamiliares = ref<IFamiliaPessoa[]>([]);
 const membro = ref<IFamiliaPessoa | null>(null);

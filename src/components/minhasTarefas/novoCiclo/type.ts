@@ -4,6 +4,9 @@ type FormCiclo = {
   duracaoDias: number;
   inicio: string;
   ativo: boolean;
+  participantes: string[];
+  renovacaoAutomatica: boolean;
+  revezamentoAutomatico: boolean;
 };
 
 interface IResponseCiclos {
@@ -16,6 +19,8 @@ interface IResponseCiclos {
   ultimaRotacao: string | null;
   criadoEm: string;
   atualizadoEm: string;
+  participantes: string[];
+  descricao: string;
 }
 
 export type { FormCiclo, IResponseCiclos };

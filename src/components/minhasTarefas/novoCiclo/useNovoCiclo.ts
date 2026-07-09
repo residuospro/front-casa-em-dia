@@ -7,6 +7,9 @@ const estadoInicial: FormCiclo = {
   duracaoDias: 7,
   inicio: "",
   ativo: true,
+  participantes: [],
+  renovacaoAutomatica: false,
+  revezamentoAutomatico: false,
 };
 
 const form = ref<FormCiclo>({ ...estadoInicial });

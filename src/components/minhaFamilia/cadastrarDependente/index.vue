@@ -1,6 +1,6 @@
 <template>
   <form
-    class="bg-white rounded-2xl border border-[#ECE4D8] shadow-sm overflow-hidden flex flex-col gap-2 p-4 h-full w-full flex-1"
+    class="bg-white rounded-2xl border shadow-sm overflow-hidden flex flex-col gap-2 p-4 h-full w-full flex-1"
     @submit.prevent="cadastrarNovoDependente(perfil.familiaId)"
   >
     <Input

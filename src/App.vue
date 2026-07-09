@@ -21,7 +21,7 @@ import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts
 import type { INotificacao } from "./components/notificacao/tipagem.ts";
 import { usePerfil } from "@/store/usePerfil";
 
-const { estaAutenticado, setBearerAuthorization } = useSessao();
+const { setBearerAuthorization } = useSessao();
 const { obterPerfil } = usePerfil();
 const {
   socket,

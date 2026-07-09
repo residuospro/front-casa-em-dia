@@ -11,6 +11,7 @@ interface Perfil {
   permissao: "ADMIN" | "USUARIO";
   familiaId: string;
   id: string;
+  usuarioId: string;
 }
 
 export const usePerfil = defineStore("perfil", () => {
@@ -22,6 +23,7 @@ export const usePerfil = defineStore("perfil", () => {
     permissao: "ADMIN",
     familiaId: "",
     id: "",
+    usuarioId: "",
   });
 
   const obterPerfil = async () => {

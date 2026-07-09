@@ -28,6 +28,15 @@ export const useApiCiclos = () => {
     abrirModalDeletar.value = false;
   };
 
+  const renovarCiclo = async (cicloId: string) => {
+    const resposta: AxiosResponse = await useClient.post(
+      `/ciclos/${perfil.familiaId}/ciclos/${cicloId}/rotacionar`,
+    );
+
+    useRespostaApi(resposta.status);
+    await obterCiclos();
+  };
+
   const atualizarStatusCiclo = async (id: string, ativo: boolean) => {
     try {
       const resposta: AxiosResponse = await useClient.patch(
@@ -58,5 +67,6 @@ export const useApiCiclos = () => {
     deletarCiclo,
     atualizarStatusCiclo,
     obterCicloAtivo,
+    renovarCiclo,
   };
 };

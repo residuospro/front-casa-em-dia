@@ -1,15 +1,13 @@
 <template>
   <div class="h-screen bg-[#fff] dark:bg-ce_black flex flex-col">
     <div
-      class="flex bg-[#FCFAF8] border-b border-[#ECE4D8] px-6 items-center justify-between h-16 shrink-0 z-20"
+      class="flex bg-[#FCFAF8] border-b px-6 items-center justify-between h-16 shrink-0 z-20"
     >
       <button @click="toggleSidebar" class="text-cinza_363637 transition">
         <svg-icon type="mdi" :path="mdiMenu" class="w-6 h-6" />
       </button>
 
-      <div class="flex items-center gap-2">
-        <NotificacaoNaoLidas />
-
+      <div class="flex items-center gap-4">
         <img
           v-if="perfil.fotoPerfil"
           :src="parseFotoPerfil(perfil.fotoPerfil)"
@@ -28,6 +26,10 @@
             <span>{{ parsePermissao(perfil.permissao) }}</span>
           </ce-badge>
         </div>
+
+        <button @click="limparSessao('/login')">
+          <svg-icon type="mdi" :path="mdiLogout" class="w-6 h-6" />
+        </button>
       </div>
     </div>
 
@@ -52,22 +54,26 @@
       </main>
     </div>
 
-    <div class="bg-[#FAF7F3] border-t border-[#ECE4D8] shrink-0">footer</div>
+    <div class="bg-[#FAF7F3] border-t shrink-0">
+      <Footer />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiMenu } from "@mdi/js";
+import { mdiMenu, mdiLogout } from "@mdi/js";
 import { useSidebar } from "@/components/sidebar/useSidebar";
 import Sidebar from "@/components/sidebar/index.vue";
 import { ref, onMounted, onUnmounted } from "vue";
 import { usePerfil } from "@/store/usePerfil";
 import { CeBadge } from "@comercti/vue-components";
 import { useUtils } from "@/utils/useUtils";
-import NotificacaoNaoLidas from "@/components/notificacao/naoLidas/index.vue";
+import Footer from "@/components/footer/index.vue";
+import { useSessao } from "@/utils/sessao";
 
+const { limparSessao } = useSessao();
 const { toggleSidebar, sidebarAberto, fecharSidebar } = useSidebar();
 const { perfil } = usePerfil();
 const { parseFotoPerfil, parsePermissao } = useUtils();

@@ -47,6 +47,8 @@ type Filtro = {
   ativo: boolean | null;
   status: StatusExecucao[] | null;
   busca: string | null;
+  cicloId: string | null;
+  dependente: boolean | null;
 };
 
 type Direcao = "desc" | "asc";

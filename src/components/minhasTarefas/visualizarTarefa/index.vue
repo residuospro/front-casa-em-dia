@@ -220,7 +220,10 @@
               </div>
             </div>
 
-            <div class="text-center mt-6">
+            <div
+              class="text-center mt-6"
+              v-if="(dataTarefa?.execucoes || []).length > 4"
+            >
               <button
                 @click="setarQtdExecucao"
                 class="text-emerald-600 hover:text-emerald-700 font-medium text-sm"

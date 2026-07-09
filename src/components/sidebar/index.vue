@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="flex flex-col bg-white border-r border-[#ECE4D8] overflow-hidden transition-all duration-300 z-50"
+    class="flex flex-col bg-white border-r overflow-hidden transition-all duration-300 z-50"
     :class="
       isDesktop
         ? sidebarAberto
@@ -104,9 +104,7 @@
     </nav>
 
     <div class="w-full p-4 mb-5" v-if="sidebarAberto">
-      <div
-        class="overflow-hidden rounded-2xl bg-white shadow-sm border border-[#ECE4D8]"
-      >
+      <div class="overflow-hidden rounded-2xl bg-white shadow-sm border">
         <div
           class="h-24 bg-[#F5F4F0] px-5 py-4 flex items-center justify-between"
         >

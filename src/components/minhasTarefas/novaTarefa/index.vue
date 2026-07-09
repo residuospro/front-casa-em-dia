@@ -20,7 +20,7 @@
       <Button
         variant="primary"
         type="button"
-        class="!w-1/6 sm:!w-full"
+        class="sm:!w-full"
         @click="
           acao === 'criar'
             ? router.push('/minhas-tarefas')
@@ -35,7 +35,7 @@
     </div>
 
     <div class="flex flex-row gap-2 sm:flex-col md:!flex-col">
-      <div class="border border-[#ECE4D8] rounded-2xl overflow-hidden flex-1">
+      <div class="border rounded-2xl overflow-hidden flex-1">
         <div class="p-5 space-y-5">
           <h2 class="font-semibold">Informações da tarefa</h2>
 
@@ -128,6 +128,7 @@
           />
 
           <Select
+            v-if="form.modoDistribuicao === 'REVEZAMENTO'"
             label="Ciclo"
             placeholder="Selecione o ciclo"
             v-model="form.cicloId"
@@ -136,7 +137,7 @@
 
           <!-- Frequência -->
 
-          <div class="border-t border-[#ECE4D8] pt-5 space-y-3">
+          <div class="border-t pt-5 space-y-3">
             <h2 class="font-semibold">Frequência da tarefa</h2>
 
             <p class="text-xs text-black/50">
@@ -169,7 +170,7 @@
             </Button>
           </div>
 
-          <div class="border-t border-[#ECE4D8] pt-5">
+          <div class="border-t pt-5" v-if="form.tipo === 'FAMILIAR'">
             <h2 class="font-semibold mt-1">Pontuação (Gamificação)</h2>
 
             <p class="text-xs text-black/50">
@@ -191,7 +192,7 @@
 
       <div class="flex flex-col justify-between gap-2">
         <div
-          class="border border-[#ECE4D8] rounded-2xl p-5 flex flex-col justify-between h-full"
+          class="border rounded-2xl p-5 flex flex-col justify-between h-full"
         >
           <div class="flex flex-col">
             <h2 class="font-semibold mb-5">Resumo da tarefa</h2>

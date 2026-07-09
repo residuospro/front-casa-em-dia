@@ -3,7 +3,8 @@
     class="flex xl:!flex-row xl:!items-center justify-between flex-col gap-3"
   >
     <div class="flex gap-3">
-      <button
+      <Button
+        variant="outline"
         @click="filtraNotificacoes('todas')"
         class="px-4 py-2 rounded-full border text-sm"
         :class="
@@ -11,9 +12,10 @@
         "
       >
         Todas {{ notificacoes.length }}
-      </button>
+      </Button>
 
-      <button
+      <Button
+        variant="outline"
         class="px-4 py-2 rounded-full border text-sm"
         :class="
           filtroSelecionado === 'nao-lidas'
@@ -23,9 +25,10 @@
         @click="filtraNotificacoes('nao-lidas')"
       >
         Não lidas {{ totalNaoLidas }}
-      </button>
+      </Button>
 
-      <button
+      <Button
+        variant="outline"
         class="px-4 py-2 rounded-full border text-sm"
         :class="
           filtroSelecionado === 'lidas' ? 'border-[#53864C] text-[#53864C]' : ''
@@ -33,10 +36,11 @@
         @click="filtraNotificacoes('lidas')"
       >
         Lidas {{ totalLidas }}
-      </button>
+      </Button>
     </div>
 
-    <button
+    <Button
+      variant="outline"
       :disabled="notificacoes.length === 0"
       class="px-4 py-2 rounded-full border text-sm sm:w-full"
       :class="
@@ -47,13 +51,14 @@
       @click="marcarTodasComoLido"
     >
       Marcar todas como lidas
-    </button>
+    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useNotificacao } from "../useNotificacao";
 import { useApiNotificacao } from "../useApiNotificacao";
+import Button from "@/components/botao/index.vue";
 
 const {
   notificacoes,
