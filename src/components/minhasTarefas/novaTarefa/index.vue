@@ -299,8 +299,8 @@ import {
 } from "@mdi/js";
 import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
-import { useCiclos } from "../ciclos/useCiclos";
-import { useApiCiclos } from "../ciclos/useApiCiclos";
+import { useCiclos } from "../../ciclos/useCiclos";
+import { useApiCiclos } from "../../ciclos/useApiCiclos";
 import { useNovaTarefa } from "./useNovaTarefa";
 import { computed, onMounted, watch } from "vue";
 import { useApiNovaTarefa } from "./useApiNovaTarefa";

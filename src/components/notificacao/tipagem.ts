@@ -1,6 +1,8 @@
+import type { TipoNotificacao } from "@/utils/tipagem";
+
 interface INotificacao {
   id: string;
-  tipo: string;
+  tipo: TipoNotificacao;
   titulo: string;
   mensagem: string;
   lido: boolean;

@@ -10,9 +10,9 @@
           Defina um ciclo para o revezamento automático das tarefas.
         </p>
       </div>
-      <Button @click="router.push('/minhas-tarefas/ciclos')" class="sm:!w-full"
-        >Visualizar Ciclos</Button
-      >
+      <Button @click="router.push('/ciclos')" class="sm:!w-full">
+        Visualizar Ciclos
+      </Button>
     </div>
 
     <div

@@ -1,62 +1,47 @@
 <template>
-  <div class="max-w-md bg-white rounded-3xl shadow-2xl">
-    <!-- Cabeçalho -->
-    <div class="p-4 flex items-center justify-between">
+  <div class="w-full bg-white rounded-3xl shadow-2xl">
+    <div class="p-4 flex items-center justify-between border-b">
       <h1 class="text-xl font-semibold text-gray-900">Membros da família</h1>
-      <a
-        href="#"
+      <button
+        @click="router.push('/minha-familia')"
         class="text-emerald-600 hover:text-emerald-700 font-medium text-sm flex items-center gap-1"
       >
         Ver todos
         <span aria-hidden="true">→</span>
-      </a>
+      </button>
     </div>
 
-    <!-- Lista de membros -->
     <div class="divide-y divide-gray-100">
       <div
-        v-for="member in displayedMembers"
-        :key="member.id"
+        v-for="membro in membros"
+        :key="membro.id"
         class="py-2 px-4 flex items-center gap-2 hover:bg-gray-50 transition-colors group"
       >
-        <!-- Avatar -->
         <img
-          :src="member.avatar"
-          :alt="member.name"
+          :src="membro.fotoPerfil"
+          :alt="membro.nome"
           class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm"
         />
 
-        <!-- Informações -->
         <div class="flex-1 min-w-0 flex flex-row justify-between">
-          <p class="font-medium text-gray-900 text-[17px]">{{ member.name }}</p>
+          <p class="font-medium text-gray-900 text-[17px]">{{ membro.nome }}</p>
           <span
-            :class="[
-              'inline-block mt-1 px-3 py-0.5 text-xs font-medium rounded-full',
-              member.badgeColor,
-            ]"
+            v-if="membro.permissao === 'ADMIN'"
+            class="px-2 py-1 rounded-full text-xs bg-[#FFF4D8] text-[#A46B00] capitalize"
           >
-            {{ member.role }}
+            {{ membro.permissao.toLocaleLowerCase() }}
           </span>
-        </div>
 
-        <!-- Seta -->
-        <div
-          class="text-gray-300 group-hover:text-emerald-500 transition-colors"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+          <span
+            v-else
+            class="px-2 py-1 rounded-full text-xs bg-[#FFF4D8] text-[#A46B00] capitalize"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="3"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+            {{
+              membro.permissao === "USUARIO"
+                ? "Usuário"
+                : String(membro.permissao).toLocaleLowerCase()
+            }}
+          </span>
         </div>
       </div>
     </div>
@@ -64,54 +49,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
+import { useListaMembros } from "@/components/minhaFamilia/lista/useListaMembros";
+import { useRouter } from "vue-router";
 
-// Dados mockados (pode ter mais de 4)
-const allMembers = ref([
-  {
-    id: 1,
-    name: "Kallif Abdon",
-    role: "Administrador",
-    avatar: "https://i.pravatar.cc/128?u=kallif",
-    badgeColor: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    id: 2,
-    name: "Maria Abdon",
-    role: "Esposa",
-    avatar: "https://i.pravatar.cc/128?u=maria",
-    badgeColor: "bg-amber-100 text-amber-700",
-  },
-  {
-    id: 3,
-    name: "João Abdon",
-    role: "Filho",
-    avatar: "https://i.pravatar.cc/128?u=joao",
-    badgeColor: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    id: 4,
-    name: "Laura Abdon",
-    role: "Filha",
-    avatar: "https://i.pravatar.cc/128?u=laura",
-    badgeColor: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    id: 5,
-    name: "Pedro Abdon",
-    role: "Filho",
-    avatar: "https://i.pravatar.cc/128?u=pedro",
-    badgeColor: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    id: 6,
-    name: "Ana Abdon",
-    role: "Filha",
-    avatar: "https://i.pravatar.cc/128?u=ana",
-    badgeColor: "bg-emerald-100 text-emerald-700",
-  },
-]);
-
-// Limita a exibição a 4 membros
-const displayedMembers = computed(() => allMembers.value.slice(0, 4));
+const { dataMembrosFamiliares } = useListaMembros();
+const router = useRouter();
+const membros = computed(() => dataMembrosFamiliares.value.slice(0, 4));
 </script>

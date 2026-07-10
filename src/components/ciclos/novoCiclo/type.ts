@@ -13,14 +13,19 @@ interface IResponseCiclos {
   id: string;
   familiaId: string;
   nome: string;
+  descricao: string;
   duracaoDias: number;
   ativo: boolean;
   inicio: string;
-  ultimaRotacao: string | null;
+  renovadoEm: string;
+  proximaRenovacao: string;
+  participantes: string[];
+  renovacaoAutomatica: boolean;
+  revezamentoAutomatico: boolean;
+  iteracao: number;
+  expirado: boolean;
   criadoEm: string;
   atualizadoEm: string;
-  participantes: string[];
-  descricao: string;
 }
 
 export type { FormCiclo, IResponseCiclos };

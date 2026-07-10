@@ -1,12 +1,11 @@
 <template>
-  <NovoCiclo />
+  <EditarPerfil />
 </template>
 
 <route lang="json">
 {
-  "name": "novo-ciclo",
   "meta": {
-    "title": "Novo Ciclo",
+    "title": "Editar Perfil",
     "layout": "Default",
     "auth": true
   }
@@ -14,5 +13,5 @@
 </route>
 
 <script setup lang="ts">
-import NovoCiclo from "@/components/minhasTarefas/novoCiclo/index.vue";
+import EditarPerfil from "@/components/perfil/index.vue";
 </script>

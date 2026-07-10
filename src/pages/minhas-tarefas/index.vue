@@ -19,10 +19,16 @@
       class="flex items-center justify-between sm:flex-col sm:items-start gap-2 w-full"
     >
       <div>
-        <h1 class="text-2xl font-semibold text-[#1C1F1F]">Tarefas</h1>
+        <h1 class="text-2xl font-semibold text-[#1C1F1F]">
+          {{ modoExibicao === "tabela" ? "Tarefas" : "Execuções" }}
+        </h1>
 
         <p class="text-sm text-black/50">
-          Organize e distribua tarefas para sua família.
+          {{
+            modoExibicao === "tabela"
+              ? " Organize e distribua tarefas para sua família."
+              : "Visualize as execuções das suas tarefas."
+          }}
         </p>
       </div>
 

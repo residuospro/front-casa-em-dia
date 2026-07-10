@@ -5,7 +5,7 @@ import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import type { AxiosResponse } from "axios";
 
 export function useApiNotificacao() {
-  const { notificacoes, notificacoesNaoLidas } = useNotificacao();
+  const { notificacoes } = useNotificacao();
 
   const listar = async () => {
     try {
@@ -19,13 +19,11 @@ export function useApiNotificacao() {
   const marcarComoLido = async (notificacaoId: string) => {
     await useClient.patch(`/notifications/${notificacaoId}/read`);
     await listar();
-    await obterNotificacoesNaoLidas();
   };
 
   const marcarTodasComoLido = async () => {
     await useClient.patch("/notifications/read-all");
     await listar();
-    await obterNotificacoesNaoLidas();
   };
 
   const excluirNotificacao = async (notificacaoId: string) => {
@@ -35,7 +33,6 @@ export function useApiNotificacao() {
 
     useRespostaApi(resposta.status);
     await listar();
-    await obterNotificacoesNaoLidas();
   };
 
   const aceitar = async (notificacao: INotificacao) => {
@@ -64,12 +61,10 @@ export function useApiNotificacao() {
     await marcarComoLido(notificacao.id);
   };
 
-  const obterNotificacoesNaoLidas = async () => {
-    const resposta: AxiosResponse<{ count: number }> = await useClient.get(
-      "/notifications/unread-count",
-    );
+  const deletarTodasNotificacoes = async () => {
+    await useClient.delete("/notifications/all");
 
-    notificacoesNaoLidas.value = resposta.data.count;
+    await listar();
   };
 
   return {
@@ -79,6 +74,6 @@ export function useApiNotificacao() {
     marcarComoLido,
     excluirNotificacao,
     marcarTodasComoLido,
-    obterNotificacoesNaoLidas,
+    deletarTodasNotificacoes,
   };
 }

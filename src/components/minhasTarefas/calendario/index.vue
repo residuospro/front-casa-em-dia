@@ -219,8 +219,6 @@ import { useApiTarefas } from "../useApiTarefas";
 import { useTarefas } from "../useTarefas";
 import { CeContextMenu } from "@comercti/vue-components-hmg";
 import { useRouter } from "vue-router";
-import BuscaRapida from "@/components/minhasTarefas/buscaRapida/index.vue";
-import AcionarFiltro from "@/components/minhasTarefas/acionarFiltro/index.vue";
 
 const router = useRouter();
 const { parseFotoPerfil } = useUtils();
@@ -242,7 +240,6 @@ const {
   proximo,
   getTarefasDoDia,
   getTaskPositionStyle,
-  abrirDetalhe,
 } = useCalendario();
 
 onMounted(async () => {

@@ -49,9 +49,9 @@ import SvgIcon from "@jamescoyle/vue-icon";
 import { onMounted } from "vue";
 import { useResumo } from "./useResumo";
 
-const { obterCiclos, resumo } = useResumo();
+const { obterResumo, resumo } = useResumo();
 
 onMounted(async () => {
-  await obterCiclos();
+  await obterResumo();
 });
 </script>

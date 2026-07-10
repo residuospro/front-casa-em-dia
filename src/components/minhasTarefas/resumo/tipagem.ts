@@ -1,7 +1,7 @@
 interface IResumo {
   totalTarefas: number;
-  tarefasConcluidas: number;
-  tarefasAtrasadas: number;
+  execucoesConcluidas: number;
+  execucoesAtrasadas: number;
   diasRestantes: number;
   ciclo: {
     id: string;

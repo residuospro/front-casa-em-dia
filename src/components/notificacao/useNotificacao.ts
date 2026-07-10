@@ -6,7 +6,6 @@ import router from "@/router";
 
 const notificacoes = ref<INotificacao[]>([]);
 const notificacoesFiltradas = ref<INotificacao[]>([]);
-const notificacoesNaoLidas = ref(0);
 const filtroSelecionado = ref<TipoFiltro>("todas");
 const socket = ref<Socket | null>(null);
 
@@ -140,6 +139,10 @@ const totalLidas = computed(
 
 const totalNaoLidas = computed(
   () => notificacoes.value.filter((n) => !n.lido).length,
+);
+
+const notificacoesNaoLidas = computed(() =>
+  notificacoes.value.filter((n) => !n.lido),
 );
 
 export const useNotificacao = () => {

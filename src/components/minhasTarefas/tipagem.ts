@@ -80,7 +80,9 @@ interface Execucao {
   concluidoPorId: string | null;
   concluidoEm: string | null;
   notificacaoCriada: boolean;
+  notificacaoAtrasada: boolean;
   criadoEm: string | null;
+  iteracao: number;
 }
 
 export type { IResponseTarefa, Filtro, ParametrosTarefas, Execucao, Tarefa };

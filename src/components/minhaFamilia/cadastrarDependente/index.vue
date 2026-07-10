@@ -76,8 +76,7 @@ import { useMinhaFamilia } from "../useMinhaFamilia";
 
 const { cadastrarNovoDependente } = useApiCadastrarDependente();
 const { novoDependente } = useCadastrarDependente();
-const { opcoesMembroFamiliar, opcoesGenero, opcoesPermissao } =
-  useMinhaFamilia();
+const { opcoesMembroFamiliar, opcoesGenero } = useMinhaFamilia();
 
 const { perfil } = usePerfil();
 </script>

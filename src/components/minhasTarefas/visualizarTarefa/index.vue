@@ -132,97 +132,202 @@
         </div>
 
         <!-- Histórico Recente -->
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-4">
           <h2 class="font-semibold text-lg">Histórico recente</h2>
-          <div class="space-y-4">
-            <div
-              class="flex items-center justify-between bg-gray-50 rounded-2xl p-4"
-              v-for="(item, index) in dataTarefa?.execucoes.slice(
-                0,
-                qtdExecucao,
-              )"
-              :key="index"
-            >
-              <div class="flex items-center gap-4">
-                <div
-                  v-if="obterProximaExecucao([item])"
-                  class="flex flex-col gap-1"
-                >
+
+          <div v-if="execucoesAgrupadas.atuais.length">
+            <h3 class="text-sm font-medium text-gray-500 mb-2">
+              Execuções atuais
+            </h3>
+            <div class="space-y-4">
+              <div
+                class="flex items-center justify-between bg-gray-50 rounded-2xl p-4"
+                v-for="(item, index) in execucoesAgrupadas.atuais"
+                :key="index"
+              >
+                <div class="flex items-center gap-4">
                   <div
-                    class="flex items-start gap-2"
-                    :class="
-                      obterClasseExecucaoFormatada(obterProximaExecucao([item]))
-                        .text
-                    "
+                    v-if="obterProximaExecucao([item])"
+                    class="flex flex-col gap-1"
                   >
-                    <span
-                      class="mt-[6px] h-2.5 w-2.5 rounded-full shrink-0"
+                    <div
+                      class="flex items-start gap-2"
                       :class="
                         obterClasseExecucaoFormatada(
                           obterProximaExecucao([item]),
-                        ).dot
+                        ).text
                       "
-                    />
+                    >
+                      <span
+                        class="mt-[6px] h-2.5 w-2.5 rounded-full shrink-0"
+                        :class="
+                          obterClasseExecucaoFormatada(
+                            obterProximaExecucao([item]),
+                          ).dot
+                        "
+                      />
 
-                    <div class="flex flex-col">
-                      <span class="text-sm font-medium leading-5">
-                        {{
-                          formatarExecucao(obterProximaExecucao([item])).titulo
-                        }}
-                      </span>
+                      <div class="flex flex-col">
+                        <span class="text-sm font-medium leading-5">
+                          {{
+                            formatarExecucao(obterProximaExecucao([item]))
+                              .titulo
+                          }}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <span
-                  class="border rounded-full p-1 text-sm capitalize"
-                  :class="setarClasseStatus(item)"
-                  >{{ item.status.toLocaleLowerCase() }}
-                </span>
-              </div>
-
-              <div class="flex flex-row gap-2">
-                <div class="flex items-center gap-3" v-if="item.concluidoPorId">
-                  <div class="flex items-center gap-2">
-                    <img
-                      :src="
-                        parseFotoPerfil(
-                          perfilConcluidoPor(item.concluidoPorId).foto || '',
-                        )
-                      "
-                      alt=""
-                      class="w-6 h-6 rounded-full"
-                    />
-                    <span
-                      :title="perfilConcluidoPor(item.concluidoPorId).nome"
-                      class="text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
-                      >{{ perfilConcluidoPor(item.concluidoPorId).nome }}</span
-                    >
-                  </div>
-                  <span class="text-emerald-600 font-medium">
-                    +{{ item.pontosObtidos }} pts
+                  <span
+                    class="border rounded-full p-1 text-sm capitalize"
+                    :class="setarClasseStatus(item)"
+                    >{{ item.status.toLocaleLowerCase() }}
                   </span>
                 </div>
 
-                <ce-context-menu
-                  v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
-                  :items="opcoesMenuExecucao"
-                  @select="executarOpcoesMenuExecucao($event, item.id)"
-                >
-                  <button>
-                    <svg-icon
-                      type="mdi"
-                      :path="mdiDotsVertical"
-                      class="text-gray-400 cursor-pointer"
-                    />
-                  </button>
-                </ce-context-menu>
+                <div class="flex flex-row gap-2">
+                  <div
+                    class="flex items-center gap-3"
+                    v-if="item.concluidoPorId"
+                  >
+                    <div class="flex items-center gap-2">
+                      <img
+                        :src="
+                          parseFotoPerfil(
+                            perfilConcluidoPor(item.concluidoPorId).foto || '',
+                          )
+                        "
+                        alt=""
+                        class="w-6 h-6 rounded-full"
+                      />
+                      <span
+                        :title="perfilConcluidoPor(item.concluidoPorId).nome"
+                        class="text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
+                        >{{ perfilConcluidoPor(item.concluidoPorId).nome }}</span
+                      >
+                    </div>
+                    <span class="text-emerald-600 font-medium">
+                      +{{ item.pontosObtidos }} pts
+                    </span>
+                  </div>
+
+                  <ce-context-menu
+                    v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
+                    :items="opcoesMenuExecucao"
+                    @select="executarOpcoesMenuExecucao($event, item.id)"
+                  >
+                    <button>
+                      <svg-icon
+                        type="mdi"
+                        :path="mdiDotsVertical"
+                        class="text-gray-400 cursor-pointer"
+                      />
+                    </button>
+                  </ce-context-menu>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="execucoesAgrupadas.passadas.length">
+            <h3 class="text-sm font-medium text-gray-500 mb-2">
+              Execuções passadas
+            </h3>
+            <div class="space-y-4">
+              <div
+                class="flex items-center justify-between bg-gray-50 rounded-2xl p-4"
+                v-for="(item, index) in execucoesAgrupadas.passadas.slice(
+                  0,
+                  qtdExecucao,
+                )"
+                :key="index"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    v-if="obterProximaExecucao([item])"
+                    class="flex flex-col gap-1"
+                  >
+                    <div
+                      class="flex items-start gap-2"
+                      :class="
+                        obterClasseExecucaoFormatada(
+                          obterProximaExecucao([item]),
+                        ).text
+                      "
+                    >
+                      <span
+                        class="mt-[6px] h-2.5 w-2.5 rounded-full shrink-0"
+                        :class="
+                          obterClasseExecucaoFormatada(
+                            obterProximaExecucao([item]),
+                          ).dot
+                        "
+                      />
+
+                      <div class="flex flex-col">
+                        <span class="text-sm font-medium leading-5">
+                          {{
+                            formatarExecucao(obterProximaExecucao([item]))
+                              .titulo
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <span
+                    class="border rounded-full p-1 text-sm capitalize"
+                    :class="setarClasseStatus(item)"
+                    >{{ item.status.toLocaleLowerCase() }}
+                  </span>
+                </div>
+
+                <div class="flex flex-row gap-2">
+                  <div
+                    class="flex items-center gap-3"
+                    v-if="item.concluidoPorId"
+                  >
+                    <div class="flex items-center gap-2">
+                      <img
+                        :src="
+                          parseFotoPerfil(
+                            perfilConcluidoPor(item.concluidoPorId).foto || '',
+                          )
+                        "
+                        alt=""
+                        class="w-6 h-6 rounded-full"
+                      />
+                      <span
+                        :title="perfilConcluidoPor(item.concluidoPorId).nome"
+                        class="text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
+                        >{{ perfilConcluidoPor(item.concluidoPorId).nome }}</span
+                      >
+                    </div>
+                    <span class="text-emerald-600 font-medium">
+                      +{{ item.pontosObtidos }} pts
+                    </span>
+                  </div>
+
+                  <ce-context-menu
+                    v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
+                    :items="opcoesMenuExecucao"
+                    @select="executarOpcoesMenuExecucao($event, item.id)"
+                  >
+                    <button>
+                      <svg-icon
+                        type="mdi"
+                        :path="mdiDotsVertical"
+                        class="text-gray-400 cursor-pointer"
+                      />
+                    </button>
+                  </ce-context-menu>
+                </div>
               </div>
             </div>
 
             <div
               class="text-center mt-6"
-              v-if="(dataTarefa?.execucoes || []).length > 4"
+              v-if="execucoesAgrupadas.passadas.length > 4"
             >
               <button
                 @click="setarQtdExecucao"
@@ -338,6 +443,7 @@ const {
 const { obterTarefaPorId } = useApiVisualizarTarefa();
 const {
   dataTarefa,
+  execucoesAgrupadas,
   opcoesMenuExecucao,
   qtdExecucao,
   verHisticoCompleto,

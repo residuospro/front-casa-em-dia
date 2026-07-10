@@ -174,8 +174,8 @@ import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 import { useTarefas } from "../useTarefas";
 import { useApiTarefas } from "../useApiTarefas";
 import { computed, onMounted } from "vue";
-import { useApiCiclos } from "../ciclos/useApiCiclos";
-import { useCiclos } from "../ciclos/useCiclos";
+import { useApiCiclos } from "../../ciclos/useApiCiclos";
+import { useCiclos } from "../../ciclos/useCiclos";
 
 const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const { opcoesFamiliares } = useMinhaFamilia();

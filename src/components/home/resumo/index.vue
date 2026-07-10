@@ -20,10 +20,6 @@
         <div class="text-sm text-black/70 mt-1">
           {{ card.titulo }}
         </div>
-
-        <button class="mt-3 text-sm font-medium text-[#53864C] hover:underline">
-          {{ card.acao }}
-        </button>
       </div>
     </div>
   </div>
@@ -35,35 +31,36 @@ import SvgIcon from "@jamescoyle/vue-icon";
 import {
   mdiCalendarCheck,
   mdiListBoxOutline,
-  mdiAccountGroupOutline,
+  mdiClockAlertOutline,
 } from "@mdi/js";
+import { useResumo } from "@/components/minhasTarefas/resumo/useResumo";
+import { computed } from "vue";
 
-const cards = [
+const { dataResumo } = useResumo();
+
+const cards = computed(() => [
   {
-    titulo: "Tarefas pendentes",
-    valor: 12,
-    acao: "5 urgentes",
+    titulo: "Total de tarefas",
+    valor: dataResumo.value?.totalTarefas,
     icon: mdiListBoxOutline,
     bg: "bg-[#EEF5EA]",
     color: "text-[#53864C]",
   },
 
   {
-    titulo: "Eventos hoje",
-    valor: 3,
-    acao: "Ver agenda",
+    titulo: "Execuções concluidas",
+    valor: dataResumo.value?.execucoesConcluidas,
     icon: mdiCalendarCheck,
-    bg: "bg-[#FFF4D8]",
-    color: "text-[#D39B00]",
+    bg: "bg-green-500/5",
+    color: "text-green-500",
   },
 
   {
-    titulo: "Membros da família",
-    valor: 4,
-    acao: "Ver todos",
-    icon: mdiAccountGroupOutline,
-    bg: "bg-[#EEF5EA]",
-    color: "text-[#53864C]",
+    titulo: "Execuções em atraso",
+    valor: dataResumo.value?.execucoesAtrasadas,
+    icon: mdiClockAlertOutline,
+    bg: "bg-red-500/5",
+    color: "text-red-500",
   },
-];
+]);
 </script>

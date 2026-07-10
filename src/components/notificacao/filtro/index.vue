@@ -39,19 +39,29 @@
       </Button>
     </div>
 
-    <Button
-      variant="outline"
-      :disabled="notificacoes.length === 0"
-      class="px-4 py-2 rounded-full border text-sm sm:w-full"
-      :class="
-        notificacoes.length > 0
-          ? 'border-[#53864C] text-[#53864C]'
-          : 'border-slate-300 text-slate-400'
-      "
-      @click="marcarTodasComoLido"
-    >
-      Marcar todas como lidas
-    </Button>
+    <div class="space-x-2">
+      <Button
+        variant="outline"
+        :disabled="notificacoes.length === 0"
+        class="px-4 py-2 rounded-full border text-sm sm:w-full"
+        :class="
+          notificacoes.length > 0
+            ? 'border-[#53864C] text-[#53864C]'
+            : 'border-slate-300 text-slate-400'
+        "
+        @click="marcarTodasComoLido"
+      >
+        Marcar todas como lidas
+      </Button>
+
+      <button
+        :disabled="notificacoes.length === 0"
+        @click="deletarTodasNotificacoes"
+        class="px-5 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+      >
+        Excluir todas
+      </button>
+    </div>
   </div>
 </template>
 
@@ -68,5 +78,5 @@ const {
   filtraNotificacoes,
 } = useNotificacao();
 
-const { marcarTodasComoLido } = useApiNotificacao();
+const { marcarTodasComoLido, deletarTodasNotificacoes } = useApiNotificacao();
 </script>

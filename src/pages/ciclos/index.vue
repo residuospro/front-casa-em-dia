@@ -13,5 +13,5 @@
 </route>
 
 <script setup lang="ts">
-import Ciclos from "@/components/minhasTarefas/ciclos/index.vue";
+import Ciclos from "@/components/ciclos/index.vue";
 </script>

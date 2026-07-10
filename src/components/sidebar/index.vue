@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <nav class="flex-1 p-4 space-y-1 overflow-hidden">
+    <nav class="flex-1 p-4 space-y-1 overflow-auto">
       <template v-for="item in navItens" :key="item.label">
         <div v-if="item.children" class="space-y-1">
           <button

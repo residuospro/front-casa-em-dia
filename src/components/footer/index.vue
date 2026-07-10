@@ -19,10 +19,10 @@
         @click="() => router.push('/notificacoes')"
       >
         <div
-          v-if="notificacoesNaoLidas > 0"
+          v-if="totalNaoLidas > 0"
           class="text-white bg-red-600 rounded-full text-center text-[0.5rem] w-4 absolute z-30 top-1 right-4"
         >
-          {{ notificacoesNaoLidas }}
+          {{ totalNaoLidas }}
         </div>
 
         <svg-icon
@@ -70,20 +70,14 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { useApiNotificacao } from "@/components/notificacao/useApiNotificacao";
 import { useNotificacao } from "@/components/notificacao/useNotificacao";
 
-const { obterNotificacoesNaoLidas } = useApiNotificacao();
-const { notificacoesNaoLidas } = useNotificacao();
-onMounted(async () => {
-  await obterNotificacoesNaoLidas();
-});
+const { totalNaoLidas } = useNotificacao();
 
 import {
   mdiHome,
   mdiClipboardTextOutline,
   mdiPlus,
-  mdiCalendarMonthOutline,
   mdiBellOutline,
   mdiCalculatorVariantOutline,
 } from "@mdi/js";

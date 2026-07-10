@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Execucao, Tarefa } from "../tipagem";
 import { useUtils } from "@/utils/useUtils";
 
@@ -15,6 +15,18 @@ const execucao = ref({
   execucaoId: "",
   concluidoPorId: "",
   tarefaId: "",
+});
+
+const execucoesAgrupadas = computed(() => {
+  const execs = dataTarefa.value?.execucoes || [];
+  if (!execs.length) return { atuais: [], passadas: [] };
+
+  const maxIteracao = Math.max(...execs.map((e) => e.iteracao));
+
+  return {
+    atuais: execs.filter((e) => e.iteracao === maxIteracao),
+    passadas: execs.filter((e) => e.iteracao < maxIteracao),
+  };
 });
 
 const opcoesMenuExecucao = [
@@ -115,12 +127,13 @@ const setarQtdExecucao = () => {
   }
 
   verHisticoCompleto.value = true;
-  qtdExecucao.value = dataTarefa?.value?.execucoes.length || 4;
+  qtdExecucao.value = execucoesAgrupadas.value.passadas.length || 4;
 };
 
 export const useVisualizarTarefas = () => {
   return {
     dataTarefa,
+    execucoesAgrupadas,
     opcoesMenuExecucao,
     qtdExecucao,
     verHisticoCompleto,

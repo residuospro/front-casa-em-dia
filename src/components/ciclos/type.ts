@@ -2,14 +2,19 @@ interface IResponseCiclos {
   id: string;
   familiaId: string;
   nome: string;
+  descricao: string | null;
   duracaoDias: number;
   ativo: boolean;
   inicio: string;
-  ultimaRotacao: string | null;
+  proximaRenovacao: string | null;
+  renovadoEm: string | null;
+  participantes: string[];
+  renovacaoAutomatica: boolean;
+  revezamentoAutomatico: boolean;
+  iteracao: number;
+  expirado: boolean;
   criadoEm: string;
   atualizadoEm: string;
-  renovadoEm: string | null;
-  expirado: boolean;
 }
 
 export type { IResponseCiclos };

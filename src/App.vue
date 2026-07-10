@@ -29,7 +29,7 @@ const {
   mostrarNotificacaoOS,
   solicitarPermissaoNotificacao,
 } = useNotificacao();
-const { listar, obterNotificacoesNaoLidas } = useApiNotificacao();
+const { listar } = useApiNotificacao();
 const { conectar } = useSocket();
 
 const temToken = !!localStorage.getItem("token");
@@ -67,7 +67,6 @@ onMounted(async () => {
       if (!existe) {
         notificacoes.value.unshift(data);
         mostrarNotificacaoOS(data);
-        obterNotificacoesNaoLidas();
       }
     });
   }

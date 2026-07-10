@@ -24,10 +24,7 @@
         </p>
       </div>
 
-      <Button
-        @click="router.push('/minhas-tarefas/novo-ciclo')"
-        class="sm:!w-full"
-      >
+      <Button @click="router.push('/ciclos/novo-ciclo')" class="sm:!w-full">
         + Novo ciclo
       </Button>
     </div>
@@ -78,18 +75,12 @@
             <p>🕒 Duração: {{ cicloAtivo?.duracaoDias }} dias</p>
 
             <p>
-              📅 Próxima renovação:
-              {{
-                formatarData(
-                  String(
-                    calcularProximaRenovacao(
-                      cicloAtivo?.inicio || "",
-                      cicloAtivo?.duracaoDias || 0,
-                      cicloAtivo.renovadoEm,
-                    ),
-                  ),
-                )
-              }}
+              📅 Renovado em: {{ formatarData(cicloAtivo?.renovadoEm || "") }}
+            </p>
+
+            <p>
+              ↻ Próxima renovação:
+              {{ formatarData(cicloAtivo?.proximaRenovacao || "") }}
             </p>
 
             <Toogle
@@ -106,7 +97,7 @@
           <ce-progress-indicator
             :progress="
               calcularProgressoCiclo(
-                new Date(cicloAtivo?.inicio || ''),
+                new Date(cicloAtivo?.renovadoEm || cicloAtivo?.inicio || ''),
                 cicloAtivo?.duracaoDias || 0,
               )
             "
@@ -197,7 +188,6 @@ const {
   opcoesMenuCicloAtivo,
   calcularProgressoCiclo,
   diasDesdeInicio,
-  calcularProximaRenovacao,
   acoesMenuContext,
   ajustarOpçoesMenu,
 } = useCiclos();

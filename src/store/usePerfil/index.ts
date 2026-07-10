@@ -2,17 +2,7 @@ import { useClient } from "@/client";
 import type { AxiosResponse } from "axios";
 import { ref } from "vue";
 import { defineStore } from "pinia";
-
-interface Perfil {
-  nome: string;
-  fotoPerfil: string | null;
-  familia: string;
-  totalMembros: number;
-  permissao: "ADMIN" | "USUARIO";
-  familiaId: string;
-  id: string;
-  usuarioId: string;
-}
+import type { Perfil } from "@/utils/tipagem";
 
 export const usePerfil = defineStore("perfil", () => {
   const perfil = ref<Perfil>({
@@ -24,6 +14,10 @@ export const usePerfil = defineStore("perfil", () => {
     familiaId: "",
     id: "",
     usuarioId: "",
+    email: "",
+    celular: null,
+    genero: null,
+    tipoPessoa: null,
   });
 
   const obterPerfil = async () => {

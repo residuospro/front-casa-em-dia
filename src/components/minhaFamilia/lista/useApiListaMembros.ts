@@ -4,6 +4,8 @@ import type { IFamiliaPessoa } from "../tipagem";
 import { useListaMembros } from "./useListaMembros";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import { useApiMinhaFamilia } from "../useApiMinhaFamilia";
+import { usePerfil } from "@/store/usePerfil";
+import { storeToRefs } from "pinia";
 
 export const useApiListaMembros = () => {
   const {
@@ -14,10 +16,11 @@ export const useApiListaMembros = () => {
     fecharModalDeletar,
   } = useListaMembros();
   const { obterFamilia } = useApiMinhaFamilia();
+  const { perfil } = storeToRefs(usePerfil());
 
   const listarMembros = async (familiaId?: string) => {
     const resposta: AxiosResponse<IFamiliaPessoa[]> = await useClient.get(
-      `/families/${familiaId}/membros`,
+      `/families/${familiaId ?? perfil.value.familiaId}/membros`,
     );
 
     dataMembrosFamiliares.value = resposta.data;

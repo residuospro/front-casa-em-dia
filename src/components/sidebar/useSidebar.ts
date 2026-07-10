@@ -5,6 +5,8 @@ import {
   mdiBellOutline,
   mdiListBoxOutline,
   mdiCalculatorVariantOutline,
+  mdiAutorenew,
+  mdiAccountDetailsOutline,
 } from "@mdi/js";
 
 export interface NavItem {
@@ -37,16 +39,27 @@ const navItens: NavItem[] = [
   },
   { label: "Notificações", path: "/notificacoes", icone: mdiBellOutline },
   {
+    label: "Meus ciclos",
+    icone: mdiAutorenew,
+    children: [
+      { label: "Ciclos", path: "/ciclos" },
+      { label: "Novo ciclo", path: "/ciclos/novo-ciclo" },
+    ],
+  },
+  {
     label: "Minhas tarefas",
     icone: mdiListBoxOutline,
     children: [
       { label: "Tarefas", path: "/minhas-tarefas" },
       { label: "Nova tarefa", path: "/minhas-tarefas/nova-tarefa" },
-      { label: "Ciclos", path: "/minhas-tarefas/ciclos" },
-      { label: "Novo ciclo", path: "/minhas-tarefas/novo-ciclo" },
     ],
   },
   { label: "Finanças", path: "/financas", icone: mdiCalculatorVariantOutline },
+  {
+    label: "Editar perfil",
+    path: "/perfil/editar",
+    icone: mdiAccountDetailsOutline,
+  },
 ];
 
 export const useSidebar = () => {

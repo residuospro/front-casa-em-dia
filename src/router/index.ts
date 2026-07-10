@@ -12,6 +12,7 @@ const router = createRouter({
   routes,
 });
 
+///@ts-ignore
 router.beforeEach((to, from) => {
   const requiresAuth = to.meta.auth !== false;
 
