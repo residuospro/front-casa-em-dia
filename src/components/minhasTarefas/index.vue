@@ -99,6 +99,9 @@
       </div>
     </template>
 
+    <template #ciclo="{ item }">
+      <span class="font-medium capitalize">{{ item.ciclo.nome }}</span>
+    </template>
     <template #pontos="{ item }">
       <span class="font-bold">{{ item.pontos }}pts</span>
     </template>

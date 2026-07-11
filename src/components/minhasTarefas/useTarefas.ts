@@ -102,6 +102,7 @@ const headers = [
   { text: "Responsável", value: "responsavelAtual", sortable: true },
   { text: "Pontos", value: "pontos", sortable: false },
   { text: "Agenda", value: "execucoes", sortable: false },
+  { text: "Ciclo", value: "ciclo" },
   { text: "Status", value: "ativo", sortable: true },
   { text: "Ações", value: "acoes", sortable: false, width: "5rem" },
 ];
