@@ -3,6 +3,7 @@ import type { IResumo } from "./tipagem";
 import { useClient } from "@/client";
 import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
+import { storeToRefs } from "pinia";
 import {
   mdiListBoxOutline,
   mdiCalendarCheckOutline,
@@ -10,13 +11,15 @@ import {
   mdiAutorenew,
 } from "@mdi/js";
 
-const { perfil } = usePerfil();
+const { perfil } = storeToRefs(usePerfil());
 
 const dataResumo = ref<IResumo | null>(null);
 
+const familiaId = computed(() => perfil.value.familiaId);
+
 const obterResumo = async () => {
   const resposta: AxiosResponse<IResumo> = await useClient.get(
-    `/tarefas/${perfil.familiaId}/tarefas/resumo`,
+    `/tarefas/${familiaId.value}/tarefas/resumo`,
   );
 
   dataResumo.value = resposta.data;

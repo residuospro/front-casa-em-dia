@@ -36,7 +36,9 @@ export function useCalendario() {
       `${meses[dataAtual.value.getMonth()]} de ${dataAtual.value.getFullYear()}`,
   );
 
-  const horas = computed(() => Array.from({ length: 18 }, (_, i) => i + 6));
+  const horas = computed(() => {
+    return Array.from({ length: 24 }, (_, i) => i); // 0 até 23
+  });
 
   const semana = computed(() => {
     const ref = new Date(dataAtual.value);
@@ -109,7 +111,8 @@ export function useCalendario() {
     const date = new Date(tarefa.data);
     const hora = date.getHours() + date.getMinutes() / 60;
 
-    const top = (hora - 6) * 60;
+    // Alteração principal aqui ↓
+    const top = hora * 60; // ← Removido o "- 6"
     const height = 65;
 
     const diff = new Date(tarefa.data).getTime() - new Date().getTime();

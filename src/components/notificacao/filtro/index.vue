@@ -2,7 +2,7 @@
   <div
     class="flex xl:!flex-row xl:!items-center justify-between flex-col gap-3"
   >
-    <div class="flex gap-3">
+    <div class="flex gap-3 sm:flex-col">
       <Button
         variant="outline"
         @click="filtraNotificacoes('todas')"
@@ -39,7 +39,7 @@
       </Button>
     </div>
 
-    <div class="space-x-2">
+    <div class="flex items-center gap-2 sm:flex-col">
       <Button
         variant="outline"
         :disabled="notificacoes.length === 0"
@@ -57,7 +57,7 @@
       <button
         :disabled="notificacoes.length === 0"
         @click="deletarTodasNotificacoes"
-        class="px-5 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+        class="px-5 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors sm:w-full"
       >
         Excluir todas
       </button>

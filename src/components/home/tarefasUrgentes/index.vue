@@ -10,7 +10,9 @@
         :key="index"
         class="px-6 py-5 flex items-center gap-4 hover:bg-gray-50 transition-colors group"
       >
-        <div class="flex flex-rows items-center justify-between w-full">
+        <div
+          class="flex flex-rows items-center justify-between w-full sm:flex-col sm:items-start sm:gap-4"
+        >
           <div class="flex-1 min-w-0 flex flex-row gap-2 items-center">
             <p :class="['text-[17px] font-medium']">
               {{ task.titulo }}
@@ -27,7 +29,9 @@
             </span>
           </div>
 
-          <div class="flex items-center gap-10">
+          <div
+            class="flex items-center gap-10 sm:gap-4 sm:justify-between sm:w-full"
+          >
             <div class="flex items-center gap-4">
               <div
                 v-if="obterProximaExecucao(task.execucoes)"
@@ -69,6 +73,7 @@
                 }}
               </span>
             </div>
+
             <img
               :src="
                 parseFotoPerfil(

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white p-6 rounded-lg flex flex-col gap-3">
+  <div class="bg-white p-6 rounded-lg flex flex-col gap-3">
     <div class="flex items-center justify-between sm:flex-col sm:gap-2">
       <div class="flex flex-col justify-center gap-1">
         <h1 class="text-2xl font-semibold">

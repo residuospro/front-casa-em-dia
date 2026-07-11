@@ -8,7 +8,7 @@
     >
       <div
         v-if="item.floating"
-        class="w-16 h-16 sm:!w-14 sm:!h-14 rounded-full bg-green-700 flex items-center justify-center shadow-lg"
+        class="w-16 h-16 sm:!w-10 sm:!h-10 rounded-full bg-green-700 flex items-center justify-center shadow-lg"
       >
         <svg-icon type="mdi" :path="item.icon" class="text-white" />
       </div>

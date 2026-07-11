@@ -24,7 +24,13 @@
         />
 
         <div class="flex-1 min-w-0 flex flex-row justify-between">
-          <p class="font-medium text-gray-900 text-[17px]">{{ membro.nome }}</p>
+          <span
+            :title="membro.nome"
+            class="font-medium text-gray-900 text-[17px] truncate max-w-[80px] sm:max-w-[120px] md:max-w-[180px]"
+          >
+            {{ membro.nome }}
+          </span>
+
           <span
             v-if="membro.permissao === 'ADMIN'"
             class="px-2 py-1 rounded-full text-xs bg-[#FFF4D8] text-[#A46B00] capitalize"

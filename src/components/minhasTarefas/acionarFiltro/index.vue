@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row gap-2 sm:justify-between sm:w-full">
+  <div class="flex flex-row gap-2 sm:justify-between sm:w-full sm:p-2">
     <div class="flex items-center gap-2">
       <div class="p-2 rounded-lg shadow-lg border">
         <button

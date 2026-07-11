@@ -29,7 +29,11 @@
       </Button>
     </div>
 
-    <div class="border rounded-2xl p-5" v-if="cicloAtivo">
+    <div
+      class="border rounded-2xl p-5"
+      v-for="(ciclo, index) in cicloAtivo"
+      :key="index"
+    >
       <div class="flex flex-row items-center justify-between">
         <h2 class="font-semibold mb-4">Ciclo ativo</h2>
 
@@ -39,15 +43,13 @@
             (acao) =>
               acoesMenuContext(
                 acao,
-                cicloAtivo?.id || '',
-                cicloAtivo?.nome || '',
+                ciclo?.id || '',
+                ciclo?.nome || '',
                 renovarCiclo,
               )
           "
         >
-          <button class="text-xl" @click="ajustarOpçoesMenu(cicloAtivo)">
-            ⋮
-          </button>
+          <button class="text-xl" @click="ajustarOpçoesMenu(ciclo)">⋮</button>
         </ce-context-menu>
       </div>
 
@@ -60,7 +62,7 @@
 
         <div class="flex-1">
           <div class="flex gap-3 items-center">
-            <h3 class="font-semibold">{{ cicloAtivo?.nome }}</h3>
+            <h3 class="font-semibold">{{ ciclo?.nome }}</h3>
 
             <span
               class="px-3 py-1 rounded-full bg-[#EEF5EA] text-[#53864C] text-xs"
@@ -70,24 +72,22 @@
           </div>
 
           <div class="mt-3 space-y-2 text-sm text-black/60">
-            <p>📅 Iniciado em {{ formatarData(cicloAtivo?.inicio || "") }}</p>
+            <p>📅 Iniciado em {{ formatarData(ciclo?.inicio || "") }}</p>
 
-            <p>🕒 Duração: {{ cicloAtivo?.duracaoDias }} dias</p>
+            <p>🕒 Duração: {{ ciclo?.duracaoDias }} dias</p>
 
-            <p>
-              📅 Renovado em: {{ formatarData(cicloAtivo?.renovadoEm || "") }}
-            </p>
+            <p>📅 Renovado em: {{ formatarData(ciclo?.renovadoEm || "") }}</p>
 
             <p>
               ↻ Próxima renovação:
-              {{ formatarData(cicloAtivo?.proximaRenovacao || "") }}
+              {{ formatarData(ciclo?.proximaRenovacao || "") }}
             </p>
 
             <Toogle
-              :model-value="cicloAtivo?.ativo"
+              :model-value="ciclo?.ativo"
               label="Ativo"
               @update:model-value="
-                (valor) => atualizarStatusCiclo(cicloAtivo?.id || '', valor)
+                (valor) => atualizarStatusCiclo(ciclo?.id || '', valor)
               "
             />
           </div>
@@ -97,12 +97,12 @@
           <ce-progress-indicator
             :progress="
               calcularProgressoCiclo(
-                new Date(cicloAtivo?.renovadoEm || cicloAtivo?.inicio || ''),
-                cicloAtivo?.duracaoDias || 0,
+                ciclo?.renovadoEm || ciclo?.inicio || '',
+                ciclo?.duracaoDias || 0,
               )
             "
             variant="circle"
-            :label="`${diasDesdeInicio(new Date(cicloAtivo?.inicio || ''), cicloAtivo?.duracaoDias)} de ${cicloAtivo?.duracaoDias} dias`"
+            :label="`${diasDesdeInicio(new Date(ciclo?.renovadoEm || ciclo?.inicio || ''), ciclo?.duracaoDias)} de ${ciclo?.duracaoDias} dias`"
           />
         </div>
       </div>

@@ -20,8 +20,6 @@ const opcoesMenuCicloAtivo = ref([...estadoInicial]);
 const opcoesMenu = ref([...estadoInicial]);
 
 const ajustarOpçoesMenu = (ciclo: IResponseCiclos) => {
-  console.log("aquuiii", ciclo);
-
   const existente = opcoesMenuCicloAtivo.value.some(
     (opcao) => opcao.value === "renovar-ciclo",
   );
@@ -39,27 +37,24 @@ const ajustarOpçoesMenu = (ciclo: IResponseCiclos) => {
   opcoesMenuCicloAtivo.value = [...estadoInicial];
 };
 
-const calcularProgressoCiclo = (inicio: Date, duracaoDias: number) => {
-  const hoje = new Date();
+const calcularProgressoCiclo = (renovadoEm: string, duracaoDias: number) => {
+  const agora = new Date();
+  const inicio = new Date(renovadoEm);
 
-  const inicioData = new Date(inicio);
+  // Calcula a diferença exata em milissegundos
+  const diffMs = agora.getTime() - inicio.getTime();
 
-  inicioData.setHours(0, 0, 0, 0);
-  hoje.setHours(0, 0, 0, 0);
+  // Converte duração para milissegundos
+  const duracaoMs = duracaoDias * 24 * 60 * 60 * 1000;
 
-  const diffMs = hoje.getTime() - inicioData.getTime();
+  // Calcula o progresso em porcentagem
+  let progresso = (diffMs / duracaoMs) * 100;
 
-  const diasPassados = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diasPassados <= 0) {
-    return 0;
-  }
-
-  const progresso = ((diasPassados - 1) / duracaoDias) * 100;
+  // Garante que o valor fique entre 0 e 100
+  progresso = Math.max(0, Math.min(100, progresso));
 
   return Math.round(progresso);
 };
-
 const diasDesdeInicio = (
   inicio: Date | string,
   duracaoDias: number,
@@ -108,7 +103,7 @@ const calcularProximaRenovacao = (
 };
 
 const cicloAtivo = computed(() =>
-  dataCiclos.value.find((ciclo) => ciclo.ativo),
+  dataCiclos.value.filter((ciclo) => ciclo.ativo),
 );
 
 const ciclosInativo = computed(() =>

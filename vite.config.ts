@@ -52,12 +52,12 @@ export default defineConfig({
       },
 
       manifest: {
-        name: "Memora",
-        short_name: "Memora",
-        description: "Aprenda melhor. Lembre por mais tempo.",
+        name: "Casa em dia",
+        short_name: "casa em dia",
+        description: "Organize sua rotina e viva melhor.",
 
-        theme_color: "#081121",
-        background_color: "#020617",
+        theme_color: "#53864C",
+        background_color: "#53864C",
 
         display: "standalone",
         orientation: "portrait",

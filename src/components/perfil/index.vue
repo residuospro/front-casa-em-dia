@@ -181,7 +181,7 @@
         </div>
 
         <!-- Botões -->
-        <div class="flex flex-col sm:flex-row gap-3 pt-4">
+        <div class="flex flex-col gap-3 pt-4">
           <Button
             type="submit"
             :disabled="loading || !formularioValido"

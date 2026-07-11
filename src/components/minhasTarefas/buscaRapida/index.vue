@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center gap-4">
+  <div class="flex items-center gap-4 sm:p-2 sm:justify-between sm:w-full">
     <button
       @click="aplicaFiltro('todas')"
       class="active:scale-90"

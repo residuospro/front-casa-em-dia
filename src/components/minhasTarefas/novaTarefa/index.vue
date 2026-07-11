@@ -30,7 +30,7 @@
               })
         "
       >
-        Visualizar tarefas
+        {{ acao === "criar" ? " Visualizar tarefas" : " Visualizar tarefa" }}
       </Button>
     </div>
 

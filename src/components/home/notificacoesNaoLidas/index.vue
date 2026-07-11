@@ -1,37 +1,3 @@
-<script setup lang="ts">
-///@ts-ignore
-import SvgIcon from "@jamescoyle/vue-icon";
-import {
-  mdiAccountPlusOutline,
-  mdiClockAlertOutline,
-  mdiCheckboxMarkedCircleOutline,
-  mdiClipboardTextClockOutline,
-} from "@mdi/js";
-import { useNotificacao } from "@/components/notificacao/useNotificacao";
-import { TipoNotificacaoValues, type TipoNotificacao } from "@/utils/tipagem";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-const { totalNaoLidas, notificacoesNaoLidas } = useNotificacao();
-
-const notificacaoIcones: Record<TipoNotificacao, string> = {
-  [TipoNotificacaoValues.CONVITE_FAMILIA]: mdiAccountPlusOutline,
-  [TipoNotificacaoValues.CICLO_VENCIDO]: mdiClockAlertOutline,
-  [TipoNotificacaoValues.EXECUCAO_TAREFA]: mdiCheckboxMarkedCircleOutline,
-  [TipoNotificacaoValues.TAREFA_ATRIBUIDA]: mdiClipboardTextClockOutline,
-};
-
-const notificacaoClasses: Record<TipoNotificacao, string> = {
-  [TipoNotificacaoValues.CONVITE_FAMILIA]: "bg-green-100 text-green-700",
-
-  [TipoNotificacaoValues.CICLO_VENCIDO]: "bg-red-100 text-red-600",
-
-  [TipoNotificacaoValues.EXECUCAO_TAREFA]: "bg-blue-100 text-blue-600",
-
-  [TipoNotificacaoValues.TAREFA_ATRIBUIDA]: "bg-amber-100 text-amber-600",
-};
-</script>
-
 <template>
   <div class="bg-white rounded-3xl shadow-sm overflow-hidden">
     <div class="flex items-center justify-between p-4">
@@ -68,7 +34,7 @@ const notificacaoClasses: Record<TipoNotificacao, string> = {
         </p>
 
         <span class="text-sm text-slate-400 mt-2 block">
-          {{ notificacao.criadoEm }}
+          {{ formatarData(notificacao.criadoEm) }}
         </span>
       </div>
     </div>
@@ -83,3 +49,40 @@ const notificacaoClasses: Record<TipoNotificacao, string> = {
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+///@ts-ignore
+import SvgIcon from "@jamescoyle/vue-icon";
+import {
+  mdiAccountPlusOutline,
+  mdiClockAlertOutline,
+  mdiCheckboxMarkedCircleOutline,
+  mdiClipboardTextClockOutline,
+} from "@mdi/js";
+import { useNotificacao } from "@/components/notificacao/useNotificacao";
+import { TipoNotificacaoValues, type TipoNotificacao } from "@/utils/tipagem";
+import { useRouter } from "vue-router";
+import { useUtils } from "@/utils/useUtils";
+
+const { formatarData } = useUtils();
+
+const router = useRouter();
+const { totalNaoLidas, notificacoesNaoLidas } = useNotificacao();
+
+const notificacaoIcones: Record<TipoNotificacao, string> = {
+  [TipoNotificacaoValues.CONVITE_FAMILIA]: mdiAccountPlusOutline,
+  [TipoNotificacaoValues.CICLO_VENCIDO]: mdiClockAlertOutline,
+  [TipoNotificacaoValues.EXECUCAO_TAREFA]: mdiCheckboxMarkedCircleOutline,
+  [TipoNotificacaoValues.TAREFA_ATRIBUIDA]: mdiClipboardTextClockOutline,
+};
+
+const notificacaoClasses: Record<TipoNotificacao, string> = {
+  [TipoNotificacaoValues.CONVITE_FAMILIA]: "bg-green-100 text-green-700",
+
+  [TipoNotificacaoValues.CICLO_VENCIDO]: "bg-red-100 text-red-600",
+
+  [TipoNotificacaoValues.EXECUCAO_TAREFA]: "bg-blue-100 text-blue-600",
+
+  [TipoNotificacaoValues.TAREFA_ATRIBUIDA]: "bg-amber-100 text-amber-600",
+};
+</script>
