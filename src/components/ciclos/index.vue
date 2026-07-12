@@ -76,7 +76,9 @@
 
             <p>🕒 Duração: {{ ciclo?.duracaoDias }} dias</p>
 
-            <p>📅 Renovado em: {{ formatarData(ciclo?.renovadoEm || "") }}</p>
+            <p v-if="ciclo?.renovadoEm">
+              📅 Renovado em: {{ formatarData(ciclo?.renovadoEm || "") }}
+            </p>
 
             <p>
               ↻ Próxima renovação:

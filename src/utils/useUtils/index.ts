@@ -2,14 +2,12 @@ import type { StatusExecucao } from "../tipagem";
 
 export const useUtils = () => {
   const formatarData = (data: string) => {
-    const date = new Date(data);
-    return date.toLocaleDateString("pt-BR", {
-      year: "numeric",
-      month: "2-digit",
+    return new Date(data).toLocaleString("pt-BR", {
       day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-      timeZone: "UTC",
     });
   };
 

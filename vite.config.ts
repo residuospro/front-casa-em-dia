@@ -45,6 +45,9 @@ export default defineConfig({
     VitePWA({
       registerType: "prompt",
       injectRegister: "auto",
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
 
       pwaAssets: {
         disabled: false,
@@ -86,33 +89,6 @@ export default defineConfig({
 
       workbox: {
         cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
-
-        runtimeCaching: [
-          {
-            urlPattern: ({ url, request }) => {
-              const isApiRequest = /\/api\/.*\/*.json/.test(url.pathname);
-
-              const isTargetMethod = ["POST", "PUT", "DELETE"].includes(
-                request.method,
-              );
-
-              return isApiRequest && isTargetMethod;
-            },
-
-            handler: "NetworkOnly",
-
-            options: {
-              backgroundSync: {
-                name: "memora-sync",
-                options: {
-                  maxRetentionTime: 24 * 60,
-                },
-              },
-            },
-          },
-        ],
       },
 
       devOptions: {

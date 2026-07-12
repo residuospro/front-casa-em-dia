@@ -41,11 +41,7 @@
                 placeholder="Descreva o objetivo deste ciclo..."
               />
 
-              <Input
-                label="Data de início *"
-                type="date"
-                v-model="form.inicio"
-              />
+              <Input label="Data de início *" type="date" v-model="dataInput" />
 
               <Select
                 label="Participantes"
@@ -166,7 +162,7 @@ import Textarea from "@/components/textarea/index.vue";
 import { useApiNovoCiclo } from "./useApiNovoCiclo";
 import Button from "@/components/botao/index.vue";
 import { useRouter } from "vue-router";
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 import Select from "@/components/select/index.vue";
@@ -178,7 +174,22 @@ const { form, passos, acao, idCiclo, limparForm } = useNovoCiclo();
 const { criaNovoCiclo, obterCicloPorId, atualizarCiclo } = useApiNovoCiclo();
 const router = useRouter();
 
+const dataInput = computed({
+  get() {
+    if (!form.value.inicio) return "";
+
+    return form.value.inicio.split("T")[0];
+  },
+
+  set(value: string) {
+    form.value.inicio = value;
+  },
+});
+
 onMounted(async () => {
+  limparForm();
+  acao.value = "criar";
+  
   await obterOpcoesFamiliares();
   const { id } = router.currentRoute.value.query;
 

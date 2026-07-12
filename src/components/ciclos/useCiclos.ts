@@ -70,7 +70,7 @@ const diasDesdeInicio = (
   const diasPassados = Math.floor(diferenca / (1000 * 60 * 60 * 24));
 
   // primeiro dia conta como 1
-  const diaAtual = diasPassados + 1;
+  const diaAtual = diasPassados;
 
   return Math.min(diaAtual, duracaoDias);
 };
@@ -112,9 +112,7 @@ const ciclosInativo = computed(() =>
 
 const primeiroCiclo = computed(() => dataCiclos.value[0] ?? null);
 
-const restantesCount = computed(() =>
-  Math.max(0, dataCiclos.value.length - 1),
-);
+const restantesCount = computed(() => Math.max(0, dataCiclos.value.length - 1));
 
 const acoesMenuContext = (
   acao: string,

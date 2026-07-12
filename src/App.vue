@@ -20,6 +20,7 @@ import { useNotificacao } from "@/components/notificacao/useNotificacao.ts";
 import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts";
 import type { INotificacao } from "./components/notificacao/tipagem.ts";
 import { usePerfil } from "@/store/usePerfil";
+import { usePushNotification } from "@/composables/usePushNotification";
 
 const { setBearerAuthorization } = useSessao();
 const { obterPerfil } = usePerfil();
@@ -31,6 +32,7 @@ const {
 } = useNotificacao();
 const { listar } = useApiNotificacao();
 const { conectar } = useSocket();
+const { subscrever } = usePushNotification();
 
 const temToken = !!localStorage.getItem("token");
 
@@ -71,7 +73,10 @@ onMounted(async () => {
     });
   }
 
-  solicitarPermissaoNotificacao();
+  const permissao = await solicitarPermissaoNotificacao();
+  if (permissao === "granted") {
+    await subscrever();
+  }
 });
 
 onUnmounted(() => {

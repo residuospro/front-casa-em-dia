@@ -18,7 +18,7 @@
         class="py-2 px-4 flex items-center gap-2 hover:bg-gray-50 transition-colors group"
       >
         <img
-          :src="membro.fotoPerfil"
+          :src="parseFotoPerfil(membro.fotoPerfil || '')"
           :alt="membro.nome"
           class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm"
         />
@@ -58,7 +58,9 @@
 import { computed } from "vue";
 import { useListaMembros } from "@/components/minhaFamilia/lista/useListaMembros";
 import { useRouter } from "vue-router";
+import { useUtils } from "@/utils/useUtils";
 
+const { parseFotoPerfil } = useUtils();
 const { dataMembrosFamiliares } = useListaMembros();
 const router = useRouter();
 const membros = computed(() => dataMembrosFamiliares.value.slice(0, 4));

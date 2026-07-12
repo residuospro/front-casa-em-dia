@@ -49,10 +49,7 @@ export const useApiNovoCiclo = () => {
 
       form.value = {
         ...resposta.data,
-        inicio: formatarData(resposta.data.inicio)
-          .split("/")
-          .reverse()
-          .join("-"),
+        inicio: resposta.data.inicio,
       };
     } catch (error: unknown) {
       const erro = error as IResponseError;
