@@ -32,13 +32,13 @@ self.addEventListener('notificationclick', function (event) {
   const urlToOpen = event.notification.data?.url || '/';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (windowClients) {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (windowClients) {
       for (const client of windowClients) {
         if (client.url === urlToOpen && 'focus' in client) {
           return client.focus();
         }
       }
-      return clients.openWindow(urlToOpen);
+      return self.clients.openWindow(urlToOpen);
     }),
   );
 });

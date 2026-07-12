@@ -5,12 +5,10 @@ import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import type { AxiosResponse } from "axios";
 import type { IResponseError } from "@/utils/interfaces";
 import type { IResponseCiclos } from "./type";
-import { useUtils } from "@/utils/useUtils";
 
 export const useApiNovoCiclo = () => {
   const { form, idCiclo, limparForm } = useNovoCiclo();
   const { perfil } = usePerfil();
-  const { formatarData } = useUtils();
 
   const criaNovoCiclo = async () => {
     try {
