@@ -14,12 +14,11 @@ const menuItens = [
   { label: "Excluir", value: "excluir", disabled: false },
 ];
 
-async function solicitarPermissaoNotificacao() {
-  if (!("Notification" in window)) return "denied";
+function solicitarPermissaoNotificacao() {
+  if (!("Notification" in window)) return;
   if (Notification.permission === "default") {
-    return await Notification.requestPermission();
+    Notification.requestPermission();
   }
-  return Notification.permission;
 }
 
 function mostrarNotificacaoOS(notificacao: INotificacao) {
