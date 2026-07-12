@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-row gap-2 items-center w-full justify-around">
+  <div
+    class="flex xl:!flex-row gap-2 items-center w-full justify-around flex-col"
+  >
     <div
       v-for="(item, index) in resumo"
       :key="index"
