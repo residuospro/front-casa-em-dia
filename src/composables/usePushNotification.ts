@@ -1,5 +1,6 @@
+import { useClient } from '@/client';
+
 const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY;
-const API_URL = import.meta.env.VITE_API_URL;
 
 export function usePushNotification() {
   async function subscrever() {
@@ -16,18 +17,9 @@ export function usePushNotification() {
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as Uint8Array<ArrayBuffer>,
       });
 
-      const token = localStorage.getItem('token');
-
-      await fetch(`${API_URL}/notifications/push-subscribe`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          subscription: subscription.toJSON(),
-          userAgent: navigator.userAgent,
-        }),
+      await useClient.post('/notifications/push-subscribe', {
+        subscription: subscription.toJSON(),
+        userAgent: navigator.userAgent,
       });
     } catch {
       // usuário negou permissão ou erro na rede
