@@ -115,25 +115,27 @@
         <div
           v-for="(ciclo, index) in ciclosInativo"
           :key="index"
-          class="bg-white border rounded-xl p-4 flex items-center gap-4"
+          class="bg-white border rounded-xl p-4 flex items-center gap-4 sm:flex-col sm:items-start !justify-between w-full"
         >
-          <div
-            class="w-12 h-12 rounded-full bg-[#EEF5EA] flex items-center justify-center text-[#53864C] text-xl"
-          >
-            ↻
+          <div class="flex flex-row items-center gap-2">
+            <div
+              class="w-12 h-12 rounded-full bg-[#EEF5EA] flex items-center justify-center text-[#53864C] text-xl"
+            >
+              ↻
+            </div>
+
+            <div class="">
+              <p class="font-medium">
+                {{ ciclo.nome }}
+              </p>
+
+              <p class="text-sm text-black/50">
+                Duração: {{ ciclo.duracaoDias }} dias
+              </p>
+            </div>
           </div>
 
-          <div class="flex-1">
-            <p class="font-medium">
-              {{ ciclo.nome }}
-            </p>
-
-            <p class="text-sm text-black/50">
-              Duração: {{ ciclo.duracaoDias }} dias
-            </p>
-          </div>
-
-          <div class="flex items-center gap-3">
+          <div class="flex flex-row items-center sm:justify-between sm:w-full">
             <Toogle
               @update:model-value="
                 (valor) => atualizarStatusCiclo(ciclo.id, valor)
@@ -141,20 +143,24 @@
               label="Ativo"
             />
 
-            <span class="px-3 py-1 rounded-md bg-black/5 text-xs text-black/60">
-              Inativo
-            </span>
-          </div>
+            <div class="flex items-center gap-3">
+              <span
+                class="px-3 py-1 rounded-md bg-black/5 text-xs text-black/60"
+              >
+                Inativo
+              </span>
 
-          <ce-context-menu
-            :items="opcoesMenu"
-            @select="
-              (acao) =>
-                acoesMenuContext(acao, ciclo.id, ciclo.nome, renovarCiclo)
-            "
-          >
-            <button class="text-xl">⋮</button>
-          </ce-context-menu>
+              <ce-context-menu
+                :items="opcoesMenu"
+                @select="
+                  (acao) =>
+                    acoesMenuContext(acao, ciclo.id, ciclo.nome, renovarCiclo)
+                "
+              >
+                <button class="text-xl">⋮</button>
+              </ce-context-menu>
+            </div>
+          </div>
         </div>
       </div>
     </div>

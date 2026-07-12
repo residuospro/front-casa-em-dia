@@ -120,7 +120,25 @@
             </div>
           </div>
 
+          <div
+            class="space-y-1"
+            v-if="
+              form.modoDistribuicao === 'REVEZAMENTO' &&
+              !form.responsavelAtualId
+            "
+          >
+            <Toggle
+              v-model="form.atribuirAutomaticamente"
+              label="Atribuir automaticamente"
+            />
+            <span class="text-xs font-medium"
+              >A tarefa será atribuída automaticamente ao próximo membro do
+              ciclo.</span
+            >
+          </div>
+
           <Select
+            v-if="!form.atribuirAutomaticamente"
             label="Responsável"
             placeholder="Selecione um membro"
             v-model="form.responsavelAtualId"
@@ -289,6 +307,7 @@ import Button from "@/components/botao/index.vue";
 import ResumoItem from "@/components/ResumoItem/index.vue";
 import Input from "@/components/input/index.vue";
 import Select from "@/components/select/index.vue";
+import Toggle from "@/components/toggle/index.vue";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
 import {

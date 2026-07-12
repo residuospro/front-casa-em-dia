@@ -110,6 +110,12 @@ const ciclosInativo = computed(() =>
   dataCiclos.value.filter((ciclo) => !ciclo.ativo),
 );
 
+const primeiroCiclo = computed(() => dataCiclos.value[0] ?? null);
+
+const restantesCount = computed(() =>
+  Math.max(0, dataCiclos.value.length - 1),
+);
+
 const acoesMenuContext = (
   acao: string,
   id: string,
@@ -142,6 +148,8 @@ export const useCiclos = () => {
     dataCiclos,
     cicloAtivo,
     ciclosInativo,
+    primeiroCiclo,
+    restantesCount,
     opcoesMenu,
     ciclo,
     abrirModalDeletar,

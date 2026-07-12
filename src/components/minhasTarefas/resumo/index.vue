@@ -1,44 +1,46 @@
 <template>
-  <div class="grid grid-cols-4 gap-3 sm:grid-cols-2 xs:grid-cols-1">
+  <div class="flex flex-row gap-2 items-center w-full justify-around">
     <div
-      class="flex items-start gap-2 flex-col rounded-lg shadow-lg border p-4"
       v-for="(item, index) in resumo"
       :key="index"
+      class="bg-white rounded-xl shadow border p-3 flex flex-col w-full"
     >
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-3">
         <svg-icon
           type="mdi"
           :path="item.icone"
           :class="
             item.slug === 'tarefas-atrasadas'
               ? 'text-red-500'
-              : '!text-[#53864C]'
+              : 'text-[#16742F]'
           "
-          size="20"
+          size="24"
         />
+        <span class="font-medium text-gray-600">{{ item.label }}</span>
+
         <span
-          class="font-medium text-sm"
+          v-if="item.restantesCount && item.restantesCount > 0"
+          class="px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500 text-xs font-medium"
+        >
+          +{{ item.restantesCount }}
+        </span>
+      </div>
+
+      <div class="mt-4">
+        <span
+          class="text-xl font-bold"
           :class="
             item.slug === 'tarefas-atrasadas'
               ? 'text-red-500'
-              : '   !text-[#53864C]'
+              : 'text-[#16742F]'
           "
-          >{{ item.label }}</span
         >
+          {{ item.value }}
+        </span>
+        <span v-if="item.isCiclo" class="text-sm text-gray-500 ml-1">
+          dias restantes
+        </span>
       </div>
-
-      <span
-        v-if="item.slug !== 'ciclo-ativo'"
-        class="text-2xl font-bold"
-        :class="
-          item.slug === 'tarefas-atrasadas' ? 'text-red-500' : '!text-[#53864C]'
-        "
-        >{{ item.value }}</span
-      >
-
-      <span v-else class="text-2xl font-bold text-[#53864C]"
-        >{{ item.value }} <span class="text-sm">dias restantes</span></span
-      >
     </div>
   </div>
 </template>

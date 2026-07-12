@@ -16,7 +16,7 @@
     </div>
 
     <div
-      class="grid grid-cols-2 xl:grid-cols-[1fr_340px] gap-5 sm:grid-cols-1 sm:grid-rows-2"
+      class="grid grid-cols-2 xl:grid-cols-[1fr_340px] gap-5 sm:grid-cols-1 sm:grid-rows-[1fr_auto]"
     >
       <div class="bg-white rounded-2xl border overflow-hidden">
         <form

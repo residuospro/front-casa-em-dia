@@ -100,7 +100,11 @@
     </template>
 
     <template #ciclo="{ item }">
-      <span class="font-medium capitalize">{{ item.ciclo.nome }}</span>
+      <span class="font-medium capitalize" v-if="item.ciclo?.nome">{{
+        item.ciclo?.nome
+      }}</span>
+
+      <span v-else>----</span>
     </template>
     <template #pontos="{ item }">
       <span class="font-bold">{{ item.pontos }}pts</span>

@@ -46,10 +46,11 @@ const estadoInicial = {
   tipo: "",
   categoria: "",
   modoDistribuicao: "",
-  responsavelAtualId: "",
+  responsavelAtualId: null,
   pontos: null,
   cicloId: null,
   execucoes: [],
+  atribuirAutomaticamente: false,
 };
 
 const { criarDataLocal, criarExecucoes } = useUtils();

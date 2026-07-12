@@ -16,6 +16,7 @@ type FormNovaTarefa = {
   pontos: number | null;
   cicloId: string | null;
   execucoes: Execucao[];
+  atribuirAutomaticamente: boolean;
 };
 
 export type { FormNovaTarefa, Execucao };
