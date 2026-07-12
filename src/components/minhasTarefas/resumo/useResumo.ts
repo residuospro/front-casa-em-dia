@@ -60,12 +60,12 @@ const resumo = computed(() => {
     const primeiro = dataResumo.value.ciclos[0];
 
     items.push({
-      label: primeiro.nome || "Ciclo ativo",
-      value: primeiro.diasRestantes ?? 0,
+      label: primeiro?.nome || "Ciclo ativo",
+      value: primeiro?.diasRestantes ?? 0,
       slug: "ciclo-ativo",
       icone: mdiAutorenew,
       isCiclo: true,
-      duracaoDias: primeiro.duracaoDias,
+      duracaoDias: primeiro?.duracaoDias,
       restantesCount: Math.max(0, dataResumo.value.ciclos.length - 1),
     });
   }
