@@ -70,7 +70,7 @@ export const useApiTarefas = () => {
     await chamarApi();
   };
 
-  const dupplicarTarefa = async (id: string) => {
+  const duplicarTarefa = async (id: string) => {
     const resposta: AxiosResponse = await useClient.post(
       `/tarefas/${perfil.value.familiaId}/tarefas/${id}/duplicar`,
     );
@@ -86,6 +86,6 @@ export const useApiTarefas = () => {
     obterDadosPorPagina,
     deleteTarefa,
     obterPorFiltro,
-    dupplicarTarefa,
+    duplicarTarefa,
   };
 };

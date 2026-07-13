@@ -199,7 +199,7 @@
         <ce-context-menu
           :items="opcoesMenu"
           @select="
-            executarOpcoesMenu($event, item.id, item.titulo, dupplicarTarefa)
+            executarOpcoesMenu($event, item.id, item.titulo, duplicarTarefa)
           "
         >
           <button>
@@ -261,7 +261,7 @@ const {
   obterDadosPorItensPorPagina,
   obterDadosPorOrdenacao,
   obterDadosPorPagina,
-  dupplicarTarefa,
+  duplicarTarefa,
 } = useApiTarefas();
 
 const {

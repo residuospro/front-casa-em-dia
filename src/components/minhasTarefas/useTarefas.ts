@@ -336,7 +336,7 @@ const executarOpcoesMenu = (
   acao: string,
   id: string,
   titulo: string,
-  dupplicarTarefa: (id: string) => Promise<void>,
+  duplicarTarefa?: (id: string) => Promise<void>,
 ) => {
   const maps = {
     editar: () => {
@@ -353,7 +353,7 @@ const executarOpcoesMenu = (
       router.push({ name: "minhas-tarefas.visualizar-tarefa", query: { id } });
     },
     duplicar: async () => {
-      await dupplicarTarefa(id);
+      if (duplicarTarefa) await duplicarTarefa(id);
     },
   };
 
