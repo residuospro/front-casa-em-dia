@@ -20,6 +20,7 @@ import { useNotificacao } from "@/components/notificacao/useNotificacao.ts";
 import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts";
 import type { INotificacao } from "./components/notificacao/tipagem.ts";
 import { usePerfil } from "@/store/usePerfil";
+import { usePushNotifications } from "@/composables/usePushNotifications";
 
 const { setBearerAuthorization } = useSessao();
 const { obterPerfil } = usePerfil();
@@ -31,6 +32,7 @@ const {
 } = useNotificacao();
 const { listar } = useApiNotificacao();
 const { conectar } = useSocket();
+const { registrarDispositivo, onForegroundMessage } = usePushNotifications();
 
 const temToken = !!localStorage.getItem("token");
 
@@ -72,6 +74,20 @@ onMounted(async () => {
   }
 
   solicitarPermissaoNotificacao();
+
+  await registrarDispositivo();
+
+  onForegroundMessage((payload) => {
+    const titulo = payload.notification?.title ?? "Casa em Dia";
+    const corpo = payload.notification?.body ?? "";
+
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+    new Notification(titulo, {
+      body: corpo,
+      icon: "/pwa-192.png",
+    });
+  });
 });
 
 onUnmounted(() => {
