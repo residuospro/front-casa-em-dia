@@ -27,7 +27,6 @@ const { obterPerfil } = usePerfil();
 const {
   socket,
   notificacoes,
-  mostrarNotificacaoOS,
   solicitarPermissaoNotificacao,
 } = useNotificacao();
 const { listar } = useApiNotificacao();
@@ -68,7 +67,6 @@ onMounted(async () => {
       const existe = notificacoes.value.some((n) => n.id === data.id);
       if (!existe) {
         notificacoes.value.unshift(data);
-        mostrarNotificacaoOS(data);
       }
     });
   }
