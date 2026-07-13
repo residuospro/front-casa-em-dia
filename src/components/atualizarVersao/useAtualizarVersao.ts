@@ -2,136 +2,120 @@ import { useRegisterSW } from "virtual:pwa-register/vue";
 import { onUnmounted, ref, watch } from "vue";
 
 export function useAtualizarVersao() {
-  const DEFAULT_PERIODO = 5 * 60 * 1000;
-  const periodo = DEFAULT_PERIODO;
+  const PERIODO_PADRAO = 5 * 60 * 1000; // 5 minutos
 
   const swAtivado = ref(false);
   const contador = ref(2);
-  let intervalId: number | null = null;
+  const needRefresh = ref(false); // we'll get it from the hook
 
-  function registrarSincPeriodica(
-    swUrl: string,
-    r: ServiceWorkerRegistration,
-    periodoArg?: number,
-  ) {
-    const tempo = periodoArg ?? periodo;
-    if (!tempo || tempo <= 0) return;
+  let checkInterval: number | null = null;
+  let countdownInterval: number | null = null;
 
-    setInterval(async () => {
-      if ("onLine" in navigator && !navigator.onLine) return;
-
-      const resp = await fetch(swUrl, {
-        cache: "no-store",
-        headers: {
-          cache: "no-store",
-          "cache-control": "no-cache",
-        },
-      });
-
-      if (resp?.status === 200) await r.update();
-    }, periodo);
-  }
-
-  const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
+  const {
+    offlineReady,
+    needRefresh: needRefreshFromHook,
+    updateServiceWorker,
+  } = useRegisterSW({
     immediate: true,
 
     onRegisteredSW(swUrl, r) {
-      if (periodo <= 0) return;
-      if (r?.active?.state === "activated") {
+      if (!r) return;
+
+      // Activate flag
+      const activateSW = (state: string) => {
+        swAtivado.value = state === "activated";
+      };
+
+      if (r.active?.state === "activated") {
         swAtivado.value = true;
-        registrarSincPeriodica(swUrl, r);
-      } else if (r?.installing) {
+        startPeriodicCheck(swUrl, r);
+      } else if (r.installing) {
         r.installing.addEventListener("statechange", (e) => {
           const sw = e.target as ServiceWorker;
-          swAtivado.value = sw.state === "activated";
-          if (swAtivado.value) registrarSincPeriodica(swUrl, r);
+          activateSW(sw.state);
+          if (sw.state === "activated") {
+            startPeriodicCheck(swUrl, r);
+          }
         });
       }
     },
   });
 
-  onUnmounted(() => {
-    if (intervalId) clearInterval(intervalId);
+  // Sync the reactive ref
+  watch(needRefreshFromHook, (val) => {
+    needRefresh.value = val;
   });
 
-  const CHAVE_ATUALIZANDO = "ce_atualizando";
+  function startPeriodicCheck(
+    swUrl: string,
+    registration: ServiceWorkerRegistration,
+  ) {
+    if (checkInterval) clearInterval(checkInterval);
 
-  async function executarAtualizacao() {
-    sessionStorage.setItem(CHAVE_ATUALIZANDO, "1");
+    checkInterval = window.setInterval(async () => {
+      if (!navigator.onLine) return;
 
-    updateServiceWorker(true);
+      try {
+        const resp = await fetch(swUrl, {
+          cache: "no-store",
+          headers: {
+            "cache-control": "no-cache",
+          },
+        });
 
-    const reg = await navigator.serviceWorker.ready;
-    const swEspera = reg.waiting;
-    if (!swEspera) {
-      window.location.reload();
-      return;
-    }
-
-    let recarregou = false;
-
-    if (swEspera.state === "activated") {
-      window.location.reload();
-      return;
-    }
-
-    swEspera.addEventListener("statechange", () => {
-      if (swEspera.state === "activated" && !recarregou) {
-        recarregou = true;
-        window.location.reload();
+        if (resp.status === 200) {
+          await registration.update();
+        }
+      } catch (err) {
+        // Silent fail - network error or SW not found is common
+        console.debug("Periodic SW check failed:", err);
       }
-    });
-
-    swEspera.postMessage({ type: "SKIP_WAITING" });
-
-    setTimeout(() => {
-      if (!recarregou) {
-        recarregou = true;
-        window.location.reload();
-      }
-    }, 5000);
+    }, PERIODO_PADRAO);
   }
 
+  // Countdown when update is available
   watch(
     needRefresh,
-    (ativo) => {
-      if (!ativo) {
-        contador.value = 2;
-        if (intervalId) {
-          clearInterval(intervalId);
-          intervalId = null;
-        }
-        return;
+    (hasUpdate) => {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
       }
 
-      if (sessionStorage.getItem(CHAVE_ATUALIZANDO)) {
-        sessionStorage.removeItem(CHAVE_ATUALIZANDO);
-        needRefresh.value = false;
+      if (!hasUpdate) {
+        contador.value = 2;
         return;
       }
 
       contador.value = 2;
 
-      intervalId = window.setInterval(() => {
+      countdownInterval = window.setInterval(() => {
         contador.value--;
 
         if (contador.value <= 0) {
-          clearInterval(intervalId!);
-          intervalId = null;
-          executarAtualizacao();
+          clearInterval(countdownInterval!);
+          countdownInterval = null;
+          updateServiceWorker(true); // force reload
         }
       }, 1000);
     },
     { immediate: true },
   );
 
+  onUnmounted(() => {
+    if (checkInterval) clearInterval(checkInterval);
+    if (countdownInterval) clearInterval(countdownInterval);
+  });
+
   return {
     offlineReady,
     needRefresh,
     swAtivado,
-    periodo,
     contador,
     updateServiceWorker,
-    registrarSincPeriodica,
+    // Optional: expose manual check
+    checkForUpdate: async () => {
+      // You can call this from UI if needed
+    },
   };
 }
