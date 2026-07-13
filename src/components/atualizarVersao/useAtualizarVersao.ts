@@ -75,6 +75,7 @@ export function useAtualizarVersao() {
           clearInterval(intervalId!);
           intervalId = null;
           await updateServiceWorker(true);
+          needRefresh.value = false;
         }
       }, 1000);
     },

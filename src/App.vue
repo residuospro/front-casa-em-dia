@@ -15,6 +15,7 @@ import PWABadge from "./components/atualizarVersao/atualizarVersaoAplicacao.vue"
 import Loading from "@/components/loading/index.vue";
 import { useSessao } from "./utils/sessao";
 import { ref, onBeforeMount, onMounted, onUnmounted } from "vue";
+import { useSocket } from "@/composables/useSocket";
 import { onForegroundMessage } from "@/firebase/messaging";
 import { useNotificacao } from "@/components/notificacao/useNotificacao.ts";
 import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts";
@@ -26,6 +27,7 @@ const { setBearerAuthorization } = useSessao();
 const { obterPerfil } = usePerfil();
 const { solicitarPermissaoNotificacao } = useNotificacao();
 const { listar } = useApiNotificacao();
+
 const { registrarDispositivo } = usePushNotifications();
 
 const temToken = !!localStorage.getItem("token");
@@ -55,10 +57,10 @@ onMounted(async () => {
 
   listar();
 
-  // --- SOCKET.IO (desabilitado para isolar teste FCM) ---
   // socket.value = conectar();
+
   // if (socket.value) {
-  //   socket.value.on("notification:new", (data: INotificacao) => {
+  //   socket.value.on("notification:new", (data: any) => {
   //     const existe = notificacoes.value.some((n) => n.id === data.id);
   //     if (!existe) {
   //       notificacoes.value.unshift(data);
