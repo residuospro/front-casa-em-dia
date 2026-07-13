@@ -54,7 +54,11 @@ export function useAtualizarVersao() {
     if (intervalId) clearInterval(intervalId);
   });
 
+  const CHAVE_ATUALIZANDO = "ce_atualizando";
+
   async function executarAtualizacao() {
+    sessionStorage.setItem(CHAVE_ATUALIZANDO, "1");
+
     updateServiceWorker(true);
 
     const reg = await navigator.serviceWorker.ready;
@@ -62,33 +66,8 @@ export function useAtualizarVersao() {
       reg.waiting.postMessage({ type: "SKIP_WAITING" });
     }
 
-    let recarregou = false;
-
-    const aoControladorMudar = () => {
-      if (recarregou) return;
-      recarregou = true;
-      navigator.serviceWorker.removeEventListener(
-        "controllerchange",
-        aoControladorMudar,
-      );
-      window.location.reload();
-    };
-
-    navigator.serviceWorker.addEventListener(
-      "controllerchange",
-      aoControladorMudar,
-    );
-
-    setTimeout(() => {
-      if (!recarregou) {
-        recarregou = true;
-        navigator.serviceWorker.removeEventListener(
-          "controllerchange",
-          aoControladorMudar,
-        );
-        window.location.reload();
-      }
-    }, 3000);
+    await new Promise((r) => setTimeout(r, 2000));
+    window.location.reload();
   }
 
   watch(
@@ -100,6 +79,12 @@ export function useAtualizarVersao() {
           clearInterval(intervalId);
           intervalId = null;
         }
+        return;
+      }
+
+      if (sessionStorage.getItem(CHAVE_ATUALIZANDO)) {
+        sessionStorage.removeItem(CHAVE_ATUALIZANDO);
+        needRefresh.value = false;
         return;
       }
 

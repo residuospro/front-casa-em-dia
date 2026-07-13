@@ -45,8 +45,8 @@ self.addEventListener("message", (event) => {
   }
 });
 
-self.addEventListener("activate", () => {
-  self.clients.claim();
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener("notificationclick", (event) => {
