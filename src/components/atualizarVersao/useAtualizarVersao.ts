@@ -54,6 +54,21 @@ export function useAtualizarVersao() {
     if (intervalId) clearInterval(intervalId);
   });
 
+  const CHAVE_ATUALIZANDO = "ce_atualizando";
+
+  async function executarAtualizacao() {
+    sessionStorage.setItem(CHAVE_ATUALIZANDO, "1");
+
+    const reg = await navigator.serviceWorker.ready;
+    const swEspera = reg.waiting;
+    if (swEspera) {
+      swEspera.postMessage({ type: "SKIP_WAITING" });
+    }
+
+    await new Promise((r) => setTimeout(r, 1000));
+    window.location.reload();
+  }
+
   watch(
     needRefresh,
     (ativo) => {
@@ -66,6 +81,12 @@ export function useAtualizarVersao() {
         return;
       }
 
+      if (sessionStorage.getItem(CHAVE_ATUALIZANDO)) {
+        sessionStorage.removeItem(CHAVE_ATUALIZANDO);
+        needRefresh.value = false;
+        return;
+      }
+
       contador.value = 2;
 
       intervalId = window.setInterval(() => {
@@ -74,8 +95,7 @@ export function useAtualizarVersao() {
         if (contador.value <= 0) {
           clearInterval(intervalId!);
           intervalId = null;
-          updateServiceWorker(true);
-          needRefresh.value = false;
+          executarAtualizacao();
         }
       }, 1000);
     },
