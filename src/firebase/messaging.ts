@@ -30,8 +30,13 @@ export async function isFirebaseMessagingSupported(): Promise<boolean> {
 export async function obterTokenFCM(): Promise<string | null> {
   const instance = getMessagingInstance();
 
+  const registration = await navigator.serviceWorker.register(
+    "/firebase-messaging-sw.js",
+  );
+
   const token = await getToken(instance, {
     vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+    serviceWorkerRegistration: registration,
   });
 
   return token ?? null;
