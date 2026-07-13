@@ -9,8 +9,6 @@ declare const self: ServiceWorkerGlobalScope;
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-self.skipWaiting();
-
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
@@ -39,6 +37,16 @@ onBackgroundMessage(messaging, (payload) => {
   }
 
   self.registration.showNotification(titulo, options);
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+self.addEventListener("activate", () => {
+  self.clients.claim();
 });
 
 self.addEventListener("notificationclick", (event) => {
