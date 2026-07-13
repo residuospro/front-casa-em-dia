@@ -1,12 +1,13 @@
 /// <reference lib="webworker" />
 
-import { precacheAndRoute } from "workbox-precaching";
+import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 import { initializeApp } from "firebase/app";
 import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
 import { firebaseConfig } from "./firebase/config";
 
 declare const self: ServiceWorkerGlobalScope;
 
+cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
 const app = initializeApp(firebaseConfig);
