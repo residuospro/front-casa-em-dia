@@ -54,6 +54,43 @@ export function useAtualizarVersao() {
     if (intervalId) clearInterval(intervalId);
   });
 
+  async function executarAtualizacao() {
+    updateServiceWorker(true);
+
+    const reg = await navigator.serviceWorker.ready;
+    if (reg.waiting) {
+      reg.waiting.postMessage({ type: "SKIP_WAITING" });
+    }
+
+    let recarregou = false;
+
+    const aoControladorMudar = () => {
+      if (recarregou) return;
+      recarregou = true;
+      navigator.serviceWorker.removeEventListener(
+        "controllerchange",
+        aoControladorMudar,
+      );
+      window.location.reload();
+    };
+
+    navigator.serviceWorker.addEventListener(
+      "controllerchange",
+      aoControladorMudar,
+    );
+
+    setTimeout(() => {
+      if (!recarregou) {
+        recarregou = true;
+        navigator.serviceWorker.removeEventListener(
+          "controllerchange",
+          aoControladorMudar,
+        );
+        window.location.reload();
+      }
+    }, 3000);
+  }
+
   watch(
     needRefresh,
     (ativo) => {
@@ -74,7 +111,7 @@ export function useAtualizarVersao() {
         if (contador.value <= 0) {
           clearInterval(intervalId!);
           intervalId = null;
-          updateServiceWorker(true);
+          executarAtualizacao();
         }
       }, 1000);
     },
