@@ -62,12 +62,34 @@ export function useAtualizarVersao() {
     updateServiceWorker(true);
 
     const reg = await navigator.serviceWorker.ready;
-    if (reg.waiting) {
-      reg.waiting.postMessage({ type: "SKIP_WAITING" });
+    const swEspera = reg.waiting;
+    if (!swEspera) {
+      window.location.reload();
+      return;
     }
 
-    await new Promise((r) => setTimeout(r, 2000));
-    window.location.reload();
+    let recarregou = false;
+
+    if (swEspera.state === "activated") {
+      window.location.reload();
+      return;
+    }
+
+    swEspera.addEventListener("statechange", () => {
+      if (swEspera.state === "activated" && !recarregou) {
+        recarregou = true;
+        window.location.reload();
+      }
+    });
+
+    swEspera.postMessage({ type: "SKIP_WAITING" });
+
+    setTimeout(() => {
+      if (!recarregou) {
+        recarregou = true;
+        window.location.reload();
+      }
+    }, 5000);
   }
 
   watch(
