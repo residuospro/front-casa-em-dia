@@ -43,10 +43,7 @@ export default defineConfig({
       importMode: "sync",
     }),
     VitePWA({
-      registerType: "prompt",
       injectRegister: "auto",
-      strategies: "injectManifest",
-      srcDir: "src",
       filename: "sw.ts",
 
       pwaAssets: {
