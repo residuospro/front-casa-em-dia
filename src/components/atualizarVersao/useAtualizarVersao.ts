@@ -95,7 +95,8 @@ export function useAtualizarVersao() {
         if (contador.value <= 0) {
           clearInterval(countdownInterval!);
           countdownInterval = null;
-          updateServiceWorker(true); // force reload
+          updateServiceWorker(true);
+          needRefresh.value = false;
         }
       }, 1000);
     },
