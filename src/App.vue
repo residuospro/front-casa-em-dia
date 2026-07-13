@@ -15,22 +15,18 @@ import PWABadge from "./components/atualizarVersaoAplicacao.vue";
 import Loading from "@/components/loading/index.vue";
 import { useSessao } from "./utils/sessao";
 import { ref, onBeforeMount, onMounted, onUnmounted } from "vue";
-import { useSocket } from "@/composables/useSocket";
+import { onForegroundMessage } from "@/firebase/messaging";
 import { useNotificacao } from "@/components/notificacao/useNotificacao.ts";
 import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts";
-import type { INotificacao } from "./components/notificacao/tipagem.ts";
+import { usePushNotifications } from "./composables/usePushNotifications.ts";
+
 import { usePerfil } from "@/store/usePerfil";
 
 const { setBearerAuthorization } = useSessao();
 const { obterPerfil } = usePerfil();
-const {
-  socket,
-  notificacoes,
-  mostrarNotificacaoOS,
-  solicitarPermissaoNotificacao,
-} = useNotificacao();
+const { solicitarPermissaoNotificacao } = useNotificacao();
 const { listar } = useApiNotificacao();
-const { conectar } = useSocket();
+const { registrarDispositivo } = usePushNotifications();
 
 const temToken = !!localStorage.getItem("token");
 
@@ -81,7 +77,8 @@ onMounted(async () => {
     const titulo = payload.notification?.title ?? "Casa em Dia";
     const corpo = payload.notification?.body ?? "";
 
-    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    if (!("Notification" in window) || Notification.permission !== "granted")
+      return;
 
     new Notification(titulo, {
       body: corpo,
