@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import PWABadge from "./components/atualizarVersaoAplicacao.vue";
+import PWABadge from "./components/atualizarVersao/atualizarVersaoAplicacao.vue";
 import Loading from "@/components/loading/index.vue";
 import { useSessao } from "./utils/sessao";
 import { ref, onBeforeMount, onMounted, onUnmounted } from "vue";
