@@ -198,7 +198,9 @@
 
         <ce-context-menu
           :items="opcoesMenu"
-          @select="executarOpcoesMenu($event, item.id, item.titulo)"
+          @select="
+            executarOpcoesMenu($event, item.id, item.titulo, dupplicarTarefa)
+          "
         >
           <button>
             <svg-icon
@@ -259,6 +261,7 @@ const {
   obterDadosPorItensPorPagina,
   obterDadosPorOrdenacao,
   obterDadosPorPagina,
+  dupplicarTarefa,
 } = useApiTarefas();
 
 const {

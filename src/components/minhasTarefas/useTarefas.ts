@@ -85,6 +85,7 @@ const dataTarefas = ref<IResponseTarefa>({
 });
 const opcoesMenu = [
   { label: "Editar", value: "editar" },
+  { label: "Duplicar tarefa", value: "duplicar" },
   { label: "Excluir", value: "excluir", color: "#ff0000" },
 ];
 
@@ -331,7 +332,12 @@ const obterClasseExecucaoFormatada = (execucao: Execucao | null) => {
     : classe;
 };
 
-const executarOpcoesMenu = (acao: string, id: string, titulo: string) => {
+const executarOpcoesMenu = (
+  acao: string,
+  id: string,
+  titulo: string,
+  dupplicarTarefa: (id: string) => Promise<void>,
+) => {
   const maps = {
     editar: () => {
       router.push({ name: "minhas-tarefas.editar-tarefa", query: { id } });
@@ -345,6 +351,9 @@ const executarOpcoesMenu = (acao: string, id: string, titulo: string) => {
     },
     visualizar: () => {
       router.push({ name: "minhas-tarefas.visualizar-tarefa", query: { id } });
+    },
+    duplicar: async () => {
+      await dupplicarTarefa(id);
     },
   };
 

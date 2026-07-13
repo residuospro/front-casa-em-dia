@@ -146,7 +146,6 @@
           />
 
           <Select
-            v-if="form.modoDistribuicao === 'REVEZAMENTO'"
             label="Ciclo"
             placeholder="Selecione o ciclo"
             v-model="form.cicloId"
