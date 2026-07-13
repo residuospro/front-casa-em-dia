@@ -20,8 +20,8 @@ export const useUtils = () => {
   };
 
   const parseFotoPerfil = (foto: string) => {
-    if (foto.startsWith("https")) return foto;
-
+    if (!foto) return '';
+    if (foto.startsWith('data:') || foto.startsWith('https')) return foto;
     return import.meta.env.VITE_API_URL + foto;
   };
 
