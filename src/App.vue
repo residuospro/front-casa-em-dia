@@ -59,24 +59,40 @@ onMounted(async () => {
 
   listar();
 
-  socket.value = conectar();
-
-  if (socket.value) {
-    socket.value.on("notification:new", (data: INotificacao) => {
-      const existe = notificacoes.value.some((n) => n.id === data.id);
-      if (!existe) {
-        notificacoes.value.unshift(data);
-        mostrarNotificacaoOS(data);
-      }
-    });
-  }
+  // --- SOCKET.IO (desabilitado para isolar teste FCM) ---
+  // socket.value = conectar();
+  // if (socket.value) {
+  //   socket.value.on("notification:new", (data: INotificacao) => {
+  //     const existe = notificacoes.value.some((n) => n.id === data.id);
+  //     if (!existe) {
+  //       notificacoes.value.unshift(data);
+  //     }
+  //   });
+  // }
 
   solicitarPermissaoNotificacao();
+
+  console.log("[FCM Debug] Iniciando registro de push...");
+  const resultado = await registrarDispositivo();
+  console.log("[FCM Debug] registrarDispositivo retornou:", resultado);
+
+  onForegroundMessage((payload) => {
+    console.log("[FCM Debug] Mensagem recebida em foreground:", payload);
+    const titulo = payload.notification?.title ?? "Casa em Dia";
+    const corpo = payload.notification?.body ?? "";
+
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+    new Notification(titulo, {
+      body: corpo,
+      icon: "/pwa-192.png",
+    });
+  });
 });
 
 onUnmounted(() => {
-  if (socket.value) {
-    socket.value.off("notification:new");
-  }
+  // if (socket.value) {
+  //   socket.value.off("notification:new");
+  // }
 });
 </script>
