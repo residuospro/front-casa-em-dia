@@ -86,6 +86,37 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        navigateFallbackDenylist: [
+          // URLs que não devem ser interceptadas pelo SW
+          /^\/externa\//,
+          /^\/login\//,
+          /login/,
+          /cadastro/,
+          /no-sw=/,
+        ],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url, request }) => {
+              const isApiRequest = /\/externa\/.+/.test(url.pathname);
+
+              const isTargetMethod = ["POST", "PUT", "DELETE"].includes(
+                request.method,
+              );
+              return isApiRequest && isTargetMethod;
+            },
+            handler: "NetworkOnly",
+            options: {
+              backgroundSync: {
+                name: "myQueueName",
+                options: {
+                  maxRetentionTime: 24 * 60, // Tempo máximo de retenção em minutos (neste caso, 24 horas)
+                },
+              },
+            },
+          },
+        ],
+      },
 
       devOptions: {
         navigateFallback: "index.html",
