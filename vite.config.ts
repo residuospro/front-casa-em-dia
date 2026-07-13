@@ -45,6 +45,9 @@ export default defineConfig({
     VitePWA({
       registerType: "prompt",
       injectRegister: "auto",
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
 
       pwaAssets: {
         disabled: false,
@@ -53,7 +56,7 @@ export default defineConfig({
 
       manifest: {
         name: "Casa em dia",
-        short_name: "casa em dia",
+        short_name: "Casa em dia",
         description: "Organize sua rotina e viva melhor.",
 
         theme_color: "#53864C",
@@ -80,37 +83,6 @@ export default defineConfig({
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
-          },
-        ],
-      },
-
-      workbox: {
-        cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
-
-        runtimeCaching: [
-          {
-            urlPattern: ({ url, request }) => {
-              const isApiRequest = /\/api\/.*\/*.json/.test(url.pathname);
-
-              const isTargetMethod = ["POST", "PUT", "DELETE"].includes(
-                request.method,
-              );
-
-              return isApiRequest && isTargetMethod;
-            },
-
-            handler: "NetworkOnly",
-
-            options: {
-              backgroundSync: {
-                name: "memora-sync",
-                options: {
-                  maxRetentionTime: 24 * 60,
-                },
-              },
-            },
           },
         ],
       },
