@@ -56,7 +56,7 @@ export default defineConfig({
 
       manifest: {
         name: "Casa em dia",
-        short_name: "casa em dia",
+        short_name: "Casa em dia",
         description: "Organize sua rotina e viva melhor.",
 
         theme_color: "#53864C",
