@@ -15,7 +15,6 @@ import PWABadge from "./components/atualizarVersao/atualizarVersaoAplicacao.vue"
 import Loading from "@/components/loading/index.vue";
 import { useSessao } from "./utils/sessao";
 import { ref, onBeforeMount, onMounted, onUnmounted } from "vue";
-import { useSocket } from "@/composables/useSocket";
 import { onForegroundMessage } from "@/firebase/messaging";
 import { useNotificacao } from "@/components/notificacao/useNotificacao.ts";
 import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts";
