@@ -210,7 +210,6 @@ const frequenciaDefinida = computed(() => {
   if (
     recorrencia.value.frequencia &&
     recorrencia.value.dataInicio !== "" &&
-    recorrencia.value.dataFim !== "" &&
     recorrencia.value.horarios.length > 0
   ) {
     return {
