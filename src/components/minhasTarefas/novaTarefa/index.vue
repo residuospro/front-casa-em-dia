@@ -438,9 +438,9 @@ import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 import { useCiclos } from "../../ciclos/useCiclos";
 import { useApiCiclos } from "../../ciclos/useApiCiclos";
 import { useNovaTarefa } from "./useNovaTarefa";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { useApiNovaTarefa } from "./useApiNovaTarefa";
-import { CeDatePicker, CeCheckbox } from "@comercti/vue-components-hmg";
+import { CeCheckbox } from "@comercti/vue-components-hmg";
 import { useRouter } from "vue-router";
 import type { FrequenciasRecorrencia } from "@/utils/tipagem";
 
@@ -473,8 +473,6 @@ const {
   excluirData,
   limparFormulario,
   gerarExecucoes,
-  onUpdateStart,
-  onUpdateEnd,
   preencherFormulario,
   formatarDataAgenda,
 } = useNovaTarefa();

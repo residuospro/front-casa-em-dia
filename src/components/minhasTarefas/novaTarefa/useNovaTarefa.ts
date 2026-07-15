@@ -101,14 +101,6 @@ const excluirData = (data: string) => {
   form.value.execucoes = form.value.execucoes.filter((d) => d.data !== data);
 };
 
-const onUpdateStart = (datas: string) => {
-  dataInicio.value = datas ?? null;
-};
-
-const onUpdateEnd = (datas: string) => {
-  dataFim.value = datas ?? null;
-};
-
 const formatarDataAgenda = (dataIso: string) => {
   const data = criarDataLocal(dataIso);
 
@@ -272,8 +264,6 @@ export const useNovaTarefa = () => {
     setarFrequenciaAutomatica,
     preencherFormulario,
     gerarExecucoes,
-    onUpdateStart,
-    onUpdateEnd,
     limparFormulario,
     formatarDataAgenda,
     excluirData,
