@@ -48,7 +48,7 @@ const estadoInicialRecorrencia: Recorrencia = {
   frequencia: null,
   horarios: [],
   dataInicio: "",
-  dataFim: "",
+  dataFim: null,
 };
 
 const estadoInicial = {
