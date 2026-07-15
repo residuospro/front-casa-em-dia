@@ -76,13 +76,17 @@ export function useAtualizarVersao() {
           clearInterval(intervalId!);
           intervalId = null;
 
-          // Dispara o update. O reload da página acontecerá automaticamente
-          // pelo listener interno do vite-plugin-pwa.
           await updateServiceWorker(true);
+
+          needRefresh.value = false;
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
       }, 1000);
     },
-    { immediate: false }, // 👈 Mude para false para não disparar no "init" do composable
+    { immediate: false },
   );
 
   return {

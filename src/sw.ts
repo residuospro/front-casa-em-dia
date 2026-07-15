@@ -16,7 +16,9 @@ const messaging = getMessaging(app);
 onBackgroundMessage(messaging, (payload) => {
   const data = payload.data ?? {};
 
-  const titulo = String(data.titulo ?? payload.notification?.title ?? "Casa em Dia");
+  const titulo = String(
+    data.titulo ?? payload.notification?.title ?? "Casa em Dia",
+  );
   const mensagem = String(data.mensagem ?? payload.notification?.body ?? "");
   const imagem = data.imagem ? String(data.imagem) : undefined;
   const url = String(data.url ?? "/");
@@ -48,6 +50,11 @@ self.addEventListener("message", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener("install", () => {
+  // Força o Service Worker pendente a se tornar o ativo imediatamente
+  self.skipWaiting();
 });
 
 self.addEventListener("notificationclick", (event) => {
