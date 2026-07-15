@@ -79,10 +79,6 @@ export function useAtualizarVersao() {
           await updateServiceWorker(true);
 
           needRefresh.value = false;
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 500);
         }
       }, 1000);
     },
