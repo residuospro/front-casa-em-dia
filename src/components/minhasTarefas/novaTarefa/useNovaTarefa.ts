@@ -181,7 +181,7 @@ const exibirDataFrequencia = () => {
 
   if (!inicio) return "";
 
-  if (inicio !== fim) {
+  if (fim && inicio !== fim) {
     return `${inicio} à ${fim}`;
   }
 

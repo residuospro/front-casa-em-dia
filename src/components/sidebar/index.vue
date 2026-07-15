@@ -103,13 +103,23 @@
       </template>
     </nav>
 
-    <div class="w-full p-4 mb-5" v-if="sidebarAberto">
+    <div
+      class="w-full flex flex-row justify-end p-4 gap-2"
+      v-if="sidebarAberto"
+    >
+      <span>Sair</span>
+      <button @click="limparSessao('/login')">
+        <svg-icon type="mdi" :path="mdiLogout" class="w-4 h-4" />
+      </button>
+    </div>
+
+    <!-- <div class="w-full p-4 mb-5" v-if="sidebarAberto">
       <div class="overflow-hidden rounded-2xl bg-white shadow-sm border">
         <div
-          class="h-24 bg-[#F5F4F0] px-5 py-4 flex items-center justify-between"
+          class="h-16 bg-[#F5F4F0] px-5 py-4 flex items-center justify-between"
         >
           <div>
-            <h3 class="text-lg font-semibold text-[#1C1F1F]">
+            <h3 class="text-base font-semibold text-[#1C1F1F]">
               {{ perfil.familia }}
             </h3>
 
@@ -119,24 +129,24 @@
           </div>
         </div>
 
-        <div class="h-32 overflow-hidden bg-[#F1F0E6]">
+        <div class="h-20 overflow-hidden bg-[#F1F0E6]">
           <img src="/casinha.png" class="w-full h-full object-cover" />
         </div>
       </div>
-    </div>
+    </div> -->
   </aside>
 </template>
 
 <script setup lang="ts">
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiChevronDown } from "@mdi/js";
+import { mdiChevronDown, mdiLogout } from "@mdi/js";
 import { useRoute } from "vue-router";
 import { useSidebar, type NavItem } from "./useSidebar";
 import { ref, reactive, onMounted, onUnmounted } from "vue";
-import { usePerfil } from "@/store/usePerfil";
+import { useSessao } from "@/utils/sessao";
 
-const { perfil } = usePerfil();
+const { limparSessao } = useSessao();
 
 const route = useRoute();
 const { sidebarAberto, navItens, fecharSidebar } = useSidebar();

@@ -26,10 +26,6 @@
             <span>{{ parsePermissao(perfil.permissao) }}</span>
           </ce-badge>
         </div>
-
-        <button @click="limparSessao('/login')">
-          <svg-icon type="mdi" :path="mdiLogout" class="w-6 h-6" />
-        </button>
       </div>
     </div>
 
@@ -63,7 +59,7 @@
 <script setup lang="ts">
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiMenu, mdiLogout } from "@mdi/js";
+import { mdiMenu } from "@mdi/js";
 import { useSidebar } from "@/components/sidebar/useSidebar";
 import Sidebar from "@/components/sidebar/index.vue";
 import { ref, onMounted, onUnmounted } from "vue";
@@ -71,9 +67,7 @@ import { usePerfil } from "@/store/usePerfil";
 import { CeBadge } from "@comercti/vue-components";
 import { useUtils } from "@/utils/useUtils";
 import Footer from "@/components/footer/index.vue";
-import { useSessao } from "@/utils/sessao";
 
-const { limparSessao } = useSessao();
 const { toggleSidebar, sidebarAberto, fecharSidebar } = useSidebar();
 const { perfil } = usePerfil();
 const { parseFotoPerfil, parsePermissao } = useUtils();
