@@ -52,11 +52,6 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener("install", () => {
-  // Força o Service Worker pendente a se tornar o ativo imediatamente
-  self.skipWaiting();
-});
-
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
