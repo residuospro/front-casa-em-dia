@@ -42,8 +42,6 @@ onBeforeMount(async () => {
 
   try {
     await obterPerfil();
-  } catch (erro) {
-    console.error("Erro ao carregar perfil:", erro);
   } finally {
     carregado.value = true;
   }
@@ -69,12 +67,9 @@ onMounted(async () => {
 
   solicitarPermissaoNotificacao();
 
-  console.log("[FCM Debug] Iniciando registro de push...");
-  const resultado = await registrarDispositivo();
-  console.log("[FCM Debug] registrarDispositivo retornou:", resultado);
+  await registrarDispositivo();
 
   onForegroundMessage((payload) => {
-    console.log("[FCM Debug] Mensagem recebida em foreground:", payload);
     const titulo = payload.notification?.title ?? "Casa em Dia";
     const corpo = payload.notification?.body ?? "";
 

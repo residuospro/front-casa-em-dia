@@ -8,6 +8,7 @@ import type {
 interface Tarefa {
   id: string;
   familiaId: string;
+  cicloIteracao: number;
   cicloId: string | null;
   titulo: string;
   descricao: string | null;

@@ -2,14 +2,14 @@
   <div class="flex flex-col justify-center gap-4 px-2">
     <Header />
 
-    <div class="grid xl:!grid-cols-2 gap-5 grid-cols-1">
-      <div class="grid grid-rows-[auto_auto] gap-4">
+    <div class="flex flex-row gap-4 w-full sm:flex-col md:!flex-col">
+      <div class="grid grid-rows-[auto_auto] gap-4 w-full">
         <Resumo />
 
         <TarefasUrgentes />
       </div>
 
-      <div class="grid grid-rows-[1fr_auto] gap-4">
+      <div class="grid grid-rows-[1fr_auto] gap-4 w-full">
         <NotificacoesNaoLidas />
         <MembrosFamiliares />
       </div>
@@ -42,7 +42,7 @@ onMounted(async () => {
     listarNotificacoes(),
     obterTarefasurgentes(),
     obterOpcoesFamiliares(),
-    obterResumo()
+    obterResumo(),
   ]);
 });
 </script>

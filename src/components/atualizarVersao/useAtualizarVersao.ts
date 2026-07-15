@@ -54,6 +54,7 @@ export function useAtualizarVersao() {
     if (intervalId) clearInterval(intervalId);
   });
 
+  // useAtualizarVersao.ts
   watch(
     needRefresh,
     (ativo) => {
@@ -74,12 +75,14 @@ export function useAtualizarVersao() {
         if (contador.value <= 0) {
           clearInterval(intervalId!);
           intervalId = null;
+
+          // Dispara o update. O reload da página acontecerá automaticamente
+          // pelo listener interno do vite-plugin-pwa.
           await updateServiceWorker(true);
-          needRefresh.value = false;
         }
       }, 1000);
     },
-    { immediate: true },
+    { immediate: false }, // 👈 Mude para false para não disparar no "init" do composable
   );
 
   return {

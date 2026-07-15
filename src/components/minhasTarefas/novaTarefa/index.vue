@@ -154,30 +154,111 @@
 
           <!-- Frequência -->
 
-          <div class="border-t pt-5 space-y-3">
-            <h2 class="font-semibold">Frequência da tarefa</h2>
+          <div class="border-t pt-5 flex flex-col justify-center gap-3">
+            <div>
+              <h2 class="font-semibold">Frequência da tarefa</h2>
 
-            <p class="text-xs text-black/50">
-              Defina em quais dias e horários essa tarefa será executada.
-            </p>
+              <p class="text-xs text-black/50">
+                Defina em quais dias e horários essa tarefa será executada.
+              </p>
+            </div>
 
-            <div class="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:grid-rows-2">
-              <ce-date-picker
-                range
-                modal
-                id="periodo-nova-tarefa"
-                label="Período"
-                format="yyyy-MM-dd"
-                v-model:start="dataInicio"
-                v-model:end="dataFim"
-                @update:start="(valor) => onUpdateStart(valor as string)"
-                @update:end="(valor) => onUpdateEnd(valor as string)"
-              />
+            <Toggle
+              v-if="form.execucoes.length === 0"
+              @update:model-value="setarFrequenciaAutomatica"
+              :model-value="frequenciaAutomatica"
+              label="Definir frequência automaticamente"
+            />
 
-              <Input label="Horário" type="time" v-model="horario" />
+            <div
+              v-if="frequenciaAutomatica"
+              class="flex flex-col justify-center gap-2 w-full mt-3"
+            >
+              <div
+                class="flex flex-row items-center gap-2 sm:flex-col sm:items-start"
+              >
+                <ce-checkbox
+                  v-for="item in frequencias"
+                  @update:model-value="
+                    (valor) =>
+                      setarFrequencia(
+                        item.value as FrequenciasRecorrencia,
+                        valor as boolean,
+                      )
+                  "
+                  :id="item.label"
+                  :model-value="recorrencia.frequencia === item.value"
+                  :label="item.label"
+                />
+              </div>
+
+              <div class="flex flex-row items-center gap-2">
+                <Input
+                  label="Data ínicio"
+                  type="date"
+                  class="!w-full"
+                  v-model="recorrencia.dataInicio"
+                />
+
+                <Input
+                  label="Data fim (opcional)"
+                  type="date"
+                  class="!w-full"
+                  v-model="recorrencia.dataFim"
+                />
+              </div>
+
+              <div class="flex flex-row items-end gap-2">
+                <Input
+                  label="Horário"
+                  type="time"
+                  class="!w-full"
+                  v-model="horario"
+                />
+
+                <Button
+                  class="!w-full"
+                  size="lg"
+                  @click="setarHorarioRecorrencia"
+                  >{{
+                    recorrencia?.horarios.length === 0
+                      ? "Adicionar horário"
+                      : "Adicionar novo horário"
+                  }}</Button
+                >
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col justify-center gap-2 mt-3"
+              v-if="!frequenciaAutomatica"
+            >
+              <div class="flex flex-row items-center gap-2 sm:flex-col">
+                <Input
+                  label="Data ínicio"
+                  type="date"
+                  class="!w-full"
+                  v-model="dataInicio"
+                />
+
+                <Input
+                  label="Data fim (opcional)"
+                  type="date"
+                  class="!w-full"
+                  v-model="dataFim"
+                />
+
+                <Input
+                  label="Horário"
+                  type="time"
+                  v-model="horario"
+                  class="!w-1/2 sm:!w-full"
+                />
+              </div>
             </div>
 
             <Button
+              v-if="!frequenciaAutomatica"
               type="button"
               variant="outline"
               class="!w-full"
@@ -237,7 +318,44 @@
               "
             />
 
-            <div class="flex flex-col gap-2">
+            <div
+              class="flex flex-row justify-between items-center w-full sm:flex-col sm:items-start gap-2"
+              v-if="frequenciaDefinida.exibir"
+            >
+              <div class="flex flex-row items-center gap-2 font-medium text-xs">
+                <div
+                  class="w-5 h-5 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center p-1"
+                >
+                  <svg-icon
+                    type="mdi"
+                    :path="mdiClockTimeEightOutline"
+                    class="text-emerald-600"
+                  />
+                </div>
+
+                <span class="capitalize">{{
+                  frequenciaDefinida.frequencia.toLocaleLowerCase()
+                }}</span>
+              </div>
+
+              <div
+                class="flex flex-row items-center gap-2 font-medium text-xs sm:justify-between"
+              >
+                <span>{{ frequenciaDefinida.data }}</span>
+
+                <span>às {{ frequenciaDefinida.horario }}</span>
+
+                <button @click="limparRecorrencia">
+                  <svg-icon
+                    type="mdi"
+                    :path="mdiTrashCanOutline"
+                    class="text-red-500"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2" v-else>
               <div
                 class="flex flex-row items-center justify-between font-medium"
                 v-for="(item, index) in form.execucoes"
@@ -320,16 +438,18 @@ import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 import { useCiclos } from "../../ciclos/useCiclos";
 import { useApiCiclos } from "../../ciclos/useApiCiclos";
 import { useNovaTarefa } from "./useNovaTarefa";
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useApiNovaTarefa } from "./useApiNovaTarefa";
-import { CeDatePicker } from "@comercti/vue-components-hmg";
+import { CeDatePicker, CeCheckbox } from "@comercti/vue-components-hmg";
 import { useRouter } from "vue-router";
+import type { FrequenciasRecorrencia } from "@/utils/tipagem";
 
 const props = defineProps<{
   acao: "criar" | "editar";
 }>();
 
 const router = useRouter();
+
 const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const { opcoesFamiliares } = useMinhaFamilia();
 const { obterCicloAtivo } = useApiCiclos();
@@ -342,6 +462,14 @@ const {
   idTarefa,
   dataFim,
   dataInicio,
+  frequenciaAutomatica,
+  frequencias,
+  recorrencia,
+  frequenciaDefinida,
+  limparRecorrencia,
+  setarFrequencia,
+  setarHorarioRecorrencia,
+  setarFrequenciaAutomatica,
   excluirData,
   limparFormulario,
   gerarExecucoes,
@@ -353,9 +481,7 @@ const {
 
 const { criarNovaTarefa, editarTarefa, obterTarefaPorId } = useApiNovaTarefa();
 
-onMounted(async () => {
-  await Promise.all([obterOpcoesFamiliares(), obterCicloAtivo()]);
-});
+onMounted(async () => {});
 
 const responsavel = computed(
   () =>
@@ -381,6 +507,8 @@ onMounted(async () => {
   };
 
   limparFormulario();
+  limparRecorrencia();
+  frequenciaAutomatica.value = false;
 
   if (props.acao === "editar" && id) {
     const id = router.currentRoute.value.query.id as string;
@@ -389,6 +517,8 @@ onMounted(async () => {
   } else if (data) {
     preencherFormulario(data);
   }
+
+  await Promise.all([obterOpcoesFamiliares(), obterCicloAtivo()]);
 });
 </script>
 

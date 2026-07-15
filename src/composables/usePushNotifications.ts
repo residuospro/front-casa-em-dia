@@ -18,7 +18,7 @@ export function usePushNotifications() {
     if (suporte.value) return true;
 
     suporte.value = await isFirebaseMessagingSupported();
-    console.log("[FCM Debug] Suporte a messaging:", suporte.value);
+
     return suporte.value;
   }
 
@@ -27,53 +27,45 @@ export function usePushNotifications() {
     carregando.value = true;
 
     try {
-      console.log("[FCM Debug] Verificando suporte...");
       const temSuporte = await verificarSuporte();
       if (!temSuporte) {
         erro.value = "Push notifications não são suportadas neste navegador";
-        console.log("[FCM Debug] Sem suporte, abortando.");
+
         return false;
       }
 
-      console.log("[FCM Debug] Permissão atual:", Notification.permission);
       status.value = Notification.permission;
 
       if (Notification.permission === "denied") {
         erro.value = "Permissão de notificação negada";
-        console.log("[FCM Debug] Permissão negada pelo usuário.");
+
         return false;
       }
 
       if (Notification.permission === "default") {
-        console.log("[FCM Debug] Solicitando permissão...");
         status.value = await Notification.requestPermission();
-        console.log("[FCM Debug] Permissão após request:", status.value);
+
         if (status.value !== "granted") {
-          console.log("[FCM Debug] Permissão não concedida.");
           return false;
         }
       }
 
-      console.log("[FCM Debug] Obtendo token FCM...");
       const fcmToken = await obterTokenFCM();
-      console.log("[FCM Debug] Token obtido:", fcmToken ? fcmToken.substring(0, 30) + "..." : "null");
 
       if (!fcmToken) {
         erro.value = "Falha ao obter token FCM";
-        console.log("[FCM Debug] Token nulo, abortando.");
+
         return false;
       }
 
       token.value = fcmToken;
-      console.log("[FCM Debug] Enviando token para backend...");
+
       await enviarTokenPush(fcmToken);
-      console.log("[FCM Debug] Token enviado com sucesso!");
 
       return true;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erro desconhecido";
       erro.value = message;
-      console.error("[FCM Debug] Erro no registro:", err);
 
       return false;
     } finally {

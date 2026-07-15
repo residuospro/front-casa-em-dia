@@ -148,7 +148,6 @@ export function useCalendario() {
   };
 
   const abrirDetalhe = (tarefa: TarefaComExecucao) => {
-    console.log("Tarefa clicada:", tarefa);
     router.push({
       name: "minhas-tarefas.editar-tarefa",
       query: { id: tarefa.tarefaId },

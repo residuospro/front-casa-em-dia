@@ -1,6 +1,10 @@
-import { ref } from "vue";
-import type { FormNovaTarefa } from "./tipagem";
-import { CategoriaValues, TipoTarefaValues } from "@/utils/tipagem";
+import { computed, ref } from "vue";
+import type { FormNovaTarefa, Recorrencia } from "./tipagem";
+import {
+  CategoriaValues,
+  TipoTarefaValues,
+  type FrequenciasRecorrencia,
+} from "@/utils/tipagem";
 import { useUtils } from "@/utils/useUtils";
 
 const categorias = [
@@ -40,6 +44,13 @@ const tipos = [
   },
 ];
 
+const estadoInicialRecorrencia: Recorrencia = {
+  frequencia: null,
+  horarios: [],
+  dataInicio: "",
+  dataFim: "",
+};
+
 const estadoInicial = {
   titulo: "",
   descricao: "",
@@ -51,14 +62,16 @@ const estadoInicial = {
   cicloId: null,
   execucoes: [],
   atribuirAutomaticamente: false,
+  recorrencia: { ...estadoInicialRecorrencia },
 };
 
-const { criarDataLocal, criarExecucoes } = useUtils();
+const { criarDataLocal, criarExecucoes, formatarData } = useUtils();
 const idTarefa = ref("");
 const form = ref<FormNovaTarefa>({ ...estadoInicial });
 const dataInicio = ref<string | null>(null);
 const dataFim = ref<string | null>(null);
 const horario = ref("");
+const frequenciaAutomatica = ref(false);
 
 const preencherFormulario = (dataIso: string) => {
   const data = criarDataLocal(dataIso);
@@ -132,6 +145,112 @@ const limparFormulario = () => {
   horario.value = "";
 };
 
+const frequencias = [
+  { label: "Diariamente", value: "DIARIO" },
+  { label: "Dia sim, dia não", value: "DIA_SIM_DIA_NAO" },
+  { label: "Dias ímpares", value: "DIAS_IMPARES" },
+  { label: "Dias pares", value: "DIAS_PARES" },
+];
+
+const recorrencia = ref({
+  ...estadoInicialRecorrencia,
+});
+
+const limparRecorrencia = () => {
+  recorrencia.value = { ...estadoInicialRecorrencia, horarios: [] };
+};
+
+const setarFrequencia = (
+  frequencia: FrequenciasRecorrencia,
+  checked: boolean,
+) => {
+  recorrencia.value.frequencia = checked ? frequencia : null;
+};
+
+const setarHorarioRecorrencia = () => {
+  if (
+    recorrencia.value.horarios.includes(horario.value) ||
+    horario.value === ""
+  )
+    return;
+
+  recorrencia.value.horarios.push(horario.value);
+  horario.value = "";
+};
+
+const setarFrequenciaAutomatica = (valor: boolean) => {
+  frequenciaAutomatica.value = valor;
+  recorrencia.value = { ...estadoInicialRecorrencia, horarios: [] };
+};
+
+const exibirDataFrequencia = () => {
+  const inicio = recorrencia.value.dataInicio?.split("-").reverse().join("/");
+  const fim = recorrencia.value.dataFim?.split("-").reverse().join("/");
+
+  if (!inicio) return "";
+
+  if (inicio !== fim) {
+    return `${inicio} à ${fim}`;
+  }
+
+  return inicio;
+};
+
+const parseFrequencia = (frequencia: FrequenciasRecorrencia) => {
+  const mapsFrequencia = {
+    DIARIO: "Diário",
+    DIA_SIM_DIA_NAO: "Dia sim, dia não",
+    DIAS_IMPARES: "Dias impares",
+    DIAS_PARES: "Dias pares",
+  };
+
+  return mapsFrequencia[frequencia];
+};
+
+const frequenciaDefinida = computed(() => {
+  const recorrenciaRetorno = {
+    frequencia: "",
+    data: "",
+    horario: "",
+    exibir: false,
+  };
+
+  if (
+    recorrencia.value.frequencia &&
+    recorrencia.value.dataInicio !== "" &&
+    recorrencia.value.dataFim !== "" &&
+    recorrencia.value.horarios.length > 0
+  ) {
+    return {
+      frequencia: parseFrequencia(recorrencia.value.frequencia),
+      data: exibirDataFrequencia(),
+      horario: recorrencia.value.horarios.join(" & "),
+      exibir: true,
+    };
+  }
+
+  return recorrenciaRetorno;
+});
+
+const setarFormRecorrencia = () => {
+  const inicio = formatarData(recorrencia.value.dataInicio || "", false);
+  const fim = formatarData(recorrencia.value.dataFim || "", false);
+
+  if (inicio != fim) {
+    return {
+      ...recorrencia.value,
+      dataInicio: recorrencia.value.dataInicio,
+      dataFim: recorrencia.value.dataFim,
+    };
+  }
+
+  return {
+    ...recorrencia.value,
+    dataInicio: recorrencia.value.dataInicio,
+    dataFim: null,
+  };
+};
+
 export const useNovaTarefa = () => {
   return {
     categorias,
@@ -141,6 +260,16 @@ export const useNovaTarefa = () => {
     dataFim,
     horario,
     idTarefa,
+    frequenciaAutomatica,
+    estadoInicialRecorrencia,
+    frequencias,
+    recorrencia,
+    frequenciaDefinida,
+    setarFormRecorrencia,
+    limparRecorrencia,
+    setarFrequencia,
+    setarHorarioRecorrencia,
+    setarFrequenciaAutomatica,
     preencherFormulario,
     gerarExecucoes,
     onUpdateStart,

@@ -14,6 +14,18 @@ const obterPathname = (url?: string): string => {
   }
 };
 
+let numeroRequisicoesAtivas = 0;
+
+const incrementarRequisicoesAtivas = () => {
+  numeroRequisicoesAtivas += 1;
+};
+
+const decrementarRequisicoesAtivas = () => {
+  if (numeroRequisicoesAtivas > 0) {
+    numeroRequisicoesAtivas -= 1;
+  }
+};
+
 const isRotaIgnorada = (url?: string): boolean => {
   if (!url) return false;
 
@@ -34,6 +46,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use((config) => {
   const ignorarLoading = isRotaIgnorada(config.url);
 
+  incrementarRequisicoesAtivas();
   if (!ignorarLoading) {
     ativarLoading();
   }
@@ -43,18 +56,20 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
+    decrementarRequisicoesAtivas();
     const ignorarLoading = isRotaIgnorada(response.config.url);
 
-    if (!ignorarLoading) desativarLoading();
+    if (!ignorarLoading && numeroRequisicoesAtivas === 0) desativarLoading();
 
     return response;
   },
   (error) => {
+    decrementarRequisicoesAtivas();
     useRespostaApi(error.response?.status, error);
 
     const ignorarLoading = isRotaIgnorada(error.config?.url);
 
-    if (!ignorarLoading) desativarLoading();
+    if (!ignorarLoading && numeroRequisicoesAtivas === 0) desativarLoading();
 
     return Promise.reject(error);
   },

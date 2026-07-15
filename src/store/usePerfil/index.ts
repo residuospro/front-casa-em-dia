@@ -25,8 +25,6 @@ export const usePerfil = defineStore("perfil", () => {
       await useClient.get("/users/me/perfil");
 
     perfil.value = resposta.data;
-
-    console.log("perfil", perfil.value);
   };
   return {
     perfil,

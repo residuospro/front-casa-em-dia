@@ -252,8 +252,6 @@ const criarTarefa = (dia: Date, hora: number, minuto = 0) => {
 
   data.setHours(hora, minuto, 0, 0);
 
-  console.log("datatata", data);
-
   router.push({
     name: "minhas-tarefas.nova-tarefa",
     query: {

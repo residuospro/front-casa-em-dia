@@ -1,13 +1,21 @@
 import type { StatusExecucao } from "../tipagem";
 
 export const useUtils = () => {
-  const formatarData = (data: string) => {
+  const formatarData = (data: string, comHora: boolean = true) => {
+    if (comHora) {
+      return new Date(data).toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
     return new Date(data).toLocaleString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     });
   };
 
@@ -20,8 +28,8 @@ export const useUtils = () => {
   };
 
   const parseFotoPerfil = (foto: string) => {
-    if (!foto) return '';
-    if (foto.startsWith('data:') || foto.startsWith('https')) return foto;
+    if (!foto) return "";
+    if (foto.startsWith("data:") || foto.startsWith("https")) return foto;
     return import.meta.env.VITE_API_URL + foto;
   };
 

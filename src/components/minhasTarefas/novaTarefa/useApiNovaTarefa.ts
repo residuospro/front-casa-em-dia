@@ -8,7 +8,15 @@ import type { IResponseTarefa } from "../tipagem";
 
 export const useApiNovaTarefa = () => {
   const { perfil } = usePerfil();
-  const { form, idTarefa, limparFormulario } = useNovaTarefa();
+  const {
+    form,
+    idTarefa,
+    frequenciaAutomatica,
+    frequenciaDefinida,
+    setarFormRecorrencia,
+    limparFormulario,
+    limparRecorrencia,
+  } = useNovaTarefa();
 
   const obterTarefaPorId = async (id: string) => {
     const resposta: AxiosResponse = await useClient.get(
@@ -21,6 +29,10 @@ export const useApiNovaTarefa = () => {
   };
 
   const criarNovaTarefa = async () => {
+    form.value.recorrencia = frequenciaDefinida.value.exibir
+      ? setarFormRecorrencia()
+      : null;
+
     const resposta: AxiosResponse<IResponseTarefa> = await useClient.post(
       `/tarefas/${perfil.familiaId}/tarefas`,
       { ...form.value, pontos: form.value.pontos ?? 0 },
@@ -28,9 +40,15 @@ export const useApiNovaTarefa = () => {
 
     useRespostaApi(resposta.status);
     limparFormulario();
+    limparRecorrencia();
+    frequenciaAutomatica.value = false;
   };
 
   const editarTarefa = async () => {
+    form.value.recorrencia = frequenciaDefinida.value.exibir
+      ? setarFormRecorrencia()
+      : null;
+
     const resposta: AxiosResponse = await useClient.put(
       `/tarefas/${perfil.familiaId}/tarefas/${idTarefa.value}`,
       form.value,

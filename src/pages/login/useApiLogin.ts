@@ -14,12 +14,11 @@ export const useApiLogin = () => {
       method: "post",
     });
 
-    console.log("res", resposta);
-
     if (resposta.status === 200) {
       const redirectStorage = sessionStorage.getItem("redirectAfterLogin");
       sessionStorage.removeItem("redirectAfterLogin");
-      const redirect = (route.query.redirect as string) || redirectStorage || "/home";
+      const redirect =
+        (route.query.redirect as string) || redirectStorage || "/home";
       setToken(resposta.data.accessToken, redirect);
     }
   };

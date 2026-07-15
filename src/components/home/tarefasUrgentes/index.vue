@@ -11,6 +11,12 @@
         class="px-6 py-5 flex items-center gap-4 hover:bg-gray-50 transition-colors group"
       >
         <div
+          @click="
+            router.push({
+              name: 'minhas-tarefas.visualizar-tarefa',
+              query: { id: task.id },
+            })
+          "
           class="flex flex-rows items-center justify-between w-full sm:flex-col sm:items-start sm:gap-4"
         >
           <div class="flex-1 min-w-0 flex flex-row gap-2 items-center">
@@ -83,6 +89,12 @@
               :alt="perfilResponsavel(task?.responsavelAtualId).nome"
               class="w-9 h-9 rounded-2xl object-cover ring-2 ring-white shadow-sm"
             />
+
+            <svg-icon
+              type="mdi"
+              :path="mdiChevronRight"
+              class="text-gray-600"
+            />
           </div>
         </div>
       </div>
@@ -109,6 +121,9 @@ import { useUtils } from "@/utils/useUtils";
 import { useTarefas } from "@/components/minhasTarefas/useTarefas";
 import { useVisualizarTarefas } from "@/components/minhasTarefas/visualizarTarefa/useVisualizarTarefa";
 import { useRouter } from "vue-router";
+///@ts-ignore
+import SvgIcon from "@jamescoyle/vue-icon";
+import { mdiChevronRight } from "@mdi/js";
 
 const router = useRouter();
 const { dataTarefasUrgentes } = useTarefasUrgentes();

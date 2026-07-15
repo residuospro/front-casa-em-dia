@@ -132,7 +132,5 @@ const redirect = (rota?: string) => {
 
 onMounted(() => {
   itemAtivo.value = router.currentRoute.value.fullPath;
-
-  console.log("ite", itemAtivo.value);
 });
 </script>

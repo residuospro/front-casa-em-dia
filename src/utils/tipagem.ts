@@ -38,12 +38,20 @@ const TipoNotificacaoValues = {
   TAREFA_ATRIBUIDA: "TAREFA_ATRIBUIDA",
 } as const;
 
+const FrequenciaRecorrenciaValues = {
+  DIARIO: "DIARIO",
+  DIA_SIM_DIA_NAO: "DIA_SIM_DIA_NAO",
+  DIAS_IMPARES: "DIAS_IMPARES",
+  DIAS_PARES: "DIAS_PARES",
+} as const;
+
 type TipoNotificacao =
   (typeof TipoNotificacaoValues)[keyof typeof TipoNotificacaoValues];
 
 type StatusExecucao =
   (typeof StatusExecucaoValues)[keyof typeof StatusExecucaoValues];
-
+type FrequenciasRecorrencia =
+  (typeof FrequenciaRecorrenciaValues)[keyof typeof FrequenciaRecorrenciaValues];
 type TipoPessoa = (typeof TipoPessoaValues)[keyof typeof TipoPessoaValues];
 type Categorias = (typeof CategoriaValues)[keyof typeof CategoriaValues];
 type TipoTarefa = (typeof TipoTarefaValues)[keyof typeof TipoTarefaValues];
@@ -85,6 +93,8 @@ export {
   ModoDistribuicaoValues,
   StatusExecucaoValues,
   TipoNotificacaoValues,
+  FrequenciaRecorrenciaValues,
+  type FrequenciasRecorrencia,
   type TipoNotificacao,
   type ModoDistribuicao,
   type TipoPessoa,

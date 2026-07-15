@@ -14,9 +14,6 @@ const obterTarefasurgentes = async () => {
   );
 
   dataTarefasUrgentes.value = resposta.data;
-
-  console.log("res", resposta.data);
-  console.log("datt", dataTarefasUrgentes.value);
 };
 
 export const useTarefasUrgentes = () => {

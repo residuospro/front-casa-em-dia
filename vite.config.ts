@@ -121,7 +121,7 @@ export default defineConfig({
       devOptions: {
         navigateFallback: "index.html",
         suppressWarnings: true,
-        enabled: true,
+        enabled: false,
         type: "module",
       },
     }),
