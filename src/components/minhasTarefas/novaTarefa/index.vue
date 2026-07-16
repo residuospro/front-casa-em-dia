@@ -146,6 +146,19 @@
           />
 
           <Select
+            v-if="!form.atribuirAutomaticamente && form.tipo === 'FAMILIAR'"
+            label="Participantes"
+            multiple
+            placeholder="Selecione um participante"
+            v-model="form.participantesId"
+            :items="
+              opcoesFamiliares.filter(
+                (p) => p.value !== form.responsavelAtualId,
+              )
+            "
+          />
+
+          <Select
             label="Ciclo"
             placeholder="Selecione o ciclo"
             v-model="form.cicloId"
@@ -449,7 +462,6 @@ const props = defineProps<{
 }>();
 
 const router = useRouter();
-
 const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const { opcoesFamiliares } = useMinhaFamilia();
 const { obterCicloAtivo } = useApiCiclos();

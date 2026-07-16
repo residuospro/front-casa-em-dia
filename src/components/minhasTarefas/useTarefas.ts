@@ -101,7 +101,6 @@ const headers = [
   { text: "Categoria", value: "categoria", sortable: true },
   { text: "Tipo", value: "tipo", sortable: true },
   { text: "Responsável", value: "responsavelAtual", sortable: true },
-  { text: "Pontos", value: "pontos", sortable: false },
   { text: "Agenda", value: "execucoes", sortable: false },
   { text: "Ciclo", value: "ciclo" },
   { text: "Status", value: "ativo", sortable: true },

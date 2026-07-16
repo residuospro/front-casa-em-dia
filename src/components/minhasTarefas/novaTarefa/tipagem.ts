@@ -20,6 +20,7 @@ type FormNovaTarefa = {
   categoria: string;
   modoDistribuicao: string;
   responsavelAtualId: string | null;
+  participantesId: string[];
   pontos: number | null;
   cicloId: string | null;
   execucoes: Execucao[];

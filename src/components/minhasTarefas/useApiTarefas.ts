@@ -27,6 +27,8 @@ export const useApiTarefas = () => {
         },
       );
 
+      console.log("res", resposta);
+
       manipularResposta(resposta.data);
     } catch {
       resetarParametros();

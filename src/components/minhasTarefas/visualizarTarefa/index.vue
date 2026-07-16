@@ -113,7 +113,28 @@
                   </div>
                 </div>
               </div>
+
               <div>
+                <p class="text-sm text-gray-500 mb-1">Participante(s)</p>
+                <div class="flex -space-x-2 z-10">
+                  <div
+                    v-for="(participante, index) in dataTarefa?.participantes"
+                  >
+                    <img
+                      :key="index"
+                      v-if="participante.fotoPerfil"
+                      :src="parseFotoPerfil(participante.fotoPerfil)"
+                      class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
+                      :style="{
+                        zIndex:
+                          dataTarefa?.participantes.length || 0 + Number(index),
+                      }"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="(dataTarefa?.pontos ?? 0) > 0">
                 <p class="text-sm text-gray-500 mb-1">Pontuação</p>
                 <p class="font-medium">{{ dataTarefa?.pontos }} pts</p>
               </div>
@@ -141,89 +162,144 @@
             </h3>
             <div class="space-y-4">
               <div
-                class="flex items-center justify-between bg-gray-50 rounded-2xl p-4"
+                class="flex justify-between bg-gray-50 rounded-2xl p-4 sm:flex-col sm:items-start md:!flex-col gap-3"
                 v-for="(item, index) in execucoesAgrupadas.atuais"
+                md:!flex-col
                 :key="index"
               >
-                <div class="flex items-center gap-4">
+                <div
+                  class="flex items-center justify-between gap-4 sm:w-full md:!w-full"
+                >
                   <div
-                    v-if="obterProximaExecucao([item])"
-                    class="flex flex-col gap-1"
+                    class="flex items-center justify-between sm:w-full md:!w-full"
                   >
-                    <div
-                      class="flex items-start gap-2"
-                      :class="
-                        obterClasseExecucaoFormatada(
-                          obterProximaExecucao([item]),
-                        ).text
-                      "
-                    >
-                      <span
-                        class="mt-[6px] h-2.5 w-2.5 rounded-full shrink-0"
-                        :class="
-                          obterClasseExecucaoFormatada(
-                            obterProximaExecucao([item]),
-                          ).dot
-                        "
-                      />
+                    <div class="flex items-center gap-2">
+                      <div
+                        v-if="obterProximaExecucao([item])"
+                        class="flex flex-col gap-1"
+                      >
+                        <div
+                          class="flex items-start gap-2"
+                          :class="
+                            obterClasseExecucaoFormatada(
+                              obterProximaExecucao([item]),
+                            ).text
+                          "
+                        >
+                          <span
+                            class="mt-[6px] h-2.5 w-2.5 rounded-full shrink-0"
+                            :class="
+                              obterClasseExecucaoFormatada(
+                                obterProximaExecucao([item]),
+                              ).dot
+                            "
+                          />
 
-                      <div class="flex flex-col">
-                        <span class="text-sm font-medium leading-5">
-                          {{
-                            formatarExecucao(obterProximaExecucao([item]))
-                              .titulo
-                          }}
-                        </span>
+                          <div class="flex flex-col">
+                            <span class="text-sm font-medium leading-5">
+                              {{
+                                formatarExecucao(obterProximaExecucao([item]))
+                                  .titulo
+                              }}
+                            </span>
+                          </div>
+                        </div>
                       </div>
+
+                      <span
+                        class="border rounded-full p-1 text-sm capitalize"
+                        :class="setarClasseStatus(item)"
+                        >{{ item.status.toLocaleLowerCase() }}
+                      </span>
+                    </div>
+
+                    <div class="lg:hidden xl:hidden">
+                      <ce-context-menu
+                        v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
+                        :items="opcoesMenuExecucao"
+                        @select="executarOpcoesMenuExecucao($event, item.id)"
+                      >
+                        <button>
+                          <svg-icon
+                            type="mdi"
+                            :path="mdiDotsVertical"
+                            class="text-gray-400 cursor-pointer"
+                          />
+                        </button>
+                      </ce-context-menu>
                     </div>
                   </div>
-
-                  <span
-                    class="border rounded-full p-1 text-sm capitalize"
-                    :class="setarClasseStatus(item)"
-                    >{{ item.status.toLocaleLowerCase() }}
-                  </span>
                 </div>
 
                 <div class="flex flex-row gap-2">
-                  <div
-                    class="flex items-center gap-3"
-                    v-if="item.concluidoPorId"
-                  >
+                  <div class="flex items-center gap-3">
                     <div class="flex items-center gap-2">
-                      <img
-                        :src="
-                          parseFotoPerfil(
-                            perfilConcluidoPor(item.concluidoPorId).foto || '',
-                          )
-                        "
-                        alt=""
-                        class="w-6 h-6 rounded-full"
-                      />
-                      <span
-                        :title="perfilConcluidoPor(item.concluidoPorId).nome"
-                        class="text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
-                        >{{ perfilConcluidoPor(item.concluidoPorId).nome }}</span
+                      <ce-tooltip
+                        v-if="item.executorId"
+                        :focus="false"
+                        location="top"
+                        :text="`Executor: ${perfilConcluidoPor(item.executorId).nome}`"
                       >
+                        <template #activator>
+                          <button>
+                            <img
+                              :src="
+                                parseFotoPerfil(
+                                  perfilConcluidoPor(item.executorId).foto ||
+                                    '',
+                                )
+                              "
+                              alt=""
+                              class="w-6 h-6 rounded-full"
+                            />
+                          </button>
+                        </template>
+                      </ce-tooltip>
+                      <ce-tooltip
+                        v-if="item.concluidoPorId"
+                        :focus="false"
+                        location="top"
+                        :text="`Concluido por: ${perfilConcluidoPor(item.concluidoPorId).nome}`"
+                      >
+                        <template #activator>
+                          <button>
+                            <img
+                              :src="
+                                parseFotoPerfil(
+                                  perfilConcluidoPor(item.concluidoPorId)
+                                    .foto || '',
+                                )
+                              "
+                              alt=""
+                              class="w-6 h-6 rounded-full"
+                            />
+                          </button>
+                        </template>
+                      </ce-tooltip>
                     </div>
-                    <span class="text-emerald-600 font-medium">
+                    <span
+                      class="text-emerald-600 font-medium"
+                      v-if="item.pontosObtidos"
+                    >
                       +{{ item.pontosObtidos }} pts
                     </span>
                   </div>
 
-                  <ce-context-menu
-                    v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
-                    :items="opcoesMenuExecucao"
-                    @select="executarOpcoesMenuExecucao($event, item.id)"
-                  >
-                    <button>
-                      <svg-icon
-                        type="mdi"
-                        :path="mdiDotsVertical"
-                        class="text-gray-400 cursor-pointer"
-                      />
-                    </button>
-                  </ce-context-menu>
+                  <div class="sm:!hidden md:!hidden">
+                    <ce-context-menu
+                      v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
+                      :items="opcoesMenuExecucao"
+                      @select="executarOpcoesMenuExecucao($event, item.id)"
+                    >
+                      <button>
+                        <svg-icon
+                          type="mdi"
+                          :path="mdiDotsVertical"
+                          class="text-gray-400 cursor-pointer"
+                        />
+                      </button>
+                    </ce-context-menu>
+                  </div>
                 </div>
               </div>
             </div>
@@ -235,7 +311,7 @@
             </h3>
             <div class="space-y-4">
               <div
-                class="flex items-center justify-between bg-gray-50 rounded-2xl p-4"
+                class="flex items-center justify-between bg-gray-50 rounded-2xl p-4 sm:flex-col md:!flex-col"
                 v-for="(item, index) in execucoesAgrupadas.passadas.slice(
                   0,
                   qtdExecucao,
@@ -288,19 +364,33 @@
                     v-if="item.concluidoPorId"
                   >
                     <div class="flex items-center gap-2">
-                      <img
-                        :src="
-                          parseFotoPerfil(
-                            perfilConcluidoPor(item.concluidoPorId).foto || '',
-                          )
-                        "
-                        alt=""
-                        class="w-6 h-6 rounded-full"
-                      />
+                      <ce-tooltip
+                        :focus="true"
+                        location="top"
+                        :text="`Concluido por ${perfilConcluidoPor(item.concluidoPorId).nome}`"
+                      >
+                        <template #activator>
+                          <button>
+                            <img
+                              :src="
+                                parseFotoPerfil(
+                                  perfilConcluidoPor(item.concluidoPorId)
+                                    .foto || '',
+                                )
+                              "
+                              alt=""
+                              class="w-6 h-6 rounded-full"
+                            />
+                          </button>
+                        </template>
+                      </ce-tooltip>
+
                       <span
                         :title="perfilConcluidoPor(item.concluidoPorId).nome"
                         class="text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
-                        >{{ perfilConcluidoPor(item.concluidoPorId).nome }}</span
+                        >{{
+                          perfilConcluidoPor(item.concluidoPorId).nome
+                        }}</span
                       >
                     </div>
                     <span class="text-emerald-600 font-medium">
@@ -430,6 +520,7 @@ import { useUtils } from "@/utils/useUtils";
 import { CeContextMenu } from "@comercti/vue-components-hmg";
 import Button from "@/components/botao/index.vue";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
+import { CeTooltip } from "@comercti/vue-components-hmg";
 
 const {
   getCategoriaStyle,

@@ -5,6 +5,13 @@ import type {
   StatusExecucao,
 } from "@/utils/tipagem";
 
+type Executor = {
+  id: string;
+  nome: string;
+  fotoPerfil: string;
+  genero: "MASCULINO" | "FEMININO";
+};
+
 interface Tarefa {
   id: string;
   familiaId: string;
@@ -16,12 +23,8 @@ interface Tarefa {
   categoria: Categorias;
   modoDistribuicao: ModoDistribuicao | null;
   responsavelAtualId: string | null;
-  responsavelAtual: {
-    id: string;
-    nome: string;
-    fotoPerfil: string;
-    genero: "MASCULINO" | "FEMININO";
-  };
+  responsavelAtual: Executor;
+  participantes: Executor[];
   pontos: number;
   ativo: boolean;
   criadoPorId: string;
@@ -84,6 +87,7 @@ interface Execucao {
   notificacaoAtrasada: boolean;
   criadoEm: string | null;
   iteracao: number;
+  executorId: string | null;
 }
 
 export type { IResponseTarefa, Filtro, ParametrosTarefas, Execucao, Tarefa };

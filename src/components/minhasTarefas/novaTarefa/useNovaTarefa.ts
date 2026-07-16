@@ -58,6 +58,7 @@ const estadoInicial = {
   categoria: "",
   modoDistribuicao: "",
   responsavelAtualId: null,
+  participantesId: [],
   pontos: null,
   cicloId: null,
   execucoes: [],

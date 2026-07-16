@@ -83,19 +83,32 @@
     </template>
 
     <template #responsavelAtual="{ item }">
-      <div class="flex flex-row items-center gap-1">
+      <img
+        v-if="
+          item.responsavelAtual.fotoPerfil && item.participantes.length === 0
+        "
+        :src="parseFotoPerfil(item.responsavelAtual.fotoPerfil)"
+        class="object-cover w-8 h-8 rounded-full"
+      />
+
+      <div v-else class="flex items-center -space-x-2">
         <img
-          v-if="item.responsavelAtual.fotoPerfil"
+          v-if="item.responsavelAtual?.fotoPerfil"
           :src="parseFotoPerfil(item.responsavelAtual.fotoPerfil)"
-          class="object-cover w-8 h-8 rounded-full"
+          class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
         />
 
-        <span
-          class="text-sm font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
-          :title="item.responsavelAtual.nome"
-        >
-          {{ item.responsavelAtual.nome }}
-        </span>
+        <div class="flex -space-x-2 z-10">
+          <div v-for="(participante, index) in item.participantes">
+            <img
+              :key="index"
+              v-if="participante.fotoPerfil"
+              :src="parseFotoPerfil(participante.fotoPerfil)"
+              class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
+              :style="{ zIndex: item.participantes.length + Number(index) }"
+            />
+          </div>
+        </div>
       </div>
     </template>
 
@@ -105,9 +118,6 @@
       }}</span>
 
       <span v-else>----</span>
-    </template>
-    <template #pontos="{ item }">
-      <span class="font-bold">{{ item.pontos }}pts</span>
     </template>
 
     <template #ativo="{ item }">
