@@ -5,11 +5,12 @@ import type { IFamilia } from "./tipagem";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import { usePerfil } from "@/store/usePerfil";
 import type { IOpcoes } from "@/utils/interfaces";
+import { storeToRefs } from "pinia";
 
 export const useApiMinhaFamilia = () => {
   const { dataFamilia, abrirModalDeletar, opcoesFamiliares } =
     useMinhaFamilia();
-  const { perfil } = usePerfil();
+  const { perfil } = storeToRefs(usePerfil());
 
   const obterFamilia = async () => {
     const resposta: AxiosResponse<IFamilia[]> = await useClient.get(
@@ -21,7 +22,7 @@ export const useApiMinhaFamilia = () => {
 
   const deletarFamilia = async () => {
     const resposta: AxiosResponse = await useClient.delete(
-      `/families/${perfil.familiaId}`,
+      `/families/${perfil.value.familiaId}`,
     );
 
     useRespostaApi(resposta.status);
@@ -31,7 +32,7 @@ export const useApiMinhaFamilia = () => {
 
   const obterOpcoesFamiliares = async () => {
     const resposta: AxiosResponse<IOpcoes[]> = await useClient.get(
-      `/families/${perfil.familiaId}/membros/opcoes`,
+      `/families/${perfil.value.familiaId}/membros/opcoes`,
     );
 
     opcoesFamiliares.value = resposta.data;

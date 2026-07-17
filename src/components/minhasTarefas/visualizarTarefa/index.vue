@@ -118,7 +118,7 @@
                 </div>
               </div>
 
-              <div>
+              <div v-if="(dataTarefa?.participantesId.length || 0) > 0">
                 <p class="text-sm text-gray-500 mb-1">Participante(s)</p>
                 <div class="flex -space-x-2 z-10">
                   <div

@@ -84,28 +84,26 @@
 
     <template #responsavelAtual="{ item }">
       <img
-        v-if="
-          item.responsavelAtual.fotoPerfil && item.participantes.length === 0
-        "
+        v-if="item.responsavelAtualId && item.participantesId.length === 0"
         :src="parseFotoPerfil(perfilMembro(item.responsavelAtualId).foto)"
         class="object-cover w-8 h-8 rounded-full"
       />
 
       <div v-else class="flex items-center -space-x-2">
         <img
-          v-if="item.responsavelAtual?.fotoPerfil"
+          v-if="item.responsavelAtualId"
           :src="parseFotoPerfil(perfilMembro(item.responsavelAtualId).foto)"
           class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
         />
 
         <div class="flex -space-x-2 z-10">
-          <div v-for="(participante, index) in item.participantes">
+          <div v-for="(participante, index) in item.participantesId">
             <img
               :key="index"
-              v-if="participante.id"
-              :src="parseFotoPerfil(perfilMembro(participante.id).foto)"
+              v-if="participante"
+              :src="parseFotoPerfil(perfilMembro(participante).foto)"
               class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
-              :style="{ zIndex: item.participantes.length + Number(index) }"
+              :style="{ zIndex: item.participantesId.length + Number(index) }"
             />
           </div>
         </div>
@@ -246,7 +244,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useApiTarefas } from "./useApiTarefas";
 import { useTarefas } from "./useTarefas";
 import {

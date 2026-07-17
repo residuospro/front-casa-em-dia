@@ -14,19 +14,17 @@
 import PWABadge from "./components/atualizarVersao/atualizarVersaoAplicacao.vue";
 import Loading from "@/components/loading/index.vue";
 import { useSessao } from "./utils/sessao";
-import { ref, onBeforeMount, onMounted, onUnmounted } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import { onForegroundMessage } from "@/firebase/messaging";
 import { useNotificacao } from "@/components/notificacao/useNotificacao.ts";
 import { useApiNotificacao } from "./components/notificacao/useApiNotificacao.ts";
 import { usePushNotifications } from "./composables/usePushNotifications.ts";
-
 import { usePerfil } from "@/store/usePerfil";
 
 const { setBearerAuthorization } = useSessao();
 const { obterPerfil } = usePerfil();
 const { solicitarPermissaoNotificacao } = useNotificacao();
 const { listar } = useApiNotificacao();
-
 const { registrarDispositivo } = usePushNotifications();
 
 const temToken = !!localStorage.getItem("token");
@@ -54,17 +52,6 @@ onMounted(async () => {
 
   listar();
 
-  // socket.value = conectar();
-
-  // if (socket.value) {
-  //   socket.value.on("notification:new", (data: any) => {
-  //     const existe = notificacoes.value.some((n) => n.id === data.id);
-  //     if (!existe) {
-  //       notificacoes.value.unshift(data);
-  //     }
-  //   });
-  // }
-
   solicitarPermissaoNotificacao();
 
   await registrarDispositivo();
@@ -81,11 +68,5 @@ onMounted(async () => {
       icon: "/pwa-192.png",
     });
   });
-});
-
-onUnmounted(() => {
-  // if (socket.value) {
-  //   socket.value.off("notification:new");
-  // }
 });
 </script>

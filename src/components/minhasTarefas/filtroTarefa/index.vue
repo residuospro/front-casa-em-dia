@@ -169,7 +169,6 @@ import {
 import Button from "@/components/botao/index.vue";
 import Input from "@/components/input/index.vue";
 import Select from "@/components/select/index.vue";
-import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 import { useTarefas } from "../useTarefas";
 import { useApiTarefas } from "../useApiTarefas";
@@ -177,7 +176,6 @@ import { computed, onMounted } from "vue";
 import { useApiCiclos } from "../../ciclos/useApiCiclos";
 import { useCiclos } from "../../ciclos/useCiclos";
 
-const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const { opcoesFamiliares } = useMinhaFamilia();
 const { obterCiclos } = useApiCiclos();
 const { dataCiclos } = useCiclos();
@@ -189,7 +187,7 @@ const ciclos = computed(() => {
   }));
 });
 onMounted(async () => {
-  await Promise.all([obterOpcoesFamiliares(), obterCiclos()]);
+  await obterCiclos();
 });
 const {
   abrirModalFiltro,
