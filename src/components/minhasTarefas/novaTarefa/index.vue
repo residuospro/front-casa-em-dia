@@ -246,7 +246,9 @@
               class="flex flex-col justify-center gap-2 mt-3"
               v-if="!frequenciaAutomatica"
             >
-              <div class="flex flex-row items-center gap-2 sm:flex-col">
+              <div
+                class="flex flex-row items-center gap-2 sm:flex-col flex-wrap xl:!flex-nowrap"
+              >
                 <Input
                   label="Data ínicio"
                   type="date"
@@ -265,7 +267,7 @@
                   label="Horário"
                   type="time"
                   v-model="horario"
-                  class="!w-1/2 sm:!w-full"
+                  class="xl:!w-1/2 !w-full"
                 />
               </div>
             </div>

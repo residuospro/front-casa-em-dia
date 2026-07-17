@@ -24,7 +24,7 @@ interface Tarefa {
   modoDistribuicao: ModoDistribuicao | null;
   responsavelAtualId: string | null;
   responsavelAtual: Executor;
-  participantes: Executor[];
+  participantesId: string[];
   pontos: number;
   ativo: boolean;
   criadoPorId: string;

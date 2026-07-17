@@ -74,6 +74,7 @@ import Resumo from "@/components/minhasTarefas/resumo/index.vue";
 import { useApiTarefas } from "@/components/minhasTarefas/useApiTarefas";
 import { useRouter } from "vue-router";
 import Button from "@/components/botao/index.vue";
+import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
 
 const {
   modoExibicao,
@@ -82,10 +83,12 @@ const {
   opcoesStatusTarefa,
   carregarModoExibicao,
 } = useTarefas();
-const { deleteTarefa } = useApiTarefas();
+const { deleteTarefa, chamarApi } = useApiTarefas();
+const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const router = useRouter();
 
-onMounted(() => {
+onMounted(async () => {
   carregarModoExibicao();
+  await Promise.all([chamarApi(), obterOpcoesFamiliares()]);
 });
 </script>

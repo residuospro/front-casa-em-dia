@@ -21,6 +21,7 @@ export const useApiVisualizarTarefa = () => {
 
     if (resposta.status === 200) {
       dataTarefa.value = resposta.data;
+      console.log("res", resposta);
     }
   };
 

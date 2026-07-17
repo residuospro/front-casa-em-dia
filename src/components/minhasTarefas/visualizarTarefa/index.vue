@@ -99,15 +99,19 @@
                   <img
                     :src="
                       parseFotoPerfil(
-                        dataTarefa?.responsavelAtual?.fotoPerfil || '',
+                        perfilMembro(dataTarefa?.responsavelAtualId || '').foto,
                       )
                     "
-                    alt="Kallif"
+                    :alt="
+                      perfilMembro(dataTarefa?.responsavelAtualId || '').nome
+                    "
                     class="w-9 h-9 rounded-full"
                   />
                   <div>
                     <p class="font-medium">
-                      {{ dataTarefa?.responsavelAtual.nome }}
+                      {{
+                        perfilMembro(dataTarefa?.responsavelAtualId || "").nome
+                      }}
                     </p>
                     <p class="text-xs text-gray-500">Esta semana</p>
                   </div>
@@ -118,16 +122,19 @@
                 <p class="text-sm text-gray-500 mb-1">Participante(s)</p>
                 <div class="flex -space-x-2 z-10">
                   <div
-                    v-for="(participante, index) in dataTarefa?.participantes"
+                    v-for="(participante, index) in dataTarefa?.participantesId"
                   >
                     <img
                       :key="index"
-                      v-if="participante.fotoPerfil"
-                      :src="parseFotoPerfil(participante.fotoPerfil)"
+                      v-if="participante"
+                      :src="
+                        parseFotoPerfil(perfilMembro(participante || '').foto)
+                      "
                       class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
                       :style="{
                         zIndex:
-                          dataTarefa?.participantes.length || 0 + Number(index),
+                          dataTarefa?.participantesId.length ||
+                          0 + Number(index),
                       }"
                     />
                   </div>
@@ -238,15 +245,14 @@
                         v-if="item.executorId"
                         :focus="false"
                         location="top"
-                        :text="`Executor: ${perfilConcluidoPor(item.executorId).nome}`"
+                        :text="`Executor: ${perfilMembro(item.executorId).nome}`"
                       >
                         <template #activator>
                           <button>
                             <img
                               :src="
                                 parseFotoPerfil(
-                                  perfilConcluidoPor(item.executorId).foto ||
-                                    '',
+                                  perfilMembro(item.executorId).foto || '',
                                 )
                               "
                               alt=""
@@ -259,15 +265,14 @@
                         v-if="item.concluidoPorId"
                         :focus="false"
                         location="top"
-                        :text="`Concluido por: ${perfilConcluidoPor(item.concluidoPorId).nome}`"
+                        :text="`Concluido por: ${perfilMembro(item.concluidoPorId).nome}`"
                       >
                         <template #activator>
                           <button>
                             <img
                               :src="
                                 parseFotoPerfil(
-                                  perfilConcluidoPor(item.concluidoPorId)
-                                    .foto || '',
+                                  perfilMembro(item.concluidoPorId).foto || '',
                                 )
                               "
                               alt=""
@@ -367,15 +372,14 @@
                       <ce-tooltip
                         :focus="true"
                         location="top"
-                        :text="`Concluido por ${perfilConcluidoPor(item.concluidoPorId).nome}`"
+                        :text="`Concluido por ${perfilMembro(item.concluidoPorId).nome}`"
                       >
                         <template #activator>
                           <button>
                             <img
                               :src="
                                 parseFotoPerfil(
-                                  perfilConcluidoPor(item.concluidoPorId)
-                                    .foto || '',
+                                  perfilMembro(item.concluidoPorId).foto || '',
                                 )
                               "
                               alt=""
@@ -386,11 +390,9 @@
                       </ce-tooltip>
 
                       <span
-                        :title="perfilConcluidoPor(item.concluidoPorId).nome"
+                        :title="perfilMembro(item.concluidoPorId).nome"
                         class="text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
-                        >{{
-                          perfilConcluidoPor(item.concluidoPorId).nome
-                        }}</span
+                        >{{ perfilMembro(item.concluidoPorId).nome }}</span
                       >
                     </div>
                     <span class="text-emerald-600 font-medium">
@@ -545,7 +547,7 @@ const {
   executarOpcoesMenuExecucao,
 } = useVisualizarTarefas();
 const { parseFotoPerfil, formatarData } = useUtils();
-const { opcoesFamiliares } = useMinhaFamilia();
+const { opcoesFamiliares, perfilMembro } = useMinhaFamilia();
 
 const router = useRouter();
 
@@ -555,17 +557,6 @@ const criadoPor = computed(
       (opcao) => opcao.value === dataTarefa?.value?.criadoPorId,
     )?.text || "",
 );
-
-const perfilConcluidoPor = (concludoPorId: string) => {
-  const usuario = opcoesFamiliares.value.find(
-    (opcao) => opcao.value === concludoPorId,
-  );
-
-  return {
-    foto: usuario?.fotoPerfil,
-    nome: usuario?.text,
-  };
-};
 
 onMounted(async () => {
   const id = router.currentRoute.value.query.id as string;

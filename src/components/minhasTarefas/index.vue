@@ -87,14 +87,14 @@
         v-if="
           item.responsavelAtual.fotoPerfil && item.participantes.length === 0
         "
-        :src="parseFotoPerfil(item.responsavelAtual.fotoPerfil)"
+        :src="parseFotoPerfil(perfilMembro(item.responsavelAtualId).foto)"
         class="object-cover w-8 h-8 rounded-full"
       />
 
       <div v-else class="flex items-center -space-x-2">
         <img
           v-if="item.responsavelAtual?.fotoPerfil"
-          :src="parseFotoPerfil(item.responsavelAtual.fotoPerfil)"
+          :src="parseFotoPerfil(perfilMembro(item.responsavelAtualId).foto)"
           class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
         />
 
@@ -102,8 +102,8 @@
           <div v-for="(participante, index) in item.participantes">
             <img
               :key="index"
-              v-if="participante.fotoPerfil"
-              :src="parseFotoPerfil(participante.fotoPerfil)"
+              v-if="participante.id"
+              :src="parseFotoPerfil(perfilMembro(participante.id).foto)"
               class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
               :style="{ zIndex: item.participantes.length + Number(index) }"
             />
@@ -263,11 +263,13 @@ import type { Execucao } from "./tipagem";
 import { useRouter } from "vue-router";
 import BuscaRapida from "@/components/minhasTarefas/buscaRapida/index.vue";
 import AcionarFiltro from "@/components/minhasTarefas/acionarFiltro/index.vue";
+import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
+
+const { perfilMembro } = useMinhaFamilia();
 
 const { parseFotoPerfil } = useUtils();
 const router = useRouter();
 const {
-  chamarApi,
   obterDadosPorItensPorPagina,
   obterDadosPorOrdenacao,
   obterDadosPorPagina,
@@ -287,8 +289,4 @@ const {
   formatarExecucao,
   obterClasseExecucaoFormatada,
 } = useTarefas();
-
-onMounted(async () => {
-  await chamarApi();
-});
 </script>

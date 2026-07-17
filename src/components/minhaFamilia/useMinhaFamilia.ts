@@ -65,6 +65,22 @@ const permitirEdicao = () => {
   editando.value = !editando.value;
 };
 
+const perfilMembro = (id?: string) => {
+  if (!id) {
+    return {
+      foto: "",
+      nome: "",
+    };
+  }
+
+  const usuario = opcoesFamiliares.value.find((opcao) => opcao.value === id);
+
+  return {
+    foto: usuario?.fotoPerfil || "",
+    nome: usuario?.text || "",
+  };
+};
+
 export const useMinhaFamilia = () => {
   return {
     opcoesMembroFamiliar,
@@ -77,5 +93,6 @@ export const useMinhaFamilia = () => {
     abrirModalDeletar,
     opcoesFamiliares,
     permitirEdicao,
+    perfilMembro,
   };
 };
