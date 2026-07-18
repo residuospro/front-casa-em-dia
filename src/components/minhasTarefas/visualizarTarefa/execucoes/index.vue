@@ -99,7 +99,6 @@
                 </template>
               </ce-tooltip>
 
-              <!-- Executor diferente de quem concluiu -->
               <template v-else>
                 <!-- Executor -->
                 <ce-tooltip
