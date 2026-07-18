@@ -63,9 +63,16 @@
     subtitulo=""
     texto-botao="Atualizar"
     @fechar-modal="() => (abrirModalEditar = false)"
-    :salvar="() => atualizarExecucao(execucao.execucaoId, execucao.tarefaId)"
+    :salvar="
+      () =>
+        atualizarExecucao(
+          execucao.execucaoId,
+          execucao.tarefaId,
+          execucao.executorId,
+        )
+    "
   >
-    <div>
+    <div class="flex flex-col gap-2">
       <ce-date-picker
         modal
         id="periodo-atualizar-execucao"
@@ -74,9 +81,16 @@
         v-model="dataInicio"
       />
 
-      <div class="-mt-2">
+      <div class="-mt-2 mb-2">
         <Input label="Horário" type="time" v-model="horario" />
       </div>
+
+      <Select
+        label="Executor"
+        placeholder="Selecione um membro"
+        v-model="execucao.executorId"
+        :items="opcoesFamiliares"
+      />
     </div>
   </Modal>
 

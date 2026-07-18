@@ -52,12 +52,16 @@ export const useApiVisualizarTarefa = () => {
     }
   };
 
-  const atualizarExecucao = async (execucaoId: string, tarefaId: string) => {
+  const atualizarExecucao = async (
+    execucaoId: string,
+    tarefaId: string,
+    executorId: string | null,
+  ) => {
     const data = setarDataAtualizar()[0]?.data;
 
     const resposta: AxiosResponse<Tarefa> = await useClient.put(
       `/tarefas/${perfil.familiaId}/execucoes/${execucaoId}`,
-      { data },
+      { data, executorId },
     );
 
     if (resposta.status === 200) {

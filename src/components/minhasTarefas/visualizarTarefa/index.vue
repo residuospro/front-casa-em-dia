@@ -1,5 +1,6 @@
 <template>
   <div class="w-full bg-white min-h-screen rounded-xl">
+    <pre>{{ dataTarefa?.id }}</pre>
     <div
       class="p-5 flex items-start justify-between border-b sm:flex-col gap-8"
     >
@@ -224,7 +225,13 @@
                       <ce-context-menu
                         v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
                         :items="opcoesMenuExecucao"
-                        @select="executarOpcoesMenuExecucao($event, item.id)"
+                        @select="
+                          executarOpcoesMenuExecucao(
+                            $event,
+                            item.id,
+                            dataTarefa?.id,
+                          )
+                        "
                       >
                         <button>
                           <svg-icon
@@ -403,7 +410,13 @@
                   <ce-context-menu
                     v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
                     :items="opcoesMenuExecucao"
-                    @select="executarOpcoesMenuExecucao($event, item.id)"
+                    @select="
+                      executarOpcoesMenuExecucao(
+                        $event,
+                        item.id,
+                        dataTarefa?.id,
+                      )
+                    "
                   >
                     <button>
                       <svg-icon

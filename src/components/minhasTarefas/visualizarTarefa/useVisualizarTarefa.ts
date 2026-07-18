@@ -11,11 +11,13 @@ const verHisticoCompleto = ref(false);
 const abrirModalConcluir = ref(false);
 const abrirModalCancelar = ref(false);
 const abrirModalEditar = ref(false);
-const execucao = ref({
+const estadoInicialExecucao = {
   execucaoId: "",
   concluidoPorId: "",
   tarefaId: "",
-});
+  executorId: null,
+};
+const execucao = ref({ ...estadoInicialExecucao });
 
 const execucoesAgrupadas = computed(() => {
   const execs = dataTarefa.value?.execucoes || [];
@@ -59,8 +61,12 @@ const setarClasseStatus = (execucao: Execucao | null) => {
   return "text-green-700 border-green-700";
 };
 
-const executarOpcoesMenuExecucao = (acao: string, execucaoId: string) => {
-  execucao.value.execucaoId = execucaoId;
+const executarOpcoesMenuExecucao = (
+  acao: string,
+  execucaoId: string,
+  tarefaId?: string,
+) => {
+  execucao.value = { ...estadoInicialExecucao };
 
   const mapsAcao = {
     concluir: () => {
@@ -74,6 +80,7 @@ const executarOpcoesMenuExecucao = (acao: string, execucaoId: string) => {
     },
   };
 
+  execucao.value = { ...execucao.value, execucaoId, tarefaId: tarefaId || "" };
   const executar = mapsAcao[acao as keyof typeof mapsAcao];
 
   if (executar) executar();

@@ -204,23 +204,30 @@ const obterProximaExecucao = (execucoes: Execucao[]): Execucao | null => {
 
   const agora = new Date();
 
+  const atrasadas = execucoes
+    .filter((execucao) => {
+      const dataExecucao = new Date(execucao.data);
+
+      return (
+        execucao.status === "ATRASADA" ||
+        execucao.status === "CONCLUIDA" ||
+        (execucao.status === "AGENDADA" && dataExecucao < agora)
+      );
+    })
+    .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+
+  if (atrasadas.length) {
+    return atrasadas[0] ?? null;
+  }
+
   const futuras = execucoes
     .filter(
-      (e) =>
-        e.status === "AGENDADA" &&
-        new Date(e.data).getTime() >= agora.getTime(),
+      (execucao) =>
+        execucao.status === "AGENDADA" && new Date(execucao.data) >= agora,
     )
     .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
 
-  if (futuras.length) {
-    return futuras[0] || null;
-  }
-
-  return (
-    [...execucoes].sort(
-      (a, b) => new Date(b.data).getTime() - new Date(a.data).getTime(),
-    )[0] || null
-  );
+  return futuras[0] ?? null;
 };
 
 const formatarExecucao = (execucao: Execucao | null) => {
