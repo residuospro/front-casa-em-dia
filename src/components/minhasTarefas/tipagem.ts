@@ -33,6 +33,11 @@ interface Tarefa {
   execucoes: Execucao[];
 }
 
+type Execucoes = {
+  atuais: Execucao[];
+  passadas: Execucao[];
+};
+
 type Paginacao = {
   total: number;
   pagina: number;
@@ -90,4 +95,11 @@ interface Execucao {
   executorId: string | null;
 }
 
-export type { IResponseTarefa, Filtro, ParametrosTarefas, Execucao, Tarefa };
+export type {
+  IResponseTarefa,
+  Filtro,
+  ParametrosTarefas,
+  Execucao,
+  Tarefa,
+  Execucoes,
+};

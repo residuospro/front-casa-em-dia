@@ -211,6 +211,7 @@ const obterProximaExecucao = (execucoes: Execucao[]): Execucao | null => {
       return (
         execucao.status === "ATRASADA" ||
         execucao.status === "CONCLUIDA" ||
+        execucao.status === "CANCELADA" ||
         (execucao.status === "AGENDADA" && dataExecucao < agora)
       );
     })

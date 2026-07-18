@@ -66,6 +66,7 @@ const executarOpcoesMenuExecucao = (
   execucaoId: string,
   tarefaId?: string,
 ) => {
+  console.log("ta22", tarefaId);
   execucao.value = { ...estadoInicialExecucao };
 
   const mapsAcao = {
@@ -81,6 +82,9 @@ const executarOpcoesMenuExecucao = (
   };
 
   execucao.value = { ...execucao.value, execucaoId, tarefaId: tarefaId || "" };
+
+  console.log("aqui", execucao.value);
+  console.log("ta", tarefaId);
   const executar = mapsAcao[acao as keyof typeof mapsAcao];
 
   if (executar) executar();

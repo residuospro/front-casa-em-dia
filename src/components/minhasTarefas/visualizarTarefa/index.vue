@@ -1,451 +1,27 @@
 <template>
   <div class="w-full bg-white min-h-screen rounded-xl">
-    <pre>{{ dataTarefa?.id }}</pre>
-    <div
-      class="p-5 flex items-start justify-between border-b sm:flex-col gap-8"
-    >
-      <div class="flex items-center gap-4">
-        <div
-          class="rounded-full p-2"
-          :style="{
-            background: getCategoriaStyle('CASA').background,
-          }"
-        >
-          <svg-icon
-            type="mdi"
-            :path="setarIconePorCategoria('CASA')"
-            :style="{ color: getCategoriaStyle('CASA').cor }"
-          />
-        </div>
-
-        <div class="flex items-center gap-3">
-          <h1 class="text-3xl font-bold text-gray-900">
-            {{ dataTarefa?.titulo }}
-          </h1>
-          <span
-            v-if="dataTarefa?.ativo"
-            class="px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-700 rounded-full"
-          >
-            {{ dataTarefa?.ativo && "Ativo" }}
-          </span>
-        </div>
-      </div>
-
-      <Button @click="router.push('/minhas-tarefas')" class="sm:!w-full">
-        Visualizar tarefas
-      </Button>
-    </div>
+    <Header />
 
     <div class="flex flex-row gap-8 p-8 sm:flex-col">
       <!-- Coluna Esquerda -->
       <div class="flex-1 space-y-8">
-        <!-- Informações Gerais -->
-        <div>
-          <h2 class="font-semibold text-lg mb-4">Informações gerais</h2>
-          <div
-            class="flex flex-row sm:flex-col gap-4 xl:!w-1/2 w-full justify-between"
-          >
-            <div class="space-y-6">
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Tipo</p>
-                <span
-                  class="px-3 py-1 rounded-full text-xs font-medium w-min capitalize"
-                  :style="{
-                    color: getTagTarefaStyle(dataTarefa?.tipo).tipo?.cor,
-                    background: getTagTarefaStyle(dataTarefa?.tipo).tipo
-                      ?.background,
-                  }"
-                >
-                  {{ dataTarefa?.tipo.toLocaleLowerCase() }}
-                </span>
-              </div>
-              <div v-if="dataTarefa?.modoDistribuicao">
-                <p class="text-sm text-gray-500 mb-1">Distribuição</p>
-                <span
-                  class="px-3 py-1 rounded-full text-xs font-medium w-min capitalize"
-                  :style="{
-                    color: getTagTarefaStyle(
-                      dataTarefa?.tipo,
-                      dataTarefa?.modoDistribuicao,
-                    ).modo?.cor,
+        <InfoGerais />
 
-                    background: getTagTarefaStyle(
-                      dataTarefa?.tipo,
-                      dataTarefa?.modoDistribuicao,
-                    ).modo?.background,
-                  }"
-                >
-                  {{ dataTarefa?.modoDistribuicao.toLocaleLowerCase() }}
-                </span>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Categoria</p>
-                <span
-                  class="px-3 py-1 rounded-full text-xs font-medium w-min capitalize"
-                  :style="{
-                    color: getCategoriaStyle(dataTarefa?.categoria).cor,
-                    background: getCategoriaStyle(dataTarefa?.categoria)
-                      .background,
-                  }"
-                >
-                  {{ dataTarefa?.categoria.toLocaleLowerCase() }}
-                </span>
-              </div>
-            </div>
-
-            <div class="space-y-6">
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Responsável atual</p>
-                <div class="flex items-center gap-3">
-                  <img
-                    :src="
-                      parseFotoPerfil(
-                        perfilMembro(dataTarefa?.responsavelAtualId || '').foto,
-                      )
-                    "
-                    :alt="
-                      perfilMembro(dataTarefa?.responsavelAtualId || '').nome
-                    "
-                    class="w-9 h-9 rounded-full"
-                  />
-                  <div>
-                    <p class="font-medium">
-                      {{
-                        perfilMembro(dataTarefa?.responsavelAtualId || "").nome
-                      }}
-                    </p>
-                    <p class="text-xs text-gray-500">Esta semana</p>
-                  </div>
-                </div>
-              </div>
-
-              <div v-if="(dataTarefa?.participantesId.length || 0) > 0">
-                <p class="text-sm text-gray-500 mb-1">Participante(s)</p>
-                <div class="flex -space-x-2 z-10">
-                  <div
-                    v-for="(participante, index) in dataTarefa?.participantesId"
-                  >
-                    <img
-                      :key="index"
-                      v-if="participante"
-                      :src="
-                        parseFotoPerfil(perfilMembro(participante || '').foto)
-                      "
-                      class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
-                      :style="{
-                        zIndex:
-                          dataTarefa?.participantesId.length ||
-                          0 + Number(index),
-                      }"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div v-if="(dataTarefa?.pontos ?? 0) > 0">
-                <p class="text-sm text-gray-500 mb-1">Pontuação</p>
-                <p class="font-medium">{{ dataTarefa?.pontos }} pts</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Criada por</p>
-                <p class="font-medium">{{ criadoPor }}</p>
-              </div>
-              <div>
-                <p class="text-sm text-gray-500 mb-1">Criada em</p>
-                <p class="font-medium">
-                  {{ formatarData(String(dataTarefa?.criadoEm)) }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Histórico Recente -->
         <div class="flex flex-col gap-4">
           <h2 class="font-semibold text-lg">Histórico recente</h2>
 
-          <div v-if="execucoesAgrupadas.atuais.length">
-            <h3 class="text-sm font-medium text-gray-500 mb-2">
-              Execuções atuais
-            </h3>
-            <div class="space-y-4">
-              <div
-                class="flex justify-between bg-gray-50 rounded-2xl p-4 sm:flex-col sm:items-start md:!flex-col gap-3"
-                v-for="(item, index) in execucoesAgrupadas.atuais"
-                md:!flex-col
-                :key="index"
-              >
-                <div
-                  class="flex items-center justify-between gap-4 sm:w-full md:!w-full"
-                >
-                  <div
-                    class="flex items-center justify-between sm:w-full md:!w-full"
-                  >
-                    <div class="flex items-center gap-2">
-                      <div
-                        v-if="obterProximaExecucao([item])"
-                        class="flex flex-col gap-1"
-                      >
-                        <div
-                          class="flex items-start gap-2"
-                          :class="
-                            obterClasseExecucaoFormatada(
-                              obterProximaExecucao([item]),
-                            ).text
-                          "
-                        >
-                          <span
-                            class="mt-[6px] h-2.5 w-2.5 rounded-full shrink-0"
-                            :class="
-                              obterClasseExecucaoFormatada(
-                                obterProximaExecucao([item]),
-                              ).dot
-                            "
-                          />
+          <Execucoes
+            :execucoes-agrupadas="execucoesAgrupadas.atuais"
+            titulo="Execuções atuais"
+            :qt-execucoes="dataTarefa?.execucoes.length || 4"
+          />
 
-                          <div class="flex flex-col">
-                            <span class="text-sm font-medium leading-5">
-                              {{
-                                formatarExecucao(obterProximaExecucao([item]))
-                                  .titulo
-                              }}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <span
-                        class="border rounded-full p-1 text-sm capitalize"
-                        :class="setarClasseStatus(item)"
-                        >{{ item.status.toLocaleLowerCase() }}
-                      </span>
-                    </div>
-
-                    <div class="lg:hidden xl:hidden">
-                      <ce-context-menu
-                        v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
-                        :items="opcoesMenuExecucao"
-                        @select="
-                          executarOpcoesMenuExecucao(
-                            $event,
-                            item.id,
-                            dataTarefa?.id,
-                          )
-                        "
-                      >
-                        <button>
-                          <svg-icon
-                            type="mdi"
-                            :path="mdiDotsVertical"
-                            class="text-gray-400 cursor-pointer"
-                          />
-                        </button>
-                      </ce-context-menu>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex flex-row gap-2">
-                  <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2">
-                      <ce-tooltip
-                        v-if="item.executorId"
-                        :focus="false"
-                        location="top"
-                        :text="`Executor: ${perfilMembro(item.executorId).nome}`"
-                      >
-                        <template #activator>
-                          <button>
-                            <img
-                              :src="
-                                parseFotoPerfil(
-                                  perfilMembro(item.executorId).foto || '',
-                                )
-                              "
-                              alt=""
-                              class="w-6 h-6 rounded-full"
-                            />
-                          </button>
-                        </template>
-                      </ce-tooltip>
-                      <ce-tooltip
-                        v-if="item.concluidoPorId"
-                        :focus="false"
-                        location="top"
-                        :text="`Concluido por: ${perfilMembro(item.concluidoPorId).nome}`"
-                      >
-                        <template #activator>
-                          <button>
-                            <img
-                              :src="
-                                parseFotoPerfil(
-                                  perfilMembro(item.concluidoPorId).foto || '',
-                                )
-                              "
-                              alt=""
-                              class="w-6 h-6 rounded-full"
-                            />
-                          </button>
-                        </template>
-                      </ce-tooltip>
-                    </div>
-                    <span
-                      class="text-emerald-600 font-medium"
-                      v-if="item.pontosObtidos"
-                    >
-                      +{{ item.pontosObtidos }} pts
-                    </span>
-                  </div>
-
-                  <div class="sm:!hidden md:!hidden">
-                    <ce-context-menu
-                      v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
-                      :items="opcoesMenuExecucao"
-                      @select="executarOpcoesMenuExecucao($event, item.id)"
-                    >
-                      <button>
-                        <svg-icon
-                          type="mdi"
-                          :path="mdiDotsVertical"
-                          class="text-gray-400 cursor-pointer"
-                        />
-                      </button>
-                    </ce-context-menu>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="execucoesAgrupadas.passadas.length">
-            <h3 class="text-sm font-medium text-gray-500 mb-2">
-              Execuções passadas
-            </h3>
-            <div class="space-y-4">
-              <div
-                class="flex items-center justify-between bg-gray-50 rounded-2xl p-4 sm:flex-col md:!flex-col"
-                v-for="(item, index) in execucoesAgrupadas.passadas.slice(
-                  0,
-                  qtdExecucao,
-                )"
-                :key="index"
-              >
-                <div class="flex items-center gap-4">
-                  <div
-                    v-if="obterProximaExecucao([item])"
-                    class="flex flex-col gap-1"
-                  >
-                    <div
-                      class="flex items-start gap-2"
-                      :class="
-                        obterClasseExecucaoFormatada(
-                          obterProximaExecucao([item]),
-                        ).text
-                      "
-                    >
-                      <span
-                        class="mt-[6px] h-2.5 w-2.5 rounded-full shrink-0"
-                        :class="
-                          obterClasseExecucaoFormatada(
-                            obterProximaExecucao([item]),
-                          ).dot
-                        "
-                      />
-
-                      <div class="flex flex-col">
-                        <span class="text-sm font-medium leading-5">
-                          {{
-                            formatarExecucao(obterProximaExecucao([item]))
-                              .titulo
-                          }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <span
-                    class="border rounded-full p-1 text-sm capitalize"
-                    :class="setarClasseStatus(item)"
-                    >{{ item.status.toLocaleLowerCase() }}
-                  </span>
-                </div>
-
-                <div class="flex flex-row gap-2">
-                  <div
-                    class="flex items-center gap-3"
-                    v-if="item.concluidoPorId"
-                  >
-                    <div class="flex items-center gap-2">
-                      <ce-tooltip
-                        :focus="true"
-                        location="top"
-                        :text="`Concluido por ${perfilMembro(item.concluidoPorId).nome}`"
-                      >
-                        <template #activator>
-                          <button>
-                            <img
-                              :src="
-                                parseFotoPerfil(
-                                  perfilMembro(item.concluidoPorId).foto || '',
-                                )
-                              "
-                              alt=""
-                              class="w-6 h-6 rounded-full"
-                            />
-                          </button>
-                        </template>
-                      </ce-tooltip>
-
-                      <span
-                        :title="perfilMembro(item.concluidoPorId).nome"
-                        class="text-sm truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px]"
-                        >{{ perfilMembro(item.concluidoPorId).nome }}</span
-                      >
-                    </div>
-                    <span class="text-emerald-600 font-medium">
-                      +{{ item.pontosObtidos }} pts
-                    </span>
-                  </div>
-
-                  <ce-context-menu
-                    v-if="!['CONCLUIDA', 'CANCELADA'].includes(item.status)"
-                    :items="opcoesMenuExecucao"
-                    @select="
-                      executarOpcoesMenuExecucao(
-                        $event,
-                        item.id,
-                        dataTarefa?.id,
-                      )
-                    "
-                  >
-                    <button>
-                      <svg-icon
-                        type="mdi"
-                        :path="mdiDotsVertical"
-                        class="text-gray-400 cursor-pointer"
-                      />
-                    </button>
-                  </ce-context-menu>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="text-center mt-6"
-              v-if="execucoesAgrupadas.passadas.length > 4"
-            >
-              <button
-                @click="setarQtdExecucao"
-                class="text-emerald-600 hover:text-emerald-700 font-medium text-sm"
-              >
-                {{
-                  verHisticoCompleto
-                    ? "Recolher histórico ↑"
-                    : "Ver histórico completo ↓"
-                }}
-              </button>
-            </div>
-          </div>
+          <Execucoes
+            :execucoes-agrupadas="execucoesAgrupadas.passadas"
+            titulo="Execuções passadas"
+            :qt-execucoes="qtdExecucao"
+            :exibir-btn-historico="execucoesAgrupadas.passadas.length > 4"
+          />
         </div>
       </div>
 
@@ -459,36 +35,7 @@
             </p>
           </div>
 
-          <!-- Agendamento -->
-          <div class="bg-white border rounded-3xl p-6">
-            <h3 class="font-semibold mb-4">Agendamento</h3>
-
-            <div class="space-y-3">
-              <div
-                v-for="item in formatarAgendamento(dataTarefa?.execucoes || [])"
-                :key="item.dia"
-                class="flex items-center justify-between py-2 sm:text-xs"
-              >
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-5 h-5 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold p-1"
-                  >
-                    <svg-icon
-                      type="mdi"
-                      :path="mdiClockTimeEightOutline"
-                      class="text-emerald-600"
-                    />
-                  </div>
-
-                  <span>{{ item.dia }}</span>
-                </div>
-
-                <span class="font-medium">
-                  {{ item.horarios.join(" & ") }}
-                </span>
-              </div>
-            </div>
-          </div>
+          <Agendamentos />
         </div>
 
         <div class="flex gap-3 w-full justify-end flex-col mt-4">
@@ -523,53 +70,23 @@
 </template>
 
 <script setup lang="ts">
-///@ts-ignore
-import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiDotsVertical, mdiClockTimeEightOutline } from "@mdi/js";
 import { useTarefas } from "../useTarefas";
 import { useApiVisualizarTarefa } from "./useApiVisualizarTarefa";
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useVisualizarTarefas } from "./useVisualizarTarefa";
-import { useUtils } from "@/utils/useUtils";
-import { CeContextMenu } from "@comercti/vue-components-hmg";
 import Button from "@/components/botao/index.vue";
-import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
-import { CeTooltip } from "@comercti/vue-components-hmg";
+import Execucoes from "./execucoes/index.vue";
+import InfoGerais from "./infoGerais/index.vue";
+import Agendamentos from "./agendamento/index.vue";
+import Header from "./header/index.vue";
 
-const {
-  getCategoriaStyle,
-  setarIconePorCategoria,
-  getTagTarefaStyle,
-  executarOpcoesMenu,
-  obterClasseExecucaoFormatada,
-  formatarExecucao,
-  obterProximaExecucao,
-} = useTarefas();
+const { executarOpcoesMenu } = useTarefas();
 const { obterTarefaPorId } = useApiVisualizarTarefa();
-const {
-  dataTarefa,
-  execucoesAgrupadas,
-  opcoesMenuExecucao,
-  qtdExecucao,
-  verHisticoCompleto,
-  execucao,
-  formatarAgendamento,
-  setarClasseStatus,
-  setarQtdExecucao,
-  executarOpcoesMenuExecucao,
-} = useVisualizarTarefas();
-const { parseFotoPerfil, formatarData } = useUtils();
-const { opcoesFamiliares, perfilMembro } = useMinhaFamilia();
+const { dataTarefa, execucoesAgrupadas, qtdExecucao, execucao } =
+  useVisualizarTarefas();
 
 const router = useRouter();
-
-const criadoPor = computed(
-  () =>
-    opcoesFamiliares.value.find(
-      (opcao) => opcao.value === dataTarefa?.value?.criadoPorId,
-    )?.text || "",
-);
 
 onMounted(async () => {
   const id = router.currentRoute.value.query.id as string;
