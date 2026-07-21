@@ -236,10 +236,8 @@
 </template>
 
 <script setup lang="ts">
-import { useApiMinhaFamilia } from "@/components/minhaFamilia/useApiMinhaFamilia";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 import { useCalendario } from "./useCalendario";
-import { onMounted } from "vue";
 import { useUtils } from "@/utils/useUtils";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
@@ -258,7 +256,6 @@ import { ref } from "vue";
 
 const router = useRouter();
 const { parseFotoPerfil } = useUtils();
-const { obterOpcoesFamiliares } = useApiMinhaFamilia();
 const { opcoesFamiliares, perfilMembro } = useMinhaFamilia();
 const { chamarApi } = useApiTarefas();
 const { parametros, executarOpcoesMenu, resetarParametros, setModoExibicao } =
@@ -285,10 +282,6 @@ const {
   getTarefasDoDia,
   getTaskPositionStyle,
 } = useCalendario();
-
-// onMounted(async () => {
-//   await Promise.all([obterOpcoesFamiliares(), chamarApi()]);
-// });
 
 const criarTarefa = (dia: Date, hora: number, minuto = 0) => {
   const data = new Date(dia);
