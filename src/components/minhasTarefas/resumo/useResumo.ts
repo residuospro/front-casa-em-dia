@@ -7,7 +7,6 @@ import {
   mdiListBoxOutline,
   mdiCalendarCheckOutline,
   mdiClockAlertOutline,
-  mdiAutorenew,
 } from "@mdi/js";
 import type { IResumo, Items } from "./tipagem";
 
