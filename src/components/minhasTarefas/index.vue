@@ -1,12 +1,13 @@
 <template>
   <ce-data-table
     :items="dataTarefas.data"
-    :headers="headers"
+    :headers="headersTabela"
     truncated
     compact
     search
     order-by-server
     @order-by="obterDadosPorOrdenacao"
+    hide-id
   >
     <template #title>
       <BuscaRapida />
@@ -84,30 +85,23 @@
 
     <template #responsavelAtual="{ item }">
       <img
-        v-if="item.responsavelAtualId && item.participantesId.length === 0"
-        :src="parseFotoPerfil(perfilMembro(item.responsavelAtualId).foto)"
+        v-if="formatarExecucao(obterProximaExecucao(item.execucoes)).executor"
+        :src="
+          parseFotoPerfil(
+            perfilMembro(
+              formatarExecucao(obterProximaExecucao(item.execucoes))
+                .executor as string,
+            ).foto,
+          )
+        "
         class="object-cover w-8 h-8 rounded-full"
       />
 
-      <div v-else class="flex items-center -space-x-2">
-        <img
-          v-if="item.responsavelAtualId"
-          :src="parseFotoPerfil(perfilMembro(item.responsavelAtualId).foto)"
-          class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
-        />
-
-        <div class="flex -space-x-2 z-10">
-          <div v-for="(participante, index) in item.participantesId">
-            <img
-              :key="index"
-              v-if="participante"
-              :src="parseFotoPerfil(perfilMembro(participante).foto)"
-              class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
-              :style="{ zIndex: item.participantesId.length + Number(index) }"
-            />
-          </div>
-        </div>
-      </div>
+      <img
+        v-else-if="item.responsavelAtualId"
+        :src="parseFotoPerfil(perfilMembro(item.responsavelAtualId).foto)"
+        class="object-cover w-8 h-8 rounded-full ring-2 ring-white"
+      />
     </template>
 
     <template #ciclo="{ item }">
@@ -261,6 +255,7 @@ import { useRouter } from "vue-router";
 import BuscaRapida from "@/components/minhasTarefas/buscaRapida/index.vue";
 import AcionarFiltro from "@/components/minhasTarefas/acionarFiltro/index.vue";
 import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
+import { onMounted, onUnmounted } from "vue";
 
 const { perfilMembro } = useMinhaFamilia();
 
@@ -275,9 +270,10 @@ const {
 
 const {
   dataTarefas,
-  headers,
+  headersTabela,
   opcoesMenu,
   options,
+  atualizarIsMobile,
   executarOpcoesMenu,
   getCategoriaStyle,
   getTagTarefaStyle,
@@ -286,4 +282,13 @@ const {
   formatarExecucao,
   obterClasseExecucaoFormatada,
 } = useTarefas();
+
+onMounted(() => {
+  atualizarIsMobile();
+  window.addEventListener("resize", atualizarIsMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", atualizarIsMobile);
+});
 </script>

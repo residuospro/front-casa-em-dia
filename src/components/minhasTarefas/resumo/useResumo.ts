@@ -36,7 +36,7 @@ const resumo = computed(() => {
 
   const items: Items[] = [
     {
-      label: "Total de tarefas",
+      label: "Total de tarefas do dia",
       value: dataResumo.value.totalTarefas ?? 0,
       slug: "total-tarefas",
       icone: mdiListBoxOutline,
@@ -54,21 +54,6 @@ const resumo = computed(() => {
       icone: mdiClockAlertOutline,
     },
   ];
-
-  // Adiciona apenas o primeiro ciclo com contagem de restantes
-  if (dataResumo.value.ciclos?.length) {
-    const primeiro = dataResumo.value.ciclos[0];
-
-    items.push({
-      label: primeiro?.nome || "Ciclo ativo",
-      value: primeiro?.diasRestantes ?? 0,
-      slug: "ciclo-ativo",
-      icone: mdiAutorenew,
-      isCiclo: true,
-      duracaoDias: primeiro?.duracaoDias,
-      restantesCount: Math.max(0, dataResumo.value.ciclos.length - 1),
-    });
-  }
 
   return items;
 });

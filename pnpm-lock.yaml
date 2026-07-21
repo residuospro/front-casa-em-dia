@@ -16,8 +16,8 @@ importers:
         specifier: ^0.41.0
         version: 0.41.0(typescript@5.9.3)(vitest@4.0.16(@types/node@24.10.4)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
       '@comercti/vue-components-hmg':
-        specifier: ^0.43.15
-        version: 0.43.15(typescript@5.9.3)(vitest@4.0.16(@types/node@24.10.4)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
+        specifier: ^0.44.4
+        version: 0.44.4(typescript@5.9.3)(vitest@4.0.16(@types/node@24.10.4)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
       '@jamescoyle/vue-icon':
         specifier: ^0.1.2
         version: 0.1.2
@@ -658,8 +658,8 @@ packages:
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
 
-  '@comercti/vue-components-hmg@0.43.15':
-    resolution: {integrity: sha512-cbTfJ8xrd5WWWaHl5X4APDGPwAuE/YL8J20/q8oJQg7RGPSKjzFWwkWO71lyEAWaIvvyxURaYtVrgy5NNqREFw==}
+  '@comercti/vue-components-hmg@0.44.4':
+    resolution: {integrity: sha512-SNZGNooruL7b8dpVBbX0aoAtV763yrrub8tWHUNCDVbbvLARHsA4DXJZiqbknv8oHsj9zNcRCSCYvW5WK6T+mg==}
     peerDependencies:
       vue: '>=3.2.0'
 
@@ -4218,7 +4218,7 @@ snapshots:
 
   '@canvas/image-data@1.1.0': {}
 
-  '@comercti/vue-components-hmg@0.43.15(typescript@5.9.3)(vitest@4.0.16(@types/node@24.10.4)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))':
+  '@comercti/vue-components-hmg@0.44.4(typescript@5.9.3)(vitest@4.0.16(@types/node@24.10.4)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))':
     dependencies:
       '@popperjs/core': 2.11.8
       '@venegrad/vue3-code-input': 1.0.8(vue@3.5.26(typescript@5.9.3))

@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import router from "@/router";
 import type {
   Filtro,
@@ -106,6 +106,21 @@ const headers = [
   { text: "Status", value: "ativo", sortable: true },
   { text: "Ações", value: "acoes", sortable: false, width: "5rem" },
 ];
+
+const headerMobile = [
+  { text: "Tarefa", value: "titulo", sortable: true },
+  { text: "Responsável", value: "responsavelAtual", sortable: true },
+  { text: "Agenda", value: "execucoes", sortable: false },
+  { text: "Ações", value: "acoes", sortable: false, width: "5rem" },
+];
+
+const isMobile = ref(false);
+
+const atualizarIsMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
+const headersTabela = computed(() => (isMobile.value ? headerMobile : headers));
 
 const manipularResposta = (res: IResponseTarefa) => {
   const { data, ...resto } = res;
@@ -284,6 +299,7 @@ const formatarExecucao = (execucao: Execucao | null) => {
   return {
     titulo: `${dia} • ${hora}`,
     subtitulo: nomes[execucao.status],
+    executor: execucao.executorId,
   };
 };
 
@@ -430,6 +446,7 @@ export const useTarefas = () => {
     dataTarefas,
     filtroInicial,
     headers,
+    headersTabela,
     opcoesMenu,
     options,
     abrirModalDeletar,
@@ -439,6 +456,7 @@ export const useTarefas = () => {
     filtrado,
     modoExibicao,
     opcoesStatusTarefa,
+    atualizarIsMobile,
     setModoExibicao,
     carregarModoExibicao,
     toggleStatus,

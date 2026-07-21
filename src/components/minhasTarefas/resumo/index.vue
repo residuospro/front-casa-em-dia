@@ -5,9 +5,9 @@
     <div
       v-for="(item, index) in resumo"
       :key="index"
-      class="bg-white rounded-xl shadow border p-3 flex flex-col w-full"
+      class="bg-white rounded-xl shadow border py-2 px-3 flex flex-row w-full justify-between"
     >
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1">
         <svg-icon
           type="mdi"
           :path="item.icone"
@@ -18,7 +18,15 @@
           "
           size="24"
         />
-        <span class="font-medium text-gray-600">{{ item.label }}</span>
+        <span
+          class="font-medium"
+          :class="
+            item.slug === 'tarefas-atrasadas'
+              ? 'text-red-500'
+              : 'text-[#16742F]'
+          "
+          >{{ item.label }}</span
+        >
 
         <span
           v-if="item.restantesCount && item.restantesCount > 0"
@@ -28,9 +36,16 @@
         </span>
       </div>
 
-      <div class="mt-4">
+      <div
+        class="flex"
+        :class="
+          item.isCiclo
+            ? 'sm:flex-col sm:justify-end sm:items-end gap-2 items-center sm:gap-0'
+            : 'flex-row '
+        "
+      >
         <span
-          class="text-xl font-bold"
+          class="text-lg font-bold"
           :class="
             item.slug === 'tarefas-atrasadas'
               ? 'text-red-500'
@@ -39,7 +54,11 @@
         >
           {{ item.value }}
         </span>
-        <span v-if="item.isCiclo" class="text-sm text-gray-500 ml-1">
+        <span
+          v-if="item.isCiclo"
+          class="text-sm text-gray-500"
+          :class="item.isCiclo ? 'text-right' : ''"
+        >
           dias restantes
         </span>
       </div>

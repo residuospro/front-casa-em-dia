@@ -83,10 +83,21 @@
             <img
               :src="
                 parseFotoPerfil(
-                  perfilResponsavel(task?.responsavelAtualId).foto || '',
+                  perfilResponsavel(
+                    String(
+                      task?.execucoes[0]?.executorId ||
+                        task?.responsavelAtualId,
+                    ),
+                  ).foto || '',
                 )
               "
-              :alt="perfilResponsavel(task?.responsavelAtualId).nome"
+              :alt="
+                perfilResponsavel(
+                  String(
+                    task?.execucoes[0]?.executorId || task?.responsavelAtualId,
+                  ),
+                ).nome
+              "
               class="w-9 h-9 rounded-2xl object-cover ring-2 ring-white shadow-sm"
             />
 
