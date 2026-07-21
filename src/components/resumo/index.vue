@@ -36,14 +36,7 @@
         </span>
       </div>
 
-      <div
-        class="flex"
-        :class="
-          item.isCiclo
-            ? 'sm:flex-col sm:justify-end sm:items-end gap-2 items-center sm:gap-0'
-            : 'flex-row '
-        "
-      >
+      <div class="flex flex-row">
         <span
           class="text-lg font-bold"
           :class="
@@ -53,13 +46,6 @@
           "
         >
           {{ item.value }}
-        </span>
-        <span
-          v-if="item.isCiclo"
-          class="text-sm text-gray-500"
-          :class="item.isCiclo ? 'text-right' : ''"
-        >
-          dias restantes
         </span>
       </div>
     </div>

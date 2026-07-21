@@ -70,7 +70,7 @@ import { useTarefas } from "@/components/minhasTarefas/useTarefas";
 import { onMounted } from "vue";
 import ModalDeletar from "@/components/modal/index.vue";
 import FiltroTarefa from "@/components/minhasTarefas/filtroTarefa/index.vue";
-import Resumo from "@/components/minhasTarefas/resumo/index.vue";
+import Resumo from "@/components/resumo/index.vue";
 import { useApiTarefas } from "@/components/minhasTarefas/useApiTarefas";
 import { useRouter } from "vue-router";
 import Button from "@/components/botao/index.vue";

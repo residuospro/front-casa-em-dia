@@ -101,6 +101,7 @@ const headers = [
   { text: "Categoria", value: "categoria", sortable: true },
   { text: "Tipo", value: "tipo", sortable: true },
   { text: "Responsável", value: "responsavelAtual", sortable: true },
+  { text: "Executor(a)", value: "executor", sortable: false },
   { text: "Agenda", value: "execucoes", sortable: false },
   { text: "Ciclo", value: "ciclo" },
   { text: "Status", value: "ativo", sortable: true },
@@ -110,6 +111,7 @@ const headers = [
 const headerMobile = [
   { text: "Tarefa", value: "titulo", sortable: true },
   { text: "Responsável", value: "responsavelAtual", sortable: true },
+  { text: "Executor(a)", value: "executor", sortable: false },
   { text: "Agenda", value: "execucoes", sortable: false },
   { text: "Ações", value: "acoes", sortable: false, width: "5rem" },
 ];
@@ -361,6 +363,8 @@ const executarOpcoesMenu = (
   titulo: string,
   duplicarTarefa?: (id: string) => Promise<void>,
 ) => {
+  console.log("id", id);
+
   const maps = {
     editar: () => {
       router.push({ name: "minhas-tarefas.editar-tarefa", query: { id } });

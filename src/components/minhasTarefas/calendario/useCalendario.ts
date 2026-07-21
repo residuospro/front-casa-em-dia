@@ -93,7 +93,6 @@ export function useCalendario() {
 
   const getTarefasDoDia = (dataDia: Date): TarefaComExecucao[] => {
     const dataStr = dataDia.toISOString().split("T")[0];
-
     return dataTarefas.value.data.flatMap((tarefa) => {
       return tarefa.execucoes
         .filter((exec) => {
@@ -103,6 +102,7 @@ export function useCalendario() {
         .map((exec) => ({
           ...tarefa,
           ...exec,
+          tarefaId: tarefa.id,
         })) as TarefaComExecucao[];
     });
   };
@@ -113,7 +113,7 @@ export function useCalendario() {
 
     // Alteração principal aqui ↓
     const top = hora * 60; // ← Removido o "- 6"
-    const height = 65;
+    const height = 35;
 
     const diff = new Date(tarefa.data).getTime() - new Date().getTime();
     const isClose = diff <= 1000 * 60 * 60 * 24;
@@ -143,7 +143,10 @@ export function useCalendario() {
       height: `${height}px`,
       background: cores.bg,
       color: cores.texto,
-      borderLeft: `4px solid ${cores.borda}`,
+      borderLeft: `1px solid ${cores.borda}`,
+      left: "1px",
+      right: "1px",
+      zIndex: 10,
     };
   };
 

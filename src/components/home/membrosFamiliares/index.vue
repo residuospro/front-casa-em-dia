@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-white rounded-3xl shadow-2xl">
+  <div class="w-full bg-white rounded-3xl shadow-2xl h-auto">
     <div class="p-4 flex items-center justify-between border-b">
       <h1 class="text-xl font-semibold text-gray-900">Membros da família</h1>
       <button

@@ -102,93 +102,130 @@
       </aside>
 
       <!-- Calendário -->
-      <section class="overflow-auto h-[30rem] relative">
-        <!-- Dias da semana -->
-        <div
-          class="sticky top-0 z-30 grid grid-cols-7 min-w-[700px] border-b bg-white"
-        >
-          <div
-            v-for="dia in semana"
-            :key="dia.data.toISOString()"
-            class="text-center py-3 border-r last:border-r-0"
-          >
-            <div class="text-xs text-gray-500">{{ dia.semana }}</div>
-            <div class="text-2xl font-semibold">{{ dia.dia }}</div>
+      <section
+        class="overflow-auto h-[30rem] relative grid grid-cols-[auto_1fr]"
+      >
+        <div class="border-r grid grid-rows-2 relative">
+          <div class="p-2 flex justify-center">
+            <svg-icon
+              type="mdi"
+              :path="mdiClockAlertOutline"
+              class="text-gray-400"
+              size="25"
+            />
           </div>
-        </div>
 
-        <!-- Grade Horária -->
-        <div class="relative min-w-[700px]" style="height: 1450px">
-          <!-- Linhas de Hora -->
           <div
             v-for="hora in horas"
             :key="hora"
-            class="absolute left-0 right-0 border-t border-gray-100"
+            class="absolute left-0 right-0 mt-[3.3rem] border-t border-gray-100 bg-slate-400"
             :style="{ top: `${hora * 60}px` }"
           >
             <span
-              class="absolute -left-1 text-xs text-gray-500 w-12 text-right pr-2"
+              class="absolute -left-2 text-xs text-gray-500 w-12 text-right pr-2"
             >
               {{ String(hora).padStart(2, "0") }}:00
             </span>
           </div>
-
-          <!-- Colunas dos Dias -->
-          <div class="grid grid-cols-7 h-full min-w-[700px]">
+        </div>
+        <div>
+          <div
+            class="sticky top-0 z-30 grid grid-cols-7 min-w-[800px] sm:!min-w-0 border-b bg-white"
+          >
             <div
               v-for="dia in semana"
               :key="dia.data.toISOString()"
-              class="relative border-r last:border-r-0 min-h-full"
+              class="text-center py-1 border-r last:border-r-0"
             >
-              <!-- Grade clicável (hora cheia + meia hora) -->
-              <div
-                v-for="hora in horas"
-                :key="`${dia.data.toISOString()}-${hora}`"
-              >
-                <!-- Parte superior = hora cheia -->
-                <div
-                  class="h-[30px] border-t border-gray-100 hover:bg-[#F5FAF6] cursor-pointer transition-colors"
-                  @click="criarTarefa(dia.data, hora)"
-                />
+              <div class="text-xs text-gray-500">{{ dia.semana }}</div>
+              <div class="text-lg font-semibold">{{ dia.dia }}</div>
+            </div>
+          </div>
 
-                <!-- Parte inferior = meia hora -->
-                <div
-                  class="h-[30px] border-t border-dashed border-gray-100 hover:bg-[#EDF8EF] cursor-pointer transition-colors"
-                  @click="criarTarefa(dia.data, hora, 30)"
-                />
-              </div>
+          <!-- Grade Horária -->
+          <div
+            class="relative min-w-[800px] sm:!min-w-0"
+            style="height: 1450px"
+          >
+            <!-- Linhas de Hora -->
 
-              <!-- Tarefas -->
+            <!-- Colunas dos Dias -->
+            <div class="grid grid-cols-7 h-full min-w-[600px] sm:!min-w-0">
               <div
-                v-for="(tarefa, index) in getTarefasDoDia(dia.data)"
-                :key="index"
-                class="absolute left-2 right-2 task-block text-xs rounded-xl px-3 py-2 shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
-                :style="getTaskPositionStyle(tarefa)"
+                v-for="dia in semana"
+                :key="dia.data.toISOString()"
+                class="relative border-r last:border-r-0 min-h-full"
               >
-                <div class="flex justify-between items-start">
-                  <span class="font-bold">{{ tarefa.titulo }}</span>
-                  <ce-context-menu
-                    :items="opcoesMenu"
-                    @select="
-                      executarOpcoesMenu($event, tarefa.tarefaId, tarefa.titulo)
-                    "
-                  >
-                    <button>
-                      <svg-icon
-                        type="mdi"
-                        :path="mdiDotsVertical"
-                        class="text-gray-400"
-                        size="15"
-                      />
-                    </button>
-                  </ce-context-menu>
+                <!-- Grade clicável (hora cheia + meia hora) -->
+                <div
+                  v-for="hora in horas"
+                  :key="`${dia.data.toISOString()}-${hora}`"
+                >
+                  <!-- Parte superior = hora cheia -->
+                  <div
+                    class="h-[30px] border-t border-gray-100 hover:bg-[#F5FAF6] cursor-pointer transition-colors"
+                    @click="criarTarefa(dia.data, hora)"
+                  />
+
+                  <!-- Parte inferior = meia hora -->
+                  <div
+                    class="h-[30px] border-t border-dashed border-gray-100 hover:bg-[#EDF8EF] cursor-pointer transition-colors"
+                    @click="criarTarefa(dia.data, hora, 30)"
+                  />
                 </div>
-                <span class="truncate text-[10px] opacity-75">{{
-                  tarefa.responsavelAtual?.nome
-                }}</span>
-                <span class="capitalize text-[10px]">{{
-                  tarefa.status.toLowerCase()
-                }}</span>
+
+                <!-- Tarefas -->
+                <div
+                  v-for="(tarefa, index) in getTarefasDoDia(dia.data)"
+                  :key="index"
+                  class="absolute text-xs px-3 py-2 sm:!px-1 sm:justify-center shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
+                  :style="getTaskPositionStyle(tarefa)"
+                >
+                  <div class="flex justify-between items-start">
+                    <ce-tooltip
+                      :focus="false"
+                      location="top"
+                      :text="`${tarefa.titulo} - ${perfilMembro(tarefa.responsavelAtualId || '').nome}`"
+                    >
+                      <template #activator>
+                        <button>
+                          <svg-icon
+                            type="mdi"
+                            :path="mdiMagnify"
+                            class="text-gray-400"
+                            size="10"
+                          />
+                        </button>
+                      </template>
+                    </ce-tooltip>
+
+                    <span
+                      class="font-bold truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px] sm:hidden"
+                      :title="tarefa.titulo"
+                      >{{ tarefa.titulo }}</span
+                    >
+
+                    <ce-context-menu
+                      :items="opcoesMenu"
+                      @select="
+                        executarOpcoesMenu(
+                          $event,
+                          tarefa.tarefaId,
+                          tarefa.titulo,
+                        )
+                      "
+                    >
+                      <button>
+                        <svg-icon
+                          type="mdi"
+                          :path="mdiDotsVertical"
+                          class="text-gray-400"
+                          size="15"
+                        />
+                      </button>
+                    </ce-context-menu>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -206,17 +243,23 @@ import { onMounted } from "vue";
 import { useUtils } from "@/utils/useUtils";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiAutorenew, mdiTable, mdiDotsVertical } from "@mdi/js";
+import {
+  mdiAutorenew,
+  mdiTable,
+  mdiDotsVertical,
+  mdiClockAlertOutline,
+  mdiMagnify,
+} from "@mdi/js";
 import { useApiTarefas } from "../useApiTarefas";
 import { useTarefas } from "../useTarefas";
-import { CeContextMenu } from "@comercti/vue-components-hmg";
+import { CeContextMenu, CeTooltip } from "@comercti/vue-components-hmg";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const router = useRouter();
 const { parseFotoPerfil } = useUtils();
 const { obterOpcoesFamiliares } = useApiMinhaFamilia();
-const { opcoesFamiliares } = useMinhaFamilia();
+const { opcoesFamiliares, perfilMembro } = useMinhaFamilia();
 const { chamarApi } = useApiTarefas();
 const { parametros, executarOpcoesMenu, resetarParametros, setModoExibicao } =
   useTarefas();
@@ -243,9 +286,9 @@ const {
   getTaskPositionStyle,
 } = useCalendario();
 
-onMounted(async () => {
-  await Promise.all([obterOpcoesFamiliares(), chamarApi()]);
-});
+// onMounted(async () => {
+//   await Promise.all([obterOpcoesFamiliares(), chamarApi()]);
+// });
 
 const criarTarefa = (dia: Date, hora: number, minuto = 0) => {
   const data = new Date(dia);
@@ -263,18 +306,12 @@ const criarTarefa = (dia: Date, hora: number, minuto = 0) => {
 
 <style scoped>
 .task-block {
-  border-left: 4px solid;
+  border-left: 8px solid;
   transition: all 0.2s;
 }
 
 .task-block:hover {
   transform: translateX(4px);
   z-index: 10;
-}
-
-@media (max-width: 640px) {
-  .min-w-\[700px\] {
-    min-width: 640px;
-  }
 }
 </style>
