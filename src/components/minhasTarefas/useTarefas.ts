@@ -91,7 +91,7 @@ const opcoesMenu = [
 
 const opcoesStatusTarefa = [
   { label: "Atrasadas", bg: "#FEE2E2", cor: "#DC2626" },
-  { label: "Pra hoje", bg: "#FFF7ED", cor: "#EA580C" },
+  { label: "Próximas", bg: "#FFF7ED", cor: "#EA580C" },
   { label: "Agendadas", bg: "#DCFCE7", cor: "#16A34A" },
 ];
 

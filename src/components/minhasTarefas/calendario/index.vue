@@ -1,67 +1,65 @@
 <template>
   <div class="overflow-hidden h-full border rounded-3xl shadow-lg bg-white">
     <!-- Header -->
+
     <div
-      class="flex flex-col sm:items-center justify-between gap-4 p-4 border-b bg-gray-50"
+      class="flex w-full xl:w-1/5 gap-4 sm:flex-col sm:justify-center p-2 border-b bg-gray-50"
     >
-      <div class="flex items-center gap-4 sm:flex-col sm:justify-center">
-        <div class="flex flex-row items-center gap-2">
-          <button
-            @click="setModoExibicao('tabela')"
-            class="p-3 bg-white rounded-2xl shadow border hover:bg-gray-50 transition-all"
-          >
-            <svg-icon type="mdi" :path="mdiTable" class="text-[#16742F]" />
-          </button>
+      <div class="flex flex-row items-center justify-center gap-2">
+        <button
+          @click="setModoExibicao('tabela')"
+          class="p-3 bg-white rounded-2xl shadow border hover:bg-gray-50 transition-all"
+        >
+          <svg-icon type="mdi" :path="mdiTable" class="text-[#16742F]" />
+        </button>
 
-          <button
-            @click="mostrarMembrosMobile = !mostrarMembrosMobile"
-            class="flex items-center gap-2 text-sm font-medium px-4 py-2 bg-white border rounded-2xl"
-          >
-            <span>Membros</span>
-            <span
-              class="text-xl transition-transform"
-              :class="{ 'rotate-180': mostrarMembrosMobile }"
-              >↓</span
-            >
-          </button>
-        </div>
+        <button
+          @click="mostrarMembrosMobile = !mostrarMembrosMobile"
+          class="flex items-center gap-2 text-sm font-medium px-4 py-2 bg-white border rounded-2xl"
+        >
+          <span>Membros</span>
+          <svg-icon
+            type="mdi"
+            :path="mostrarMembrosMobile ? mdiChevronUp : mdiChevronDown"
+            size="20"
+          />
+        </button>
+      </div>
 
-        <div class="flex items-center gap-2">
-          <button
-            @click="anterior"
-            class="p-3 hover:bg-white rounded-2xl transition-colors"
-          >
-            ←
-          </button>
+      <div
+        class="flex items-center bg-white rounded-2xl px-4 py-1 shadow-sm border justify-center gap-2"
+      >
+        <button
+          @click="anterior"
+          class="hover:bg-white rounded-2xl transition-colors"
+        >
+          <svg-icon type="mdi" :path="mdiChevronLeft" size="20" />
+        </button>
 
-          <div
-            class="flex items-center bg-white rounded-2xl px-4 py-2 shadow-sm border"
-          >
-            <select
-              v-model="mesSelecionado"
-              class="font-semibold bg-transparent outline-none text-lg cursor-pointer"
-            >
-              <option v-for="(mes, i) in meses" :key="i" :value="i">
-                {{ mes }}
-              </option>
-            </select>
-            <select
-              v-model="anoSelecionado"
-              class="font-semibold bg-transparent outline-none text-lg cursor-pointer ml-2"
-            >
-              <option v-for="ano in anos" :key="ano" :value="ano">
-                {{ ano }}
-              </option>
-            </select>
-          </div>
+        <select
+          v-model="mesSelecionado"
+          class="font-semibold bg-transparent outline-none text-lg cursor-pointer"
+        >
+          <option v-for="(mes, i) in meses" :key="i" :value="i">
+            {{ mes }}
+          </option>
+        </select>
 
-          <button
-            @click="proximo"
-            class="p-3 hover:bg-white rounded-2xl transition-colors"
-          >
-            →
-          </button>
-        </div>
+        <select
+          v-model="anoSelecionado"
+          class="font-semibold bg-transparent outline-none text-lg cursor-pointer ml-2"
+        >
+          <option v-for="ano in anos" :key="ano" :value="ano">
+            {{ ano }}
+          </option>
+        </select>
+
+        <button
+          @click="proximo"
+          class="hover:bg-white rounded-2xl transition-colors"
+        >
+          <svg-icon type="mdi" :path="mdiChevronRight" size="20" />
+        </button>
       </div>
     </div>
 
@@ -182,22 +180,24 @@
                   :style="getTaskPositionStyle(tarefa)"
                 >
                   <div class="flex justify-between items-start">
-                    <ce-tooltip
-                      :focus="false"
-                      location="top"
-                      :text="`${tarefa.titulo} - ${perfilMembro(tarefa.responsavelAtualId || '').nome}`"
-                    >
-                      <template #activator>
-                        <button>
-                          <svg-icon
-                            type="mdi"
-                            :path="mdiMagnify"
-                            class="text-gray-400"
-                            size="10"
-                          />
-                        </button>
-                      </template>
-                    </ce-tooltip>
+                    <div class="hidden sm:!block">
+                      <ce-tooltip
+                        :focus="false"
+                        location="top"
+                        :text="`${tarefa.titulo} - ${perfilMembro(tarefa.responsavelAtualId || '').nome}`"
+                      >
+                        <template #activator>
+                          <button>
+                            <svg-icon
+                              type="mdi"
+                              :path="mdiMagnify"
+                              class="text-gray-400"
+                              size="10"
+                            />
+                          </button>
+                        </template>
+                      </ce-tooltip>
+                    </div>
 
                     <span
                       class="font-bold truncate max-w-[100px] sm:max-w-[150px] md:max-w-[200px] sm:hidden"
@@ -232,6 +232,17 @@
         </div>
       </section>
     </div>
+
+    <div
+      class="flex flex-row items-center justify-end gap-2 w-full py-2 px-4 border-t"
+    >
+      <ce-pagination
+        :total-pages="dataTarefas.paginacao.total"
+        :items-per-page="dataTarefas.paginacao.por_pagina"
+        :current-page="dataTarefas.paginacao.pagina"
+        @update:model-value="obterDadosPorPagina"
+      />
+    </div>
   </div>
 </template>
 
@@ -247,19 +258,32 @@ import {
   mdiDotsVertical,
   mdiClockAlertOutline,
   mdiMagnify,
+  mdiChevronUp,
+  mdiChevronDown,
+  mdiChevronLeft,
+  mdiChevronRight,
 } from "@mdi/js";
 import { useApiTarefas } from "../useApiTarefas";
 import { useTarefas } from "../useTarefas";
-import { CeContextMenu, CeTooltip } from "@comercti/vue-components-hmg";
+import {
+  CeContextMenu,
+  CeTooltip,
+  CePagination,
+} from "@comercti/vue-components-hmg";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const router = useRouter();
 const { parseFotoPerfil } = useUtils();
 const { opcoesFamiliares, perfilMembro } = useMinhaFamilia();
-const { chamarApi } = useApiTarefas();
-const { parametros, executarOpcoesMenu, resetarParametros, setModoExibicao } =
-  useTarefas();
+const { chamarApi, obterDadosPorPagina } = useApiTarefas();
+const {
+  parametros,
+  dataTarefas,
+  executarOpcoesMenu,
+  resetarParametros,
+  setModoExibicao,
+} = useTarefas();
 
 const mostrarMembrosMobile = ref(false);
 
