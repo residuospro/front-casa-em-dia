@@ -176,15 +176,27 @@
                 <div
                   v-for="(tarefa, index) in getTarefasDoDia(dia.data)"
                   :key="index"
-                  class="absolute text-xs px-3 py-2 sm:!px-1 sm:justify-center shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
-                  :style="getTaskPositionStyle(tarefa)"
+                  class="absolute text-xs sm:!px-1 sm:justify-center shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
+                  :style="getTaskPositionStyle(tarefa).style"
                 >
-                  <div class="flex justify-between items-start">
+                  <span
+                    class="h-2 w-full text-[0.5rem]"
+                    :style="getTaskPositionStyle(tarefa).membro"
+                    :title="
+                      perfilMembro(
+                        tarefa.executorId || tarefa.responsavelAtualId || '',
+                      ).nome
+                    "
+                  />
+
+                  <div
+                    class="flex justify-between items-center gap-2 px-3 mt-1 sm:!px-0"
+                  >
                     <div class="hidden sm:!block">
                       <ce-tooltip
                         :focus="false"
                         location="top"
-                        :text="`${tarefa.titulo} - ${perfilMembro(tarefa.responsavelAtualId || '').nome}`"
+                        :text="`${tarefa.titulo} - ${perfilMembro(tarefa.executorId || tarefa.responsavelAtualId || '').nome}`"
                       >
                         <template #activator>
                           <button>

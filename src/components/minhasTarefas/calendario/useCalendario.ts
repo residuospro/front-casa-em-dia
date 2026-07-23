@@ -2,11 +2,12 @@ import { computed, ref } from "vue";
 import type { ModoCalendario, TarefaComExecucao } from "./tipagem";
 import router from "@/router";
 import { useTarefas } from "../useTarefas";
-
-const { dataTarefas } = useTarefas();
+import { useMinhaFamilia } from "@/components/minhaFamilia/useMinhaFamilia";
 
 export function useCalendario() {
   const modo = ref<ModoCalendario>("SEMANA");
+  const { dataTarefas } = useTarefas();
+  const { perfilMembro } = useMinhaFamilia();
   const dataAtual = ref(new Date());
 
   const meses = [
@@ -107,7 +108,27 @@ export function useCalendario() {
     });
   };
 
+  const corDoMembro = (id: string) => {
+    const nome = perfilMembro(id)
+      .nome.toLocaleLowerCase()
+      .split(" ")
+      .join("")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    const membros = {
+      kallifabdonabrahao: "#A16207",
+      talitaabrahao: "#9333EA",
+      eloiseabrahao: "#F97316",
+      elenaabrahao: "#FACC15",
+    };
+
+    return membros[nome as keyof typeof membros] || "";
+  };
+
   const getTaskPositionStyle = (tarefa: TarefaComExecucao) => {
+    console.log("tareffffffaaa", tarefa);
+
     const date = new Date(tarefa.data);
     const hora = date.getHours() + date.getMinutes() / 60;
 
@@ -139,14 +160,20 @@ export function useCalendario() {
           });
 
     return {
-      top: `${top}px`,
-      height: `${height}px`,
-      background: cores.bg,
-      color: cores.texto,
-      borderLeft: `1px solid ${cores.borda}`,
-      left: "1px",
-      right: "1px",
-      zIndex: 10,
+      style: {
+        top: `${top}px`,
+        height: `${height}px`,
+        background: cores.bg,
+        color: cores.texto,
+        borderLeft: `1px solid ${cores.borda}`,
+        left: "1px",
+        right: "1px",
+      },
+      membro: {
+        background: corDoMembro(
+          tarefa.executorId || tarefa.responsavelAtualId || "",
+        ),
+      },
     };
   };
 
