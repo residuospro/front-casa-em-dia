@@ -176,7 +176,7 @@
                 <div
                   v-for="(tarefa, index) in getTarefasDoDia(dia.data)"
                   :key="index"
-                  class="absolute text-xs sm:!px-1 sm:justify-center shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
+                  class="absolute task-block text-xs sm:!px-1 sm:justify-center shadow-sm cursor-pointer hover:shadow-md transition-all flex flex-col"
                   :style="getTaskPositionStyle(tarefa).style"
                 >
                   <span

@@ -40,8 +40,6 @@
       </Button>
     </div>
 
-    <Resumo />
-
     <Tarefas v-if="modoExibicao === 'tabela'" />
     <Calendario v-if="modoExibicao === 'calendario'" />
 
