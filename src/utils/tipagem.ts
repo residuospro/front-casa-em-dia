@@ -45,6 +45,22 @@ const FrequenciaRecorrenciaValues = {
   DIAS_PARES: "DIAS_PARES",
 } as const;
 
+const TipoContaValues = {
+  CONTA_CORRENTE: "CONTA_CORRENTE",
+  POUPANCA: "POUPANCA",
+  DINHEIRO: "DINHEIRO",
+  INVESTIMENTO: "INVESTIMENTO",
+  CARTEIRA: "CARTEIRA",
+} as const;
+
+const MoedaValues = {
+  BRL: "BRL",
+  USD: "USD",
+  EUR: "EUR",
+} as const;
+
+type TipoConta = (typeof TipoContaValues)[keyof typeof TipoContaValues];
+type Moeda = (typeof MoedaValues)[keyof typeof MoedaValues];
 type TipoNotificacao =
   (typeof TipoNotificacaoValues)[keyof typeof TipoNotificacaoValues];
 
@@ -94,6 +110,10 @@ export {
   StatusExecucaoValues,
   TipoNotificacaoValues,
   FrequenciaRecorrenciaValues,
+  MoedaValues,
+  TipoContaValues,
+  type Moeda,
+  type TipoConta,
   type FrequenciasRecorrencia,
   type TipoNotificacao,
   type ModoDistribuicao,

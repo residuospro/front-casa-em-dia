@@ -1,7 +1,7 @@
 <template>
   <div>
     <label v-if="label" class="block text-sm mb-1 text-black">
-      {{ label }}
+      {{ label }} <span v-if="required" class="text-red-500">*</span>
     </label>
 
     <!-- Single select nativo -->
@@ -56,10 +56,7 @@
           </button>
         </span>
 
-        <span
-          v-if="!modelValueParsed.length"
-          class="text-sm text-gray-400"
-        >
+        <span v-if="!modelValueParsed.length" class="text-sm text-gray-400">
           {{ placeholder || "Selecione..." }}
         </span>
 
@@ -106,13 +103,20 @@ interface SelectItem {
   value: string | number;
 }
 
-const props = defineProps<{
-  modelValue?: string | string[] | null;
-  label?: string;
-  placeholder?: string;
-  items: SelectItem[];
-  multiple?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string | string[] | null;
+    label?: string;
+    placeholder?: string;
+    items: SelectItem[];
+    multiple?: boolean;
+    required?: boolean;
+  }>(),
+  {
+    required: false,
+    multiple: false,
+  },
+);
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: string | string[]): void;

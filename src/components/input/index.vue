@@ -1,7 +1,7 @@
 <template>
   <div>
     <label v-if="label" class="block text-sm mb-1 !text-black">
-      {{ label }}
+      {{ label }} <span v-if="required" class="text-red-500">*</span>
     </label>
 
     <!-- FILE INPUT CUSTOM -->
@@ -60,9 +60,11 @@ const props = withDefaults(
     label?: string;
     placeholder?: string;
     type?: string;
+    required?: boolean;
   }>(),
   {
     type: "text",
+    required: false,
   },
 );
 

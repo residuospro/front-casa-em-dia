@@ -103,6 +103,19 @@ export const useUtils = () => {
     return formData;
   };
 
+  const formatarReal = (valor: number) => {
+    return valor.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
+  const formartarValor = (valor: string) => {
+    const numeros = valor.replace(/\D/g, "");
+    const reais = numeros ? Number(numeros) / 100 : 0;
+    return reais;
+  };
+
   return {
     formatarData,
     idadeFormatada,
@@ -111,5 +124,7 @@ export const useUtils = () => {
     setarFormDataDependente,
     criarDataLocal,
     criarExecucoes,
+    formartarValor,
+    formatarReal,
   };
 };

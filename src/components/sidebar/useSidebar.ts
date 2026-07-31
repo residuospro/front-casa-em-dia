@@ -54,7 +54,17 @@ const navItens: NavItem[] = [
       { label: "Nova tarefa", path: "/minhas-tarefas/nova-tarefa" },
     ],
   },
-  { label: "Finanças", path: "/financas", icone: mdiCalculatorVariantOutline },
+  {
+    label: "Finanças",
+    icone: mdiCalculatorVariantOutline,
+    children: [
+      { label: "Contas", path: "/financas/contas" },
+      { label: "Cartões", path: "/financas/cartoes" },
+      { label: "Categorias", path: "/financas/categorias" },
+      { label: "Subcategorias", path: "/financas/subcategorias" },
+      { label: "Tags", path: "/financas/tags" },
+    ],
+  },
   {
     label: "Editar perfil",
     path: "/perfil/editar",
