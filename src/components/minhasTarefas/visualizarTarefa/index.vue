@@ -11,17 +11,22 @@
           <h2 class="font-semibold text-lg">Histórico recente</h2>
 
           <Execucoes
-            :execucoes-agrupadas="execucoesAgrupadas.atuais"
-            titulo="Execuções atuais"
-            :qt-execucoes="dataTarefa?.execucoes.length || 4"
+            :execucoes-agrupadas="execucoesListadas"
+            titulo="Execuções"
+            :qt-execucoes="execucoesListadas.length || 4"
           />
 
-          <Execucoes
-            :execucoes-agrupadas="execucoesAgrupadas.passadas"
-            titulo="Execuções passadas"
-            :qt-execucoes="qtdExecucao"
-            :exibir-btn-historico="execucoesAgrupadas.passadas.length > 4"
-          />
+          <div v-if="ultimaPaginaExecucoes > 1" class="flex justify-end">
+            <CePagination
+              :total-pages="ultimaPaginaExecucoes"
+              :items-per-page="POR_PAGINA_EXECUCOES"
+              :current-page="paginaExecucoes"
+              @update:model-value="
+                (pagina: number) =>
+                  obterExecucoesPorPagina(dataTarefa?.id || '', pagina)
+              "
+            />
+          </div>
         </div>
       </div>
 
@@ -80,17 +85,25 @@ import Execucoes from "./execucoes/index.vue";
 import InfoGerais from "./infoGerais/index.vue";
 import Agendamentos from "./agendamento/index.vue";
 import Header from "./header/index.vue";
+import { CePagination } from "@comercti/vue-components";
 
 const { executarOpcoesMenu } = useTarefas();
-const { obterTarefaPorId } = useApiVisualizarTarefa();
-const { dataTarefa, execucoesAgrupadas, qtdExecucao, execucao } =
-  useVisualizarTarefas();
+const { obterTarefaPorId, obterExecucoes, obterExecucoesPorPagina } =
+  useApiVisualizarTarefa();
+const {
+  dataTarefa,
+  execucao,
+  execucoesListadas,
+  paginaExecucoes,
+  ultimaPaginaExecucoes,
+  POR_PAGINA_EXECUCOES,
+} = useVisualizarTarefas();
 
 const router = useRouter();
 
 onMounted(async () => {
   const id = router.currentRoute.value.query.id as string;
   execucao.value.tarefaId = id;
-  await obterTarefaPorId(id);
+  await Promise.all([obterTarefaPorId(id), obterExecucoes(id)]);
 });
 </script>

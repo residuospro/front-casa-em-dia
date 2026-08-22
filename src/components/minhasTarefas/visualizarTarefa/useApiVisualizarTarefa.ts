@@ -1,7 +1,7 @@
 import { useClient } from "@/client";
 import type { AxiosResponse } from "axios";
 import { usePerfil } from "@/store/usePerfil";
-import type { Tarefa } from "../tipagem";
+import type { Tarefa, IResponseExecucoes } from "../tipagem";
 import { useVisualizarTarefas } from "./useVisualizarTarefa";
 
 export const useApiVisualizarTarefa = () => {
@@ -12,7 +12,41 @@ export const useApiVisualizarTarefa = () => {
     abrirModalCancelar,
     abrirModalEditar,
     setarDataAtualizar,
+    POR_PAGINA_EXECUCOES,
+    execucoesListadas,
+    paginaExecucoes,
+    ultimaPaginaExecucoes,
+    totalExecucoes,
+    carregandoExecucoes,
   } = useVisualizarTarefas();
+
+  const urlExecucoes = (tarefaId: string) =>
+    `/tarefas/${perfil.familiaId}/tarefas/${tarefaId}/execucoes`;
+
+  const obterExecucoesPorPagina = async (tarefaId: string, pagina: number) => {
+    carregandoExecucoes.value = true;
+
+    try {
+      const resposta: AxiosResponse<IResponseExecucoes> = await useClient.get(
+        urlExecucoes(tarefaId),
+        {
+          params: { pagina, por_pagina: POR_PAGINA_EXECUCOES },
+        },
+      );
+
+      if (resposta.status === 200) {
+        execucoesListadas.value = resposta.data.data;
+        totalExecucoes.value = resposta.data.paginacao.total;
+        ultimaPaginaExecucoes.value = resposta.data.paginacao.ultima_pagina;
+        paginaExecucoes.value = resposta.data.paginacao.pagina;
+      }
+    } finally {
+      carregandoExecucoes.value = false;
+    }
+  };
+
+  const obterExecucoes = (tarefaId: string) =>
+    obterExecucoesPorPagina(tarefaId, 1);
 
   const obterTarefaPorId = async (id: string) => {
     const resposta: AxiosResponse<Tarefa> = await useClient.get(
@@ -36,7 +70,10 @@ export const useApiVisualizarTarefa = () => {
     );
 
     if (resposta.status === 200) {
-      await obterTarefaPorId(tarefaId);
+      await Promise.all([
+        obterTarefaPorId(tarefaId),
+        obterExecucoesPorPagina(tarefaId, paginaExecucoes.value || 1),
+      ]);
       abrirModalConcluir.value = false;
     }
   };
@@ -47,7 +84,10 @@ export const useApiVisualizarTarefa = () => {
     );
 
     if (resposta.status === 200) {
-      await obterTarefaPorId(tarefaId);
+      await Promise.all([
+        obterTarefaPorId(tarefaId),
+        obterExecucoesPorPagina(tarefaId, paginaExecucoes.value || 1),
+      ]);
       abrirModalCancelar.value = false;
     }
   };
@@ -65,13 +105,18 @@ export const useApiVisualizarTarefa = () => {
     );
 
     if (resposta.status === 200) {
-      await obterTarefaPorId(tarefaId);
+      await Promise.all([
+        obterTarefaPorId(tarefaId),
+        obterExecucoesPorPagina(tarefaId, paginaExecucoes.value || 1),
+      ]);
       abrirModalEditar.value = false;
     }
   };
 
   return {
     obterTarefaPorId,
+    obterExecucoes,
+    obterExecucoesPorPagina,
     concluirExecucao,
     cancelarExecucao,
     atualizarExecucao,

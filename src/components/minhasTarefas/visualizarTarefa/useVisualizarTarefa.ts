@@ -19,6 +19,13 @@ const estadoInicialExecucao = {
 };
 const execucao = ref({ ...estadoInicialExecucao });
 
+const POR_PAGINA_EXECUCOES = 5;
+const execucoesListadas = ref<Execucao[]>([]);
+const paginaExecucoes = ref(1);
+const ultimaPaginaExecucoes = ref(1);
+const totalExecucoes = ref(0);
+const carregandoExecucoes = ref(false);
+
 const execucoesAgrupadas = computed(() => {
   const execs = dataTarefa.value?.execucoes || [];
   if (!execs.length) return { atuais: [], passadas: [] };
@@ -159,5 +166,11 @@ export const useVisualizarTarefas = () => {
     setarClasseStatus,
     setarQtdExecucao,
     setarDataAtualizar,
+    POR_PAGINA_EXECUCOES,
+    execucoesListadas,
+    paginaExecucoes,
+    ultimaPaginaExecucoes,
+    totalExecucoes,
+    carregandoExecucoes,
   };
 };

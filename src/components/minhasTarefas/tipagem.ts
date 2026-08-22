@@ -80,6 +80,11 @@ interface ParametrosTarefas {
   paginacao: Paginacao;
 }
 
+interface IResponseExecucoes {
+  paginacao: Paginacao;
+  data: Execucao[];
+}
+
 interface Execucao {
   id: string;
   tarefaId: string;
@@ -102,4 +107,5 @@ export type {
   Execucao,
   Tarefa,
   Execucoes,
+  IResponseExecucoes,
 };
