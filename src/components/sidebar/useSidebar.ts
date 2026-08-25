@@ -63,6 +63,7 @@ const navItens: NavItem[] = [
       { label: "Categorias", path: "/financas/categorias" },
       { label: "Subcategorias", path: "/financas/subcategorias" },
       { label: "Centros de Custo", path: "/financas/centros-custo" },
+      { label: "Lançamentos", path: "/financas/lancamentos" },
       { label: "Tags", path: "/financas/tags" },
     ],
   },

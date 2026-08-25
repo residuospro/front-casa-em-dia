@@ -75,6 +75,30 @@ const StatusCategoriaValues = {
   ARQUIVADA: "ARQUIVADA",
 } as const;
 
+const TipoLancamentoValues = {
+  RECEITA: "RECEITA",
+  DESPESA: "DESPESA",
+  TRANSFERENCIA: "TRANSFERENCIA",
+  AJUSTE: "AJUSTE",
+} as const;
+
+const StatusLancamentoValues = {
+  PENDENTE: "PENDENTE",
+  PAGO: "PAGO",
+  CANCELADO: "CANCELADO",
+  IGNORADO: "IGNORADO",
+} as const;
+
+const FormaPagamentoValues = {
+  PIX: "PIX",
+  DINHEIRO: "DINHEIRO",
+  DEBITO: "DEBITO",
+  CREDITO: "CREDITO",
+  BOLETO: "BOLETO",
+  TRANSFERENCIA: "TRANSFERENCIA",
+  OUTRO: "OUTRO",
+} as const;
+
 type TipoConta = (typeof TipoContaValues)[keyof typeof TipoContaValues];
 type Moeda = (typeof MoedaValues)[keyof typeof MoedaValues];
 type TipoCartao = (typeof TipoCartaoValues)[keyof typeof TipoCartaoValues];
@@ -82,6 +106,12 @@ type TipoCategoriaFinanceira =
   (typeof TipoCategoriaFinanceiraValues)[keyof typeof TipoCategoriaFinanceiraValues];
 type StatusCategoria =
   (typeof StatusCategoriaValues)[keyof typeof StatusCategoriaValues];
+type TipoLancamento =
+  (typeof TipoLancamentoValues)[keyof typeof TipoLancamentoValues];
+type StatusLancamento =
+  (typeof StatusLancamentoValues)[keyof typeof StatusLancamentoValues];
+type FormaPagamento =
+  (typeof FormaPagamentoValues)[keyof typeof FormaPagamentoValues];
 type TipoNotificacao =
   (typeof TipoNotificacaoValues)[keyof typeof TipoNotificacaoValues];
 
@@ -136,11 +166,17 @@ export {
   TipoCartaoValues,
   TipoCategoriaFinanceiraValues,
   StatusCategoriaValues,
+  TipoLancamentoValues,
+  StatusLancamentoValues,
+  FormaPagamentoValues,
   type Moeda,
   type TipoConta,
   type TipoCartao,
   type TipoCategoriaFinanceira,
   type StatusCategoria,
+  type TipoLancamento,
+  type StatusLancamento,
+  type FormaPagamento,
   type FrequenciasRecorrencia,
   type TipoNotificacao,
   type ModoDistribuicao,
