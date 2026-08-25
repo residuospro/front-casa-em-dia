@@ -2,24 +2,24 @@ import { useClient } from "@/client";
 import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
-import { useContaBancaria } from "./useContasBancarias";
 import { storeToRefs } from "pinia";
-import type { IResponseContas } from "./tipagem";
+import { useCartoes } from "./useCartoes";
+import type { IResponseCartoes } from "./tipagem";
 
-export const useApiContasBancarias = () => {
+export const useApiCartoes = () => {
   const { perfil } = storeToRefs(usePerfil());
   const {
     parametros,
     manipularResposta,
     resetarParametros,
     abrirModalDeletar,
-    contaSelecionada,
-  } = useContaBancaria();
+    cartaoSelecionado,
+  } = useCartoes();
 
   const chamarApi = async () => {
     try {
-      const resposta: AxiosResponse<IResponseContas> = await useClient.get(
-        `/financeiro/${perfil.value.familiaId}/financeiro/contas`,
+      const resposta: AxiosResponse<IResponseCartoes> = await useClient.get(
+        `/financeiro/${perfil.value.familiaId}/financeiro/cartoes`,
         {
           params: parametros.value,
         },
@@ -31,12 +31,12 @@ export const useApiContasBancarias = () => {
     }
   };
 
-  const deletarConta = async () => {
+  const deletarCartao = async () => {
     const resposta: AxiosResponse = await useClient.delete(
-      `/financeiro/${perfil.value.familiaId}/financeiro/contas/${contaSelecionada.value?.id}`,
+      `/financeiro/${perfil.value.familiaId}/financeiro/cartoes/${cartaoSelecionado.value?.id}`,
     );
 
-    useRespostaApi(resposta.status, null, "Conta deletada com sucesso");
+    useRespostaApi(resposta.status);
     abrirModalDeletar.value = false;
     await chamarApi();
   };
@@ -64,7 +64,7 @@ export const useApiContasBancarias = () => {
 
   return {
     chamarApi,
-    deletarConta,
+    deletarCartao,
     obterDadosPorOrdenacao,
     obterDadosPorItensPorPagina,
     obterDadosPorPagina,

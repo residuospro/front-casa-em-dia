@@ -2,28 +2,29 @@ import { useClient } from "@/client";
 import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
-import { useContaBancaria } from "./useContasBancarias";
 import { storeToRefs } from "pinia";
-import type { IResponseContas } from "./tipagem";
+import { useTags } from "./useTags";
+import type { IResponseTag } from "./tipagem";
 
-export const useApiContasBancarias = () => {
+export const useApiTags = () => {
   const { perfil } = storeToRefs(usePerfil());
   const {
     parametros,
     manipularResposta,
     resetarParametros,
     abrirModalDeletar,
-    contaSelecionada,
-  } = useContaBancaria();
+    tagSelecionada,
+  } = useTags();
 
   const chamarApi = async () => {
     try {
-      const resposta: AxiosResponse<IResponseContas> = await useClient.get(
-        `/financeiro/${perfil.value.familiaId}/financeiro/contas`,
-        {
-          params: parametros.value,
-        },
-      );
+      const resposta: AxiosResponse<IResponseTag> =
+        await useClient.get(
+          `/financeiro/${perfil.value.familiaId}/financeiro/tags`,
+          {
+            params: parametros.value,
+          },
+        );
 
       manipularResposta(resposta.data);
     } catch {
@@ -31,12 +32,12 @@ export const useApiContasBancarias = () => {
     }
   };
 
-  const deletarConta = async () => {
+  const deletarTag = async () => {
     const resposta: AxiosResponse = await useClient.delete(
-      `/financeiro/${perfil.value.familiaId}/financeiro/contas/${contaSelecionada.value?.id}`,
+      `/financeiro/${perfil.value.familiaId}/financeiro/tags/${tagSelecionada.value?.id}`,
     );
 
-    useRespostaApi(resposta.status, null, "Conta deletada com sucesso");
+    useRespostaApi(resposta.status, null, "Tag deletada com sucesso");
     abrirModalDeletar.value = false;
     await chamarApi();
   };
@@ -64,7 +65,7 @@ export const useApiContasBancarias = () => {
 
   return {
     chamarApi,
-    deletarConta,
+    deletarTag,
     obterDadosPorOrdenacao,
     obterDadosPorItensPorPagina,
     obterDadosPorPagina,

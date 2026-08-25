@@ -2,28 +2,29 @@ import { useClient } from "@/client";
 import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
-import { useContaBancaria } from "./useContasBancarias";
 import { storeToRefs } from "pinia";
-import type { IResponseContas } from "./tipagem";
+import { useCentroCustos } from "./useCentroCustos";
+import type { IResponseCentroCusto } from "./tipagem";
 
-export const useApiContasBancarias = () => {
+export const useApiCentroCustos = () => {
   const { perfil } = storeToRefs(usePerfil());
   const {
     parametros,
     manipularResposta,
     resetarParametros,
     abrirModalDeletar,
-    contaSelecionada,
-  } = useContaBancaria();
+    centroCustoSelecionado,
+  } = useCentroCustos();
 
   const chamarApi = async () => {
     try {
-      const resposta: AxiosResponse<IResponseContas> = await useClient.get(
-        `/financeiro/${perfil.value.familiaId}/financeiro/contas`,
-        {
-          params: parametros.value,
-        },
-      );
+      const resposta: AxiosResponse<IResponseCentroCusto> =
+        await useClient.get(
+          `/financeiro/${perfil.value.familiaId}/financeiro/centros-custo`,
+          {
+            params: parametros.value,
+          },
+        );
 
       manipularResposta(resposta.data);
     } catch {
@@ -31,12 +32,12 @@ export const useApiContasBancarias = () => {
     }
   };
 
-  const deletarConta = async () => {
+  const deletarCentroCusto = async () => {
     const resposta: AxiosResponse = await useClient.delete(
-      `/financeiro/${perfil.value.familiaId}/financeiro/contas/${contaSelecionada.value?.id}`,
+      `/financeiro/${perfil.value.familiaId}/financeiro/centros-custo/${centroCustoSelecionado.value?.id}`,
     );
 
-    useRespostaApi(resposta.status, null, "Conta deletada com sucesso");
+    useRespostaApi(resposta.status, null, "Centro de custo deletado com sucesso");
     abrirModalDeletar.value = false;
     await chamarApi();
   };
@@ -64,7 +65,7 @@ export const useApiContasBancarias = () => {
 
   return {
     chamarApi,
-    deletarConta,
+    deletarCentroCusto,
     obterDadosPorOrdenacao,
     obterDadosPorItensPorPagina,
     obterDadosPorPagina,

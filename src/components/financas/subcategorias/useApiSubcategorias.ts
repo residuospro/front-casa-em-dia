@@ -2,28 +2,29 @@ import { useClient } from "@/client";
 import { usePerfil } from "@/store/usePerfil";
 import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
-import { useContaBancaria } from "./useContasBancarias";
 import { storeToRefs } from "pinia";
-import type { IResponseContas } from "./tipagem";
+import { useSubcategorias } from "./useSubcategorias";
+import type { IResponseSubcategorias } from "./tipagem";
 
-export const useApiContasBancarias = () => {
+export const useApiSubcategorias = () => {
   const { perfil } = storeToRefs(usePerfil());
   const {
     parametros,
     manipularResposta,
     resetarParametros,
     abrirModalDeletar,
-    contaSelecionada,
-  } = useContaBancaria();
+    subcategoriaSelecionada,
+  } = useSubcategorias();
 
   const chamarApi = async () => {
     try {
-      const resposta: AxiosResponse<IResponseContas> = await useClient.get(
-        `/financeiro/${perfil.value.familiaId}/financeiro/contas`,
-        {
-          params: parametros.value,
-        },
-      );
+      const resposta: AxiosResponse<IResponseSubcategorias> =
+        await useClient.get(
+          `/financeiro/${perfil.value.familiaId}/financeiro/subcategorias`,
+          {
+            params: parametros.value,
+          },
+        );
 
       manipularResposta(resposta.data);
     } catch {
@@ -31,12 +32,12 @@ export const useApiContasBancarias = () => {
     }
   };
 
-  const deletarConta = async () => {
+  const deletarSubcategoria = async () => {
     const resposta: AxiosResponse = await useClient.delete(
-      `/financeiro/${perfil.value.familiaId}/financeiro/contas/${contaSelecionada.value?.id}`,
+      `/financeiro/${perfil.value.familiaId}/financeiro/subcategorias/${subcategoriaSelecionada.value?.id}`,
     );
 
-    useRespostaApi(resposta.status, null, "Conta deletada com sucesso");
+    useRespostaApi(resposta.status, null, "Subcategoria deletada com sucesso");
     abrirModalDeletar.value = false;
     await chamarApi();
   };
@@ -64,7 +65,7 @@ export const useApiContasBancarias = () => {
 
   return {
     chamarApi,
-    deletarConta,
+    deletarSubcategoria,
     obterDadosPorOrdenacao,
     obterDadosPorItensPorPagina,
     obterDadosPorPagina,

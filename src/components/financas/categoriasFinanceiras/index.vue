@@ -1,6 +1,6 @@
 <template>
   <ce-data-table
-    :items="dataContas.data"
+    :items="dataCategorias.data"
     :headers="headers"
     truncated
     compact
@@ -13,48 +13,34 @@
       <span
         class="px-3 py-1 rounded-full text-xs font-medium w-min"
         :style="{
-          color: getTipoContaStyle(item.tipo).cor,
-          background: getTipoContaStyle(item.tipo).background,
+          color: getTipoCategoriaStyle(item.tipo).cor,
+          background: getTipoCategoriaStyle(item.tipo).background,
         }"
       >
-        {{ getTipoContaStyle(item.tipo).label }}
+        {{ getTipoCategoriaStyle(item.tipo).label }}
       </span>
     </template>
 
-    <template #moeda="{ item }">
+    <template #cor="{ item }">
+      <div
+        class="p-1 rounded-full text-xs font-medium w-5 h-5"
+        :style="{
+          color: item.cor,
+          background: item.cor,
+        }"
+      />
+    </template>
+
+    <template #status="{ item }">
       <span
         class="px-3 py-1 rounded-full text-xs font-medium w-min"
         :style="{
-          color: getMoedaStyle(item.moeda).cor,
-          background: getMoedaStyle(item.moeda).background,
+          color: getStatusCategoriaStyle(item.status).cor,
+          background: getStatusCategoriaStyle(item.status).background,
         }"
       >
-        {{ item.moeda }}
+        {{ getStatusCategoriaStyle(item.status).label }}
       </span>
-    </template>
-
-    <template #ativo="{ item }">
-      <span
-        class="px-3 py-1 rounded-full text-xs font-medium w-min"
-        :style="{
-          color: getStatusContaStyle(item.ativo).cor,
-          background: getStatusContaStyle(item.ativo).background,
-        }"
-      >
-        {{ getStatusContaStyle(item.ativo).label }}
-      </span>
-    </template>
-
-    <template #saldoInicial="{ item }">
-      <span>{{ formatarReal(Number(item.saldoInicial), item.moeda) }}</span>
-    </template>
-
-    <template #saldoAtual="{ item }">
-      <span>{{ formatarReal(Number(item.saldoAtual), item.moeda) }}</span>
-    </template>
-
-    <template #saldoPrevisto="{ item }">
-      <span>{{ formatarReal(Number(item.saldoPrevisto), item.moeda) }}</span>
     </template>
 
     <template #acoes="{ item }">
@@ -79,16 +65,16 @@
         <div class="sm:hidden">
           <ce-items-per-page
             label="Itens por página"
-            v-model="dataContas.paginacao.por_pagina"
+            v-model="dataCategorias.paginacao.por_pagina"
             :options="options"
             @update:model-value="obterDadosPorItensPorPagina"
           />
         </div>
 
         <ce-pagination
-          :total-pages="dataContas.paginacao.total"
-          :items-per-page="dataContas.paginacao.por_pagina"
-          :current-page="dataContas.paginacao.pagina"
+          :total-pages="dataCategorias.paginacao.total"
+          :items-per-page="dataCategorias.paginacao.por_pagina"
+          :current-page="dataCategorias.paginacao.pagina"
           @update:model-value="obterDadosPorPagina"
         />
       </div>
@@ -103,27 +89,24 @@ import {
   CePagination,
   CeItemsPerPage,
 } from "@comercti/vue-components-hmg";
-import { useContaBancaria } from "./useContasBancarias";
-import { useApiContasBancarias } from "./useApiContasBancarias";
-import { useUtils } from "@/utils/useUtils";
+import { useCategorias } from "./useCategorias";
+import { useApiCategorias } from "./useApiCategorias";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiDotsVertical } from "@mdi/js";
 
-const { formatarReal } = useUtils();
 const {
   headers,
   options,
-  dataContas,
-  getTipoContaStyle,
-  getMoedaStyle,
-  getStatusContaStyle,
+  dataCategorias,
   opcoesMenu,
   executarOpcoesMenu,
-} = useContaBancaria();
+  getTipoCategoriaStyle,
+  getStatusCategoriaStyle,
+} = useCategorias();
 const {
   obterDadosPorOrdenacao,
   obterDadosPorItensPorPagina,
   obterDadosPorPagina,
-} = useApiContasBancarias();
+} = useApiCategorias();
 </script>

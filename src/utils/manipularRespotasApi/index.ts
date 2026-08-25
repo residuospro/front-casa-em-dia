@@ -4,7 +4,7 @@ import type { IResponseError } from "../interfaces";
 
 export const useRespostaApi = (
   statusCode: number,
-  res?: IResponseError,
+  res?: IResponseError | null,
   msg?: string,
 ) => {
   const { notificar } = useNotificacoes();
@@ -25,6 +25,10 @@ export const useRespostaApi = (
     },
 
     200: () => {
+      notificar("SUCCESS", 3000, msg || "Operação realizada com sucesso");
+    },
+
+    204: () => {
       notificar("SUCCESS", 3000, msg || "Operação realizada com sucesso");
     },
 

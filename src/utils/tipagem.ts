@@ -59,8 +59,29 @@ const MoedaValues = {
   EUR: "EUR",
 } as const;
 
+const TipoCartaoValues = {
+  CREDITO: "CREDITO",
+  DEBITO: "DEBITO",
+  AMBOS: "AMBOS",
+} as const;
+
+const TipoCategoriaFinanceiraValues = {
+  RECEITA: "RECEITA",
+  DESPESA: "DESPESA",
+} as const;
+
+const StatusCategoriaValues = {
+  ATIVA: "ATIVA",
+  ARQUIVADA: "ARQUIVADA",
+} as const;
+
 type TipoConta = (typeof TipoContaValues)[keyof typeof TipoContaValues];
 type Moeda = (typeof MoedaValues)[keyof typeof MoedaValues];
+type TipoCartao = (typeof TipoCartaoValues)[keyof typeof TipoCartaoValues];
+type TipoCategoriaFinanceira =
+  (typeof TipoCategoriaFinanceiraValues)[keyof typeof TipoCategoriaFinanceiraValues];
+type StatusCategoria =
+  (typeof StatusCategoriaValues)[keyof typeof StatusCategoriaValues];
 type TipoNotificacao =
   (typeof TipoNotificacaoValues)[keyof typeof TipoNotificacaoValues];
 
@@ -112,8 +133,14 @@ export {
   FrequenciaRecorrenciaValues,
   MoedaValues,
   TipoContaValues,
+  TipoCartaoValues,
+  TipoCategoriaFinanceiraValues,
+  StatusCategoriaValues,
   type Moeda,
   type TipoConta,
+  type TipoCartao,
+  type TipoCategoriaFinanceira,
+  type StatusCategoria,
   type FrequenciasRecorrencia,
   type TipoNotificacao,
   type ModoDistribuicao,

@@ -1,4 +1,17 @@
 <template>
+  <ModalDeletar
+    :abrir-modal="abrirModalDeletar"
+    titulo="Deletar conta"
+    subtitulo=""
+    texto-botao="Deletar"
+    @fechar-modal="() => (abrirModalDeletar = false)"
+    :salvar="() => deletarConta()"
+  >
+    <span class="text-red-600 font-medium">
+      Tem certeza que deseja deletar a conta {{ contaSelecionada?.nome }}?
+    </span>
+  </ModalDeletar>
+
   <ModalContaBancaria />
 
   <div class="w-full flex flex-col gap-6 bg-white rounded-2xl p-6">
@@ -13,7 +26,10 @@
         </p>
       </div>
 
-      <Button class="!w-[8rem] sm:!w-full" @click="manipularModalContaBancaria">
+      <Button
+        class="!w-[8rem] sm:!w-full"
+        @click="manipularModalContaBancaria('criar')"
+      >
         + Nova conta
       </Button>
     </div>
@@ -29,9 +45,11 @@ import { useApiContasBancarias } from "@/components/financas/contasBancarias/use
 import { useContaBancaria } from "@/components/financas/contasBancarias/useContasBancarias";
 import { onMounted } from "vue";
 import ModalContaBancaria from "@/components/financas/contasBancarias/novaConta/index.vue";
+import ModalDeletar from "@/components/modal/index.vue";
 
-const { chamarApi } = useApiContasBancarias();
-const { manipularModalContaBancaria } = useContaBancaria();
+const { chamarApi, deletarConta } = useApiContasBancarias();
+const { manipularModalContaBancaria, abrirModalDeletar, contaSelecionada } =
+  useContaBancaria();
 
 onMounted(async () => {
   await chamarApi();

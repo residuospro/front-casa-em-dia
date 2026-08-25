@@ -1,4 +1,4 @@
-import type { StatusExecucao } from "../tipagem";
+import type { Moeda, StatusExecucao } from "../tipagem";
 
 export const useUtils = () => {
   const formatarData = (data: string, comHora: boolean = true) => {
@@ -103,10 +103,10 @@ export const useUtils = () => {
     return formData;
   };
 
-  const formatarReal = (valor: number) => {
+  const formatarReal = (valor: number, moeda: Moeda = "BRL") => {
     return valor.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL",
+      currency: moeda,
     });
   };
 

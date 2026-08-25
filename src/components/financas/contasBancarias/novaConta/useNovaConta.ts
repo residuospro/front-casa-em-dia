@@ -1,6 +1,7 @@
 import { MoedaValues, TipoContaValues } from "@/utils/tipagem";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useUtils } from "@/utils/useUtils";
+import { useContaBancaria } from "../useContasBancarias";
 
 const { formartarValor, formatarReal } = useUtils();
 const opcoesTipoConta = [
@@ -17,12 +18,37 @@ const opcoesMoedas = [
   { text: "USD", value: MoedaValues.USD },
 ];
 
-const formConta = ref({
+const estadoInicialForm = () => ({
   nome: "",
   instituicao: "",
   tipo: "",
   moeda: "",
   saldoInicial: 0,
+  ativo: false,
+});
+
+const formConta = ref(estadoInicialForm());
+
+const { acao, abriModalContaBancaria, contaEditando } = useContaBancaria();
+
+watch(abriModalContaBancaria, (aberto) => {
+  if (!aberto) return;
+
+  if (acao.value === "editar" && contaEditando.value) {
+    const { nome, instituicao, tipo, moeda, saldoInicial, ativo } =
+      contaEditando.value;
+
+    formConta.value = {
+      nome,
+      instituicao: instituicao ?? "",
+      tipo,
+      moeda,
+      saldoInicial,
+      ativo,
+    };
+  } else {
+    formConta.value = estadoInicialForm();
+  }
 });
 
 const valorFormatado = computed({

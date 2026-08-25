@@ -1,6 +1,6 @@
 <template>
   <ce-data-table
-    :items="dataContas.data"
+    :items="dataCartoes.data"
     :headers="headers"
     truncated
     compact
@@ -9,52 +9,50 @@
     @order-by="obterDadosPorOrdenacao"
     hide-id
   >
+    <template #conta="{ item }">
+      <span class="font-medium">{{ getNomeConta(item.contaId) }}</span>
+    </template>
+
     <template #tipo="{ item }">
       <span
         class="px-3 py-1 rounded-full text-xs font-medium w-min"
         :style="{
-          color: getTipoContaStyle(item.tipo).cor,
-          background: getTipoContaStyle(item.tipo).background,
+          color: getTipoCartaoStyle(item.tipo).cor,
+          background: getTipoCartaoStyle(item.tipo).background,
         }"
       >
-        {{ getTipoContaStyle(item.tipo).label }}
+        {{ getTipoCartaoStyle(item.tipo).label }}
       </span>
     </template>
 
-    <template #moeda="{ item }">
-      <span
-        class="px-3 py-1 rounded-full text-xs font-medium w-min"
-        :style="{
-          color: getMoedaStyle(item.moeda).cor,
-          background: getMoedaStyle(item.moeda).background,
-        }"
-      >
-        {{ item.moeda }}
-      </span>
+    <template #limite="{ item }">
+      <span>{{
+        formatarReal(Number(item.limite), getMoedaDaConta(item.contaId))
+      }}</span>
+    </template>
+
+    <template #fechamentoDia="{ item }">
+      <span>{{ item.fechamentoDia ?? "----" }}</span>
+    </template>
+
+    <template #vencimentoDia="{ item }">
+      <span>{{ item.vencimentoDia ?? "----" }}</span>
+    </template>
+
+    <template #melhorDiaCompra="{ item }">
+      <span>{{ item.melhorDiaCompra ?? "----" }}</span>
     </template>
 
     <template #ativo="{ item }">
       <span
         class="px-3 py-1 rounded-full text-xs font-medium w-min"
         :style="{
-          color: getStatusContaStyle(item.ativo).cor,
-          background: getStatusContaStyle(item.ativo).background,
+          color: getStatusCartaoStyle(item.ativo).cor,
+          background: getStatusCartaoStyle(item.ativo).background,
         }"
       >
-        {{ getStatusContaStyle(item.ativo).label }}
+        {{ getStatusCartaoStyle(item.ativo).label }}
       </span>
-    </template>
-
-    <template #saldoInicial="{ item }">
-      <span>{{ formatarReal(Number(item.saldoInicial), item.moeda) }}</span>
-    </template>
-
-    <template #saldoAtual="{ item }">
-      <span>{{ formatarReal(Number(item.saldoAtual), item.moeda) }}</span>
-    </template>
-
-    <template #saldoPrevisto="{ item }">
-      <span>{{ formatarReal(Number(item.saldoPrevisto), item.moeda) }}</span>
     </template>
 
     <template #acoes="{ item }">
@@ -79,16 +77,16 @@
         <div class="sm:hidden">
           <ce-items-per-page
             label="Itens por página"
-            v-model="dataContas.paginacao.por_pagina"
+            v-model="dataCartoes.paginacao.por_pagina"
             :options="options"
             @update:model-value="obterDadosPorItensPorPagina"
           />
         </div>
 
         <ce-pagination
-          :total-pages="dataContas.paginacao.total"
-          :items-per-page="dataContas.paginacao.por_pagina"
-          :current-page="dataContas.paginacao.pagina"
+          :total-pages="dataCartoes.paginacao.total"
+          :items-per-page="dataCartoes.paginacao.por_pagina"
+          :current-page="dataCartoes.paginacao.pagina"
           @update:model-value="obterDadosPorPagina"
         />
       </div>
@@ -103,8 +101,8 @@ import {
   CePagination,
   CeItemsPerPage,
 } from "@comercti/vue-components-hmg";
-import { useContaBancaria } from "./useContasBancarias";
-import { useApiContasBancarias } from "./useApiContasBancarias";
+import { useCartoes } from "./useCartoes";
+import { useApiCartoes } from "./useApiCartoes";
 import { useUtils } from "@/utils/useUtils";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
@@ -114,16 +112,17 @@ const { formatarReal } = useUtils();
 const {
   headers,
   options,
-  dataContas,
-  getTipoContaStyle,
-  getMoedaStyle,
-  getStatusContaStyle,
+  dataCartoes,
   opcoesMenu,
   executarOpcoesMenu,
-} = useContaBancaria();
+  getTipoCartaoStyle,
+  getStatusCartaoStyle,
+  getNomeConta,
+  getMoedaDaConta,
+} = useCartoes();
 const {
   obterDadosPorOrdenacao,
   obterDadosPorItensPorPagina,
   obterDadosPorPagina,
-} = useApiContasBancarias();
+} = useApiCartoes();
 </script>

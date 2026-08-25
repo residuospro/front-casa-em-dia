@@ -38,7 +38,8 @@
         :value="modelValue"
         @change="onChange"
         @input="onChange"
-        class="w-full px-4 py-2 rounded-lg border bg-white text-black border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#53864C] appearance-none cursor-pointer pr-10"
+        :class="type === 'color' ? 'h-[2.6rem]' : ''"
+        class="!w-full px-4 py-2 rounded-lg border bg-white text-black border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#53864C] appearance-none cursor-pointer pr-10"
       />
 
       <div
