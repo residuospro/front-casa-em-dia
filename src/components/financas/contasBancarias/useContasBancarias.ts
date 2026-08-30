@@ -15,8 +15,8 @@ const headers = [
   { text: "Tipo", value: "tipo", sortable: true },
   { text: "Moeda", value: "moeda", sortable: true },
   { text: "Saldo Inicial", value: "saldoInicial", sortable: true },
-  { text: "Saldo Atual", value: "saldoAtual", sortable: true },
   { text: "Saldo Previsto", value: "saldoPrevisto", sortable: true },
+  { text: "Saldo Atual", value: "saldoAtual", sortable: true },
   { text: "Status", value: "ativo", sortable: true },
   { text: "Ações", value: "acoes", sortable: true },
 ];

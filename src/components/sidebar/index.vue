@@ -29,78 +29,13 @@
     </div>
 
     <nav class="flex-1 p-4 space-y-1 overflow-auto">
-      <template v-for="item in navItens" :key="item.label">
-        <div v-if="item.children" class="space-y-1">
-          <button
-            @click="toggleSubmenu(item.label)"
-            class="flex items-center w-full rounded-lg text-sm font-medium transition"
-            :class="[
-              isDesktop && !sidebarAberto ? 'justify-center px-0' : 'px-3',
-              parentLinkClasses(item),
-            ]"
-          >
-            <svg-icon
-              type="mdi"
-              :path="item.icone"
-              class="w-5 h-5 shrink-0 my-2.5"
-            />
-            <span
-              v-show="!isDesktop || sidebarAberto"
-              class="ml-3 whitespace-nowrap flex-1 text-left"
-            >
-              {{ item.label }}
-            </span>
-            <svg-icon
-              v-show="!isDesktop || sidebarAberto"
-              type="mdi"
-              :path="mdiChevronDown"
-              class="w-4 h-4 transition-transform"
-              :class="{ 'rotate-180': submenuAbertos[item.label] }"
-            />
-          </button>
-          <div v-show="submenuAbertos[item.label]" class="space-y-1">
-            <template v-for="child in item.children" :key="child.label">
-              <router-link
-                v-if="child.path"
-                :to="child.path!"
-                @click="!isDesktop && fecharSidebar()"
-                class="flex items-center rounded-lg text-sm font-medium transition pl-11"
-                :class="childLinkClasses(child.path)"
-              >
-                <span
-                  v-show="!isDesktop || sidebarAberto"
-                  class="whitespace-nowrap"
-                >
-                  {{ child.label }}
-                </span>
-              </router-link>
-            </template>
-          </div>
-        </div>
-
-        <router-link
-          v-else-if="item.path"
-          :to="item.path!"
-          @click="!isDesktop && fecharSidebar()"
-          class="flex items-center rounded-lg text-sm font-medium transition"
-          :class="[
-            isDesktop && !sidebarAberto ? 'justify-center px-0' : 'px-3',
-            linkClasses(item.path),
-          ]"
-        >
-          <svg-icon
-            type="mdi"
-            :path="item.icone"
-            class="w-5 h-5 shrink-0 my-2.5"
-          />
-          <span
-            v-show="!isDesktop || sidebarAberto"
-            class="ml-3 whitespace-nowrap"
-          >
-            {{ item.label }}
-          </span>
-        </router-link>
-      </template>
+      <SidebarItem
+        v-for="item in navItens"
+        :key="item.label"
+        :item="item"
+        :level="0"
+        :is-desktop="isDesktop"
+      />
     </nav>
 
     <div
@@ -140,22 +75,15 @@
 <script setup lang="ts">
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiChevronDown, mdiLogout } from "@mdi/js";
-import { useRoute } from "vue-router";
-import { useSidebar, type NavItem } from "./useSidebar";
-import { ref, reactive, onMounted, onUnmounted } from "vue";
+import { mdiLogout } from "@mdi/js";
+import { useSidebar } from "./useSidebar";
+import SidebarItem from "./SidebarItem.vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useSessao } from "@/utils/sessao";
 
 const { limparSessao } = useSessao();
 
-const route = useRoute();
-const { sidebarAberto, navItens, fecharSidebar } = useSidebar();
-
-const submenuAbertos = reactive<Record<string, boolean>>({});
-
-const toggleSubmenu = (label: string) => {
-  submenuAbertos[label] = !submenuAbertos[label];
-};
+const { sidebarAberto, navItens } = useSidebar();
 
 const isDesktop = ref(false);
 let mql: MediaQueryList | null = null;
@@ -173,37 +101,6 @@ onMounted(() => {
 onUnmounted(() => {
   mql?.removeEventListener("change", handleChange);
 });
-
-function isPathActive(path?: string) {
-  if (!path) return false;
-  return route.path === path || (route.path.startsWith(path) && path !== "/");
-}
-
-function linkClasses(path?: string) {
-  const ativo = isPathActive(path);
-  return {
-    "text-verde_53864c bg-verde_F2F4E9": ativo,
-    "text-cinza_363637 hover:text-verde_53864c hover:bg-verde_F2F4E9": !ativo,
-  };
-}
-
-function childLinkClasses(path?: string) {
-  const ativo = route.path === path;
-  return {
-    "text-verde_53864c bg-verde_F2F4E9": ativo,
-    "text-cinza_363637 hover:text-verde_53864c hover:bg-verde_F2F4E9": !ativo,
-  };
-}
-
-function parentLinkClasses(item: NavItem) {
-  const ativo =
-    isPathActive(item.path) ||
-    item.children?.some((child) => child.path && route.path === child.path);
-  return {
-    "text-verde_53864c bg-verde_F2F4E9": ativo,
-    "text-cinza_363637 hover:text-verde_53864c hover:bg-verde_F2F4E9": !ativo,
-  };
-}
 </script>
 
 <style scoped>

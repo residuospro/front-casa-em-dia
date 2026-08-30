@@ -2,7 +2,6 @@
   <ce-data-table
     :items="dataSubcategorias.data"
     :headers="headers"
-    truncated
     compact
     search
     order-by-server
@@ -10,7 +9,7 @@
     hide-id
   >
     <template #categoria="{ item }">
-      <span class="font-medium">{{ item.categoria?.nome ?? '----' }}</span>
+      <span class="font-medium">{{ item.categoria?.nome ?? "----" }}</span>
     </template>
 
     <template #ativo="{ item }">

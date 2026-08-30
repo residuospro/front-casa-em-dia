@@ -53,6 +53,13 @@ const TipoContaValues = {
   CARTEIRA: "CARTEIRA",
 } as const;
 
+const FrequenciaRecorrenciaFinanceiraValues = {
+  DIARIA: "DIARIA",
+  SEMANAL: "SEMANAL",
+  MENSAL: "MENSAL",
+  ANUAL: "ANUAL",
+} as const;
+
 const MoedaValues = {
   BRL: "BRL",
   USD: "USD",
@@ -68,6 +75,7 @@ const TipoCartaoValues = {
 const TipoCategoriaFinanceiraValues = {
   RECEITA: "RECEITA",
   DESPESA: "DESPESA",
+  AMBOS: "AMBOS",
 } as const;
 
 const StatusCategoriaValues = {
@@ -99,7 +107,33 @@ const FormaPagamentoValues = {
   OUTRO: "OUTRO",
 } as const;
 
+const TipoMetaFinanceiraValues = {
+  ECONOMIA: "ECONOMIA",
+  QUITAR_DIVIDA: "QUITAR_DIVIDA",
+  INVESTIMENTO: "INVESTIMENTO",
+  OBJETIVO: "OBJETIVO",
+} as const;
+
+const StatusMetaFinanceiraValues = {
+  EM_ANDAMENTO: "EM_ANDAMENTO",
+  CONCLUIDA: "CONCLUIDA",
+  CANCELADA: "CANCELADA",
+} as const;
+
+const TipoMovimentacaoMetaValues = {
+  ENTRADA: "ENTRADA",
+  SAIDA: "SAIDA",
+} as const;
+
+const IndicadorOrcamentoValues = {
+  NORMAL: "NORMAL",
+  PROXIMO: "PROXIMO",
+  ULTRAPASSADO: "ULTRAPASSADO",
+} as const;
+
 type TipoConta = (typeof TipoContaValues)[keyof typeof TipoContaValues];
+type FrequenciaRecorrenciaFinanceira =
+  (typeof FrequenciaRecorrenciaFinanceiraValues)[keyof typeof FrequenciaRecorrenciaFinanceiraValues];
 type Moeda = (typeof MoedaValues)[keyof typeof MoedaValues];
 type TipoCartao = (typeof TipoCartaoValues)[keyof typeof TipoCartaoValues];
 type TipoCategoriaFinanceira =
@@ -112,6 +146,14 @@ type StatusLancamento =
   (typeof StatusLancamentoValues)[keyof typeof StatusLancamentoValues];
 type FormaPagamento =
   (typeof FormaPagamentoValues)[keyof typeof FormaPagamentoValues];
+type TipoMetaFinanceira =
+  (typeof TipoMetaFinanceiraValues)[keyof typeof TipoMetaFinanceiraValues];
+type StatusMetaFinanceira =
+  (typeof StatusMetaFinanceiraValues)[keyof typeof StatusMetaFinanceiraValues];
+type TipoMovimentacaoMeta =
+  (typeof TipoMovimentacaoMetaValues)[keyof typeof TipoMovimentacaoMetaValues];
+type IndicadorOrcamento =
+  (typeof IndicadorOrcamentoValues)[keyof typeof IndicadorOrcamentoValues];
 type TipoNotificacao =
   (typeof TipoNotificacaoValues)[keyof typeof TipoNotificacaoValues];
 
@@ -163,20 +205,30 @@ export {
   FrequenciaRecorrenciaValues,
   MoedaValues,
   TipoContaValues,
+  FrequenciaRecorrenciaFinanceiraValues,
   TipoCartaoValues,
   TipoCategoriaFinanceiraValues,
   StatusCategoriaValues,
   TipoLancamentoValues,
   StatusLancamentoValues,
   FormaPagamentoValues,
+  TipoMetaFinanceiraValues,
+  StatusMetaFinanceiraValues,
+  TipoMovimentacaoMetaValues,
+  IndicadorOrcamentoValues,
   type Moeda,
   type TipoConta,
+  type FrequenciaRecorrenciaFinanceira,
   type TipoCartao,
   type TipoCategoriaFinanceira,
   type StatusCategoria,
   type TipoLancamento,
   type StatusLancamento,
   type FormaPagamento,
+  type TipoMetaFinanceira,
+  type StatusMetaFinanceira,
+  type TipoMovimentacaoMeta,
+  type IndicadorOrcamento,
   type FrequenciasRecorrencia,
   type TipoNotificacao,
   type ModoDistribuicao,

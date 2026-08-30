@@ -51,11 +51,13 @@
           label="Bandeira"
           placeholder="Ex: Mastercard"
           v-model="formCartao.bandeira"
+          class="!w-full"
         />
         <Input
           label="Limite"
           placeholder="R$ 0,00"
           v-model="valorFormatado"
+          class="!w-full"
         />
       </div>
 
@@ -129,6 +131,11 @@ import { useApiNovoCartao } from "./useApiNovoCartao";
 
 const { acao, abriModalCartao, manipularModalCartao } = useCartoes();
 const { criarCartao, atualizarCartao } = useApiNovoCartao();
-const { opcoesContas, opcoesTipoCartao, opcoesDias, formCartao, valorFormatado } =
-  useNovoCartao();
+const {
+  opcoesContas,
+  opcoesTipoCartao,
+  opcoesDias,
+  formCartao,
+  valorFormatado,
+} = useNovoCartao();
 </script>

@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import {
   mdiHomeOutline,
   mdiAccountGroupOutline,
@@ -17,6 +17,12 @@ export interface NavItem {
 }
 
 const sidebarAberto = ref(false);
+
+export const submenuAbertos = reactive<Record<string, boolean>>({});
+
+export const toggleSubmenu = (label: string) => {
+  submenuAbertos[label] = !submenuAbertos[label];
+};
 
 const toggleSidebar = () => {
   sidebarAberto.value = !sidebarAberto.value;
@@ -58,13 +64,22 @@ const navItens: NavItem[] = [
     label: "Finanças",
     icone: mdiCalculatorVariantOutline,
     children: [
-      { label: "Contas", path: "/financas/contas" },
-      { label: "Cartões", path: "/financas/cartoes" },
-      { label: "Categorias", path: "/financas/categorias" },
-      { label: "Subcategorias", path: "/financas/subcategorias" },
-      { label: "Centros de Custo", path: "/financas/centros-custo" },
+      {
+        label: "Configurações",
+        children: [
+          { label: "Contas", path: "/financas/contas" },
+          { label: "Cartões", path: "/financas/cartoes" },
+          { label: "Categorias", path: "/financas/categorias" },
+          { label: "Subcategorias", path: "/financas/subcategorias" },
+          { label: "Centros de Custo", path: "/financas/centros-custo" },
+          { label: "Tags", path: "/financas/tags" },
+        ],
+      },
+
       { label: "Lançamentos", path: "/financas/lancamentos" },
-      { label: "Tags", path: "/financas/tags" },
+      { label: "Recorrências", path: "/financas/recorrencias" },
+      { label: "Metas", path: "/financas/metas" },
+      { label: "Orçamentos", path: "/financas/orcamentos" },
     ],
   },
   {

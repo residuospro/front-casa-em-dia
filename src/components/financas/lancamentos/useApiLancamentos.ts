@@ -4,7 +4,7 @@ import type { AxiosResponse } from "axios";
 import { useRespostaApi } from "@/utils/manipularRespotasApi";
 import { storeToRefs } from "pinia";
 import { useLancamentos } from "./useLancamentos";
-import type { IResponseLancamentos } from "./tipagem";
+import type { ILancamento, IResponseLancamentos } from "./tipagem";
 
 export const useApiLancamentos = () => {
   const { perfil } = storeToRefs(usePerfil());
@@ -14,6 +14,9 @@ export const useApiLancamentos = () => {
     resetarParametros,
     abrirModalDeletar,
     lancamentoSelecionado,
+    lancamentoStatusAlteracao,
+    novoStatus,
+    fecharModalStatus,
   } = useLancamentos();
 
   const chamarApi = async () => {
@@ -64,6 +67,19 @@ export const useApiLancamentos = () => {
     }
   };
 
+  const salvarAlterarStatus = async () => {
+    const lancamento = lancamentoStatusAlteracao.value as ILancamento | null;
+    const status = novoStatus.value;
+
+    if (!lancamento || !status || status === lancamento.status) {
+      fecharModalStatus();
+      return;
+    }
+
+    await alterarStatus(lancamento.id, status);
+    fecharModalStatus();
+  };
+
   const obterDadosPorOrdenacao = async (ordenacao: {
     key: string;
     order: "asc" | "desc";
@@ -89,6 +105,7 @@ export const useApiLancamentos = () => {
     chamarApi,
     deletarLancamento,
     alterarStatus,
+    salvarAlterarStatus,
     obterDadosPorOrdenacao,
     obterDadosPorItensPorPagina,
     obterDadosPorPagina,

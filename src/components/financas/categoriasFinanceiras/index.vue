@@ -2,7 +2,6 @@
   <ce-data-table
     :items="dataCategorias.data"
     :headers="headers"
-    truncated
     compact
     search
     order-by-server

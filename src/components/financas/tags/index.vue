@@ -2,7 +2,6 @@
   <ce-data-table
     :items="dataTags.data"
     :headers="headers"
-    truncated
     compact
     search
     order-by-server
@@ -71,13 +70,8 @@ import { useApiTags } from "./useApiTags";
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiDotsVertical } from "@mdi/js";
 
-const {
-  headers,
-  options,
-  dataTags,
-  opcoesMenu,
-  executarOpcoesMenu,
-} = useTags();
+const { headers, options, dataTags, opcoesMenu, executarOpcoesMenu } =
+  useTags();
 const {
   obterDadosPorOrdenacao,
   obterDadosPorItensPorPagina,

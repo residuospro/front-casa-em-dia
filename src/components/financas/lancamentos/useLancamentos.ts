@@ -1,6 +1,31 @@
 import { ref } from "vue";
 import type { ILancamento } from "./tipagem";
-import type { TipoLancamento, StatusLancamento } from "@/utils/tipagem";
+import { StatusLancamentoValues } from "@/utils/tipagem";
+import type {
+  TipoLancamento,
+  StatusLancamento,
+} from "@/utils/tipagem";
+
+const statusOrdem: Record<StatusLancamento, number> = {
+  PENDENTE: 0,
+  PAGO: 1,
+  CANCELADO: 2,
+  IGNORADO: 3,
+};
+
+const transicoesPermitidas: Record<StatusLancamento, StatusLancamento[]> = {
+  PENDENTE: [StatusLancamentoValues.PAGO, StatusLancamentoValues.CANCELADO, StatusLancamentoValues.IGNORADO],
+  PAGO: [StatusLancamentoValues.PENDENTE, StatusLancamentoValues.CANCELADO, StatusLancamentoValues.IGNORADO],
+  CANCELADO: [StatusLancamentoValues.PENDENTE],
+  IGNORADO: [StatusLancamentoValues.PENDENTE],
+};
+
+const proximoStatus: Record<StatusLancamento, StatusLancamento> = {
+  PENDENTE: StatusLancamentoValues.PAGO,
+  PAGO: StatusLancamentoValues.PENDENTE,
+  CANCELADO: StatusLancamentoValues.PENDENTE,
+  IGNORADO: StatusLancamentoValues.PENDENTE,
+};
 
 const options = [5, 10, 25, 50, 100];
 
@@ -17,15 +42,19 @@ const headers = [
 const abriModalLancamento = ref(false);
 const abrirModalDeletar = ref(false);
 const abrirModalVisualizar = ref(false);
+const abrirModalStatus = ref(false);
 const filtrado = ref(false);
 const acao = ref<"criar" | "editar">("criar");
 const lancamentoSelecionado = ref<{ id: string; titulo: string } | null>(null);
 const lancamentoEditando = ref<ILancamento | null>(null);
 const lancamentoVisualizando = ref<ILancamento | null>(null);
+const lancamentoStatusAlteracao = ref<ILancamento | null>(null);
+const novoStatus = ref<StatusLancamento | null>(null);
 
 const opcoesMenu = [
   { label: "Visualizar", value: "visualizar" },
   { label: "Editar", value: "editar" },
+  { label: "Alterar status", value: "alterar-status" },
   { label: "Excluir", value: "excluir", color: "#ff0000" },
 ];
 
@@ -94,6 +123,9 @@ const executarOpcoesMenu = (opcao: string, item: Record<string, any>) => {
       lancamentoEditando.value = lancamento;
       manipularModalLancamento("editar");
     },
+    "alterar-status": () => {
+      alterarStatusLancamento(lancamento);
+    },
     excluir: () => {
       abrirModalDeletar.value = true;
       lancamentoSelecionado.value = {
@@ -108,6 +140,24 @@ const executarOpcoesMenu = (opcao: string, item: Record<string, any>) => {
   if (action) {
     action();
   }
+};
+
+const alterarStatusLancamento = (lancamento: ILancamento) => {
+  lancamentoStatusAlteracao.value = lancamento;
+  novoStatus.value = proximoStatus[lancamento.status];
+  abrirModalStatus.value = true;
+};
+
+const statusPermitidos = (status: StatusLancamento) => {
+  return [...transicoesPermitidas[status]].sort(
+    (a, b) => statusOrdem[a] - statusOrdem[b],
+  );
+};
+
+const fecharModalStatus = () => {
+  abrirModalStatus.value = false;
+  lancamentoStatusAlteracao.value = null;
+  novoStatus.value = null;
 };
 
 const getTipoStyle = (tipo: TipoLancamento) => {
@@ -140,15 +190,20 @@ export const useLancamentos = () => {
     abriModalLancamento,
     abrirModalDeletar,
     abrirModalVisualizar,
+    abrirModalStatus,
     lancamentoSelecionado,
     lancamentoEditando,
     lancamentoVisualizando,
+    lancamentoStatusAlteracao,
+    novoStatus,
     opcoesMenu,
     filtrado,
     manipularModalLancamento,
     manipularResposta,
     resetarParametros,
     executarOpcoesMenu,
+    statusPermitidos,
+    fecharModalStatus,
     getTipoStyle,
     getStatusStyle,
   };

@@ -1,10 +1,10 @@
 <template>
   <VisualizarLancamento />
+  <AlterarStatus />
 
   <ce-data-table
     :items="dataLancamentos.data"
     :headers="headers"
-    truncated
     compact
     search
     order-by-server
@@ -30,13 +30,23 @@
     </template>
 
     <template #valor="{ item }">
-      <span class="font-medium" :class="item.tipo === 'DESPESA' ? 'text-red-600' : item.tipo === 'RECEITA' ? 'text-green-600' : ''">
-        {{ item.tipo === 'DESPESA' ? '-' : '' }}{{ formatarReal(item.valor) }}
+      <span
+        class="font-medium"
+        :class="
+          item.tipo === 'DESPESA'
+            ? 'text-red-600'
+            : item.tipo === 'RECEITA'
+              ? 'text-green-600'
+              : ''
+        "
+      >
+        {{ item.tipo === "DESPESA" ? "-" : ""
+        }}{{ formatarReal(Number(item.valor), item.moeda) }}
       </span>
     </template>
 
     <template #contaOrigem="{ item }">
-      <span class="text-sm">{{ item.contaOrigem?.nome ?? '----' }}</span>
+      <span class="text-sm">{{ item.contaOrigem?.nome ?? "----" }}</span>
     </template>
 
     <template #status="{ item }">
@@ -100,6 +110,7 @@ import {
 import { useLancamentos } from "./useLancamentos";
 import { useApiLancamentos } from "./useApiLancamentos";
 import VisualizarLancamento from "./visualizarLancamento/index.vue";
+import AlterarStatus from "./alterarStatus/index.vue";
 import { useUtils } from "@/utils/useUtils";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
