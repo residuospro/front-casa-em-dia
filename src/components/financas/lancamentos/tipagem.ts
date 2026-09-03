@@ -50,6 +50,7 @@ type FiltroLancamento = {
   busca: string | null;
   tipo: TipoLancamento[] | null;
   status: StatusLancamento[] | null;
+  contaId: string | null;
   inicio: string | null;
   fim: string | null;
 };

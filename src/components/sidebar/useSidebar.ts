@@ -45,6 +45,11 @@ const navItens: NavItem[] = [
   },
   { label: "Notificações", path: "/notificacoes", icone: mdiBellOutline },
   {
+    label: "Editar perfil",
+    path: "/perfil/editar",
+    icone: mdiAccountDetailsOutline,
+  },
+  {
     label: "Meus ciclos",
     icone: mdiAutorenew,
     children: [
@@ -64,6 +69,11 @@ const navItens: NavItem[] = [
     label: "Finanças",
     icone: mdiCalculatorVariantOutline,
     children: [
+      { label: "Dashboard", path: "/financas" },
+      { label: "Orçamentos", path: "/financas/orcamentos" },
+      { label: "Lançamentos", path: "/financas/lancamentos" },
+      { label: "Recorrências", path: "/financas/recorrencias" },
+      { label: "Metas", path: "/financas/metas" },
       {
         label: "Configurações",
         children: [
@@ -75,17 +85,7 @@ const navItens: NavItem[] = [
           { label: "Tags", path: "/financas/tags" },
         ],
       },
-
-      { label: "Lançamentos", path: "/financas/lancamentos" },
-      { label: "Recorrências", path: "/financas/recorrencias" },
-      { label: "Metas", path: "/financas/metas" },
-      { label: "Orçamentos", path: "/financas/orcamentos" },
     ],
-  },
-  {
-    label: "Editar perfil",
-    path: "/perfil/editar",
-    icone: mdiAccountDetailsOutline,
   },
 ];
 

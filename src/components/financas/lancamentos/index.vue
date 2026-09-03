@@ -1,6 +1,7 @@
 <template>
   <VisualizarLancamento />
   <AlterarStatus />
+  <FiltroLancamento />
 
   <ce-data-table
     :items="dataLancamentos.data"
@@ -11,6 +12,17 @@
     @order-by="obterDadosPorOrdenacao"
     hide-id
   >
+    <template #groupButton>
+      <button
+        type="button"
+        @click="abrirModalFiltro = true"
+        class="flex flex-row items-center gap-2 text-[#16742F] font-medium"
+      >
+        <svg-icon type="mdi" :path="mdiFilterVariant" />
+        Filtrar
+      </button>
+    </template>
+
     <template #dataHora="{ item }">
       <span class="text-sm whitespace-nowrap">
         {{ formatarData(item.dataHora) }}
@@ -111,16 +123,18 @@ import { useLancamentos } from "./useLancamentos";
 import { useApiLancamentos } from "./useApiLancamentos";
 import VisualizarLancamento from "./visualizarLancamento/index.vue";
 import AlterarStatus from "./alterarStatus/index.vue";
+import FiltroLancamento from "./filtroLancamento/index.vue";
 import { useUtils } from "@/utils/useUtils";
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
-import { mdiDotsVertical } from "@mdi/js";
+import { mdiDotsVertical, mdiFilterVariant } from "@mdi/js";
 
 const {
   headers,
   options,
   dataLancamentos,
   opcoesMenu,
+  abrirModalFiltro,
   executarOpcoesMenu,
   getTipoStyle,
   getStatusStyle,

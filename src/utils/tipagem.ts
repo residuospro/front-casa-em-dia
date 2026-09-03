@@ -93,6 +93,7 @@ const TipoLancamentoValues = {
 const StatusLancamentoValues = {
   PENDENTE: "PENDENTE",
   PAGO: "PAGO",
+  RECEBIDO: "RECEBIDO",
   CANCELADO: "CANCELADO",
   IGNORADO: "IGNORADO",
 } as const;

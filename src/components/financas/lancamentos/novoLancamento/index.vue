@@ -24,6 +24,44 @@
         v-model="formLancamento.tipo"
       />
 
+      <div
+        v-if="mostraToggleStatus()"
+        class="flex items-center justify-between p-3 rounded-lg border border-slate-700 bg-white"
+      >
+        <div class="flex flex-col">
+          <span class="text-sm font-medium text-black">
+            {{
+              formLancamento.tipo === "RECEITA"
+                ? "Receita recebida"
+                : "Despesa paga"
+            }}
+          </span>
+          <span class="text-xs text-black/50">Status: {{ statusConfirmado }}</span>
+        </div>
+
+        <button
+          type="button"
+          role="switch"
+          :aria-checked="formLancamento.confirmado"
+          :class="
+            formLancamento.confirmado
+              ? 'bg-[#53864C]'
+              : 'bg-gray-300'
+          "
+          class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#53864C]"
+          @click="formLancamento.confirmado = !formLancamento.confirmado"
+        >
+          <span
+            :class="
+              formLancamento.confirmado
+                ? 'translate-x-6'
+                : 'translate-x-1'
+            "
+            class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
+          />
+        </button>
+      </div>
+
       <Input
         required
         label="Título"
@@ -225,6 +263,8 @@ const {
   opcoesTipo,
   mostraContaDestino,
   mostraCategoria,
+  mostraToggleStatus,
+  statusConfirmado,
 } = useNovoLancamento();
 
 const { chamarApi: carregarContas } = useApiContasBancarias();

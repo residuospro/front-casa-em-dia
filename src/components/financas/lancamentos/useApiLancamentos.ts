@@ -12,6 +12,7 @@ export const useApiLancamentos = () => {
     parametros,
     manipularResposta,
     resetarParametros,
+    limparFiltro: limparFiltroEstado,
     abrirModalDeletar,
     lancamentoSelecionado,
     lancamentoStatusAlteracao,
@@ -30,6 +31,7 @@ export const useApiLancamentos = () => {
       if (f.busca) params.busca = f.busca;
       if (f.tipo?.length) params.tipo = f.tipo.join(",");
       if (f.status?.length) params.status = f.status.join(",");
+      if (f.contaId) params.contaId = f.contaId;
       if (f.inicio) params.inicio = f.inicio;
       if (f.fim) params.fim = f.fim;
 
@@ -101,6 +103,16 @@ export const useApiLancamentos = () => {
     await chamarApi();
   };
 
+  const obterPorFiltro = async () => {
+    parametros.value.paginacao.pagina = 1;
+    await chamarApi();
+  };
+
+  const limparFiltros = async () => {
+    limparFiltroEstado();
+    await chamarApi();
+  };
+
   return {
     chamarApi,
     deletarLancamento,
@@ -109,5 +121,7 @@ export const useApiLancamentos = () => {
     obterDadosPorOrdenacao,
     obterDadosPorItensPorPagina,
     obterDadosPorPagina,
+    obterPorFiltro,
+    limparFiltros,
   };
 };

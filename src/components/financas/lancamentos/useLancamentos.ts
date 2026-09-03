@@ -9,13 +9,15 @@ import type {
 const statusOrdem: Record<StatusLancamento, number> = {
   PENDENTE: 0,
   PAGO: 1,
-  CANCELADO: 2,
-  IGNORADO: 3,
+  RECEBIDO: 2,
+  CANCELADO: 3,
+  IGNORADO: 4,
 };
 
 const transicoesPermitidas: Record<StatusLancamento, StatusLancamento[]> = {
-  PENDENTE: [StatusLancamentoValues.PAGO, StatusLancamentoValues.CANCELADO, StatusLancamentoValues.IGNORADO],
-  PAGO: [StatusLancamentoValues.PENDENTE, StatusLancamentoValues.CANCELADO, StatusLancamentoValues.IGNORADO],
+  PENDENTE: [StatusLancamentoValues.PAGO, StatusLancamentoValues.RECEBIDO, StatusLancamentoValues.CANCELADO, StatusLancamentoValues.IGNORADO],
+  PAGO: [StatusLancamentoValues.PENDENTE, StatusLancamentoValues.RECEBIDO, StatusLancamentoValues.CANCELADO, StatusLancamentoValues.IGNORADO],
+  RECEBIDO: [StatusLancamentoValues.PENDENTE, StatusLancamentoValues.PAGO, StatusLancamentoValues.CANCELADO, StatusLancamentoValues.IGNORADO],
   CANCELADO: [StatusLancamentoValues.PENDENTE],
   IGNORADO: [StatusLancamentoValues.PENDENTE],
 };
@@ -23,6 +25,7 @@ const transicoesPermitidas: Record<StatusLancamento, StatusLancamento[]> = {
 const proximoStatus: Record<StatusLancamento, StatusLancamento> = {
   PENDENTE: StatusLancamentoValues.PAGO,
   PAGO: StatusLancamentoValues.PENDENTE,
+  RECEBIDO: StatusLancamentoValues.PENDENTE,
   CANCELADO: StatusLancamentoValues.PENDENTE,
   IGNORADO: StatusLancamentoValues.PENDENTE,
 };
@@ -43,6 +46,7 @@ const abriModalLancamento = ref(false);
 const abrirModalDeletar = ref(false);
 const abrirModalVisualizar = ref(false);
 const abrirModalStatus = ref(false);
+const abrirModalFiltro = ref(false);
 const filtrado = ref(false);
 const acao = ref<"criar" | "editar">("criar");
 const lancamentoSelecionado = ref<{ id: string; titulo: string } | null>(null);
@@ -62,6 +66,7 @@ const criarFiltroInicial = () => ({
   busca: null as string | null,
   tipo: null as TipoLancamento[] | null,
   status: null as StatusLancamento[] | null,
+  contaId: null as string | null,
   inicio: null as string | null,
   fim: null as string | null,
 });
@@ -99,6 +104,11 @@ const manipularResposta = (res: typeof dataLancamentos.value) => {
 const resetarParametros = () => {
   parametros.value = criarEstadoInicial();
   filtrado.value = false;
+};
+
+const limparFiltro = () => {
+  parametros.value.filtro = criarFiltroInicial();
+  parametros.value.paginacao.pagina = 1;
 };
 
 const manipularModalLancamento = (novaAcao?: "criar" | "editar") => {
@@ -144,7 +154,12 @@ const executarOpcoesMenu = (opcao: string, item: Record<string, any>) => {
 
 const alterarStatusLancamento = (lancamento: ILancamento) => {
   lancamentoStatusAlteracao.value = lancamento;
-  novoStatus.value = proximoStatus[lancamento.status];
+  novoStatus.value =
+    lancamento.status === "PENDENTE"
+      ? lancamento.tipo === "RECEITA"
+        ? StatusLancamentoValues.RECEBIDO
+        : StatusLancamentoValues.PAGO
+      : proximoStatus[lancamento.status];
   abrirModalStatus.value = true;
 };
 
@@ -174,6 +189,7 @@ const getStatusStyle = (status: StatusLancamento) => {
   const map: Record<StatusLancamento, { label: string; cor: string; background: string }> = {
     PENDENTE: { label: "Pendente", cor: "#92400E", background: "#FEF3C7" },
     PAGO: { label: "Pago", cor: "#166534", background: "#DCFCE7" },
+    RECEBIDO: { label: "Recebido", cor: "#0F766E", background: "#CCFBF1" },
     CANCELADO: { label: "Cancelado", cor: "#991B1B", background: "#FEE2E2" },
     IGNORADO: { label: "Ignorado", cor: "#6B7280", background: "#F3F4F6" },
   };
@@ -191,6 +207,7 @@ export const useLancamentos = () => {
     abrirModalDeletar,
     abrirModalVisualizar,
     abrirModalStatus,
+    abrirModalFiltro,
     lancamentoSelecionado,
     lancamentoEditando,
     lancamentoVisualizando,
@@ -201,6 +218,7 @@ export const useLancamentos = () => {
     manipularModalLancamento,
     manipularResposta,
     resetarParametros,
+    limparFiltro,
     executarOpcoesMenu,
     statusPermitidos,
     fecharModalStatus,

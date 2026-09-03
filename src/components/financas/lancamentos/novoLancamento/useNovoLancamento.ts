@@ -5,7 +5,7 @@ import { useCategorias } from "../../categoriasFinanceiras/useCategorias";
 import { useCentroCustos } from "../../centrosCusto/useCentroCustos";
 import { useCartoes } from "../../cartoes/useCartoes";
 import { useTags } from "../../tags/useTags";
-import type { TipoLancamento, FormaPagamento } from "@/utils/tipagem";
+import type { TipoLancamento, FormaPagamento, StatusLancamento } from "@/utils/tipagem";
 
 const estadoInicialForm = () => ({
   tipo: "DESPESA" as TipoLancamento,
@@ -24,6 +24,7 @@ const estadoInicialForm = () => ({
   tagsIds: [] as string[],
   observacoes: "",
   localizacao: "",
+  confirmado: false,
 });
 
 const formLancamento = ref(estadoInicialForm());
@@ -81,6 +82,15 @@ const mostraCategoria = () =>
   formLancamento.value.tipo === "RECEITA" ||
   formLancamento.value.tipo === "DESPESA";
 
+const mostraToggleStatus = () =>
+  formLancamento.value.tipo === "RECEITA" ||
+  formLancamento.value.tipo === "DESPESA";
+
+const statusConfirmado = computed<StatusLancamento>(() => {
+  if (!formLancamento.value.confirmado) return "PENDENTE";
+  return formLancamento.value.tipo === "RECEITA" ? "RECEBIDO" : "PAGO";
+});
+
 watch(abriModalLancamento, (aberto) => {
   if (!aberto) return;
 
@@ -104,6 +114,7 @@ watch(abriModalLancamento, (aberto) => {
       tagsIds: l.tags?.map((t) => t.tag.id) ?? [],
       observacoes: l.observacoes ?? "",
       localizacao: l.localizacao ?? "",
+      confirmado: l.status === "PAGO" || l.status === "RECEBIDO",
     };
   } else {
     formLancamento.value = estadoInicialForm();
@@ -122,5 +133,7 @@ export const useNovoLancamento = () => {
     opcoesTipo,
     mostraContaDestino,
     mostraCategoria,
+    mostraToggleStatus,
+    statusConfirmado,
   };
 };

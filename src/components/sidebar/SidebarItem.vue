@@ -64,7 +64,11 @@
         :path="item.icone"
         class="w-5 h-5 shrink-0 my-2.5"
       />
-      <span v-show="!isDesktop || sidebarAberto" class="whitespace-nowrap">
+      <span
+        v-show="!isDesktop || sidebarAberto"
+        class="whitespace-nowrap"
+        :class="level === 0 ? 'ml-3' : ''"
+      >
         {{ item.label }}
       </span>
     </router-link>
@@ -75,6 +79,7 @@
 ///@ts-ignore
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiChevronDown } from "@mdi/js";
+import { toRefs } from "vue";
 import { useRoute } from "vue-router";
 import {
   useSidebar,
@@ -95,7 +100,7 @@ const props = withDefaults(
   },
 );
 
-const { item, level, isDesktop } = props;
+const { item, level, isDesktop } = toRefs(props);
 
 const route = useRoute();
 const { sidebarAberto, fecharSidebar } = useSidebar();
@@ -107,14 +112,16 @@ function indentClasses(nivel: number) {
   return "pl-14";
 }
 
-function isPathActive(path?: string) {
+function isPathActive(path?: string, temChildren?: boolean) {
   if (!path) return false;
-  return route.path === path || (route.path.startsWith(path) && path !== "/");
+  if (route.path === path) return true;
+  return Boolean(temChildren && route.path.startsWith(path) && path !== "/");
 }
 
 function itemAtivo(itemNav: NavItem): boolean {
   return (
-    isPathActive(itemNav.path) || itemNav.children?.some(itemAtivo) === true
+    isPathActive(itemNav.path, Boolean(itemNav.children?.length)) ||
+    itemNav.children?.some(itemAtivo) === true
   );
 }
 

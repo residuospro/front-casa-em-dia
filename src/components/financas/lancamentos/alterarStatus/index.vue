@@ -95,18 +95,20 @@ const { salvarAlterarStatus } = useApiLancamentos();
 const labelStatus: Record<StatusLancamento, string> = {
   PENDENTE: "Pendente",
   PAGO: "Pago",
+  RECEBIDO: "Recebido",
   CANCELADO: "Cancelado",
   IGNORADO: "Ignorado",
 };
 
 const opcoesStatus = computed(() => {
   if (!lancamentoStatusAlteracao.value) return [];
-  return statusPermitidos(lancamentoStatusAlteracao.value.status).map(
-    (status) => ({
+  const isReceita = lancamentoStatusAlteracao.value.tipo === "RECEITA";
+  return statusPermitidos(lancamentoStatusAlteracao.value.status)
+    .filter((status) => status !== "RECEBIDO" || isReceita)
+    .map((status) => ({
       text: labelStatus[status],
       value: status,
-    }),
-  );
+    }));
 });
 
 const podeSalvar = computed(() => {

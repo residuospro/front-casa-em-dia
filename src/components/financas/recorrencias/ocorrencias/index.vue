@@ -137,6 +137,7 @@ const getStatusStyle = (status: StatusLancamento) => {
   > = {
     PENDENTE: { label: "Pendente", cor: "#92400E", background: "#FEF3C7" },
     PAGO: { label: "Pago", cor: "#166534", background: "#DCFCE7" },
+    RECEBIDO: { label: "Recebido", cor: "#0F766E", background: "#CCFBF1" },
     CANCELADO: { label: "Cancelado", cor: "#991B1B", background: "#FEE2E2" },
     IGNORADO: { label: "Ignorado", cor: "#6B7280", background: "#F3F4F6" },
   };

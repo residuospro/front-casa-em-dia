@@ -9,7 +9,7 @@ import { useNovoLancamento } from "./useNovoLancamento";
 
 export const useApiNovoLancamento = () => {
   const { perfil } = storeToRefs(usePerfil());
-  const { formLancamento } = useNovoLancamento();
+  const { formLancamento, statusConfirmado } = useNovoLancamento();
   const { abriModalLancamento, lancamentoEditando } = useLancamentos();
   const { chamarApi } = useApiLancamentos();
 
@@ -22,6 +22,7 @@ export const useApiNovoLancamento = () => {
       dataHora: formLancamento.value.dataHora,
       contaOrigemId: formLancamento.value.contaOrigemId,
       responsavelId: formLancamento.value.responsavelId,
+      status: statusConfirmado.value,
     };
 
     if (formLancamento.value.contaDestinoId)
@@ -75,6 +76,7 @@ export const useApiNovoLancamento = () => {
       tagsIds: formLancamento.value.tagsIds,
       observacoes: formLancamento.value.observacoes || null,
       localizacao: formLancamento.value.localizacao || null,
+      status: statusConfirmado.value,
     };
 
     const resposta: AxiosResponse = await useClient.put(
