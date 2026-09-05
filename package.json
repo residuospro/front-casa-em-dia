@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky",
+    "deploy:local": "cd ../casa-em-dia/docker/production && docker compose up -d --build"
   },
   "dependencies": {
     "@comercti/vue-components": "^0.41.0",
@@ -33,6 +35,7 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
     "autoprefixer": "^10.4.23",
+    "husky": "^9.0.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
     "typescript": "~5.9.3",
